@@ -11,7 +11,7 @@ import {
   Button,
 } from '@mantine/core';
 
-import classes from '../../Styles/login.module.css'
+import classes from '../../../Styles/login.module.css'
 
 export function StudentLogin() {
   return (
