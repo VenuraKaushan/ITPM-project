@@ -3,10 +3,7 @@ import "dotenv/config";
 
 const dbConnect = () => {
   mongoose
-    .connect(process.env.DB_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    .connect(process.env.DB_URL,)
     .then((res) => {
       console.log(`💻 Database is synced!`);
     })

@@ -1,6 +1,6 @@
 import { useScrollIntoView } from "@mantine/hooks";
 import { Container, Button, Text, Group, Box } from "@mantine/core";
-import { StudentLogin } from "../../components/Login/StudentLogin";
+import { StudentLogin } from "../../components/Login/AllLogin/StudentLogin";
 import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
