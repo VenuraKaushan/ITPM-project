@@ -1,17 +1,25 @@
 import { useScrollIntoView } from "@mantine/hooks";
 import { Container, Button, Text, Group, Box } from "@mantine/core";
 import { StudentLogin } from "../../components/Login/StudentLogin";
+import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
     offset: 60,
   });
 
+  const navigate = useNavigate();
+
+  const handleStaffMemberClick = () => {
+    // Navigate to the StaffLogin component when the button is clicked
+    navigate('/staff-login');
+  };
+
   return (
     <Container>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <Group>
-          <Button>Are you a staff member?</Button>
+          <Button onClick={handleStaffMemberClick}>Are you a staff member?</Button>
         </Group>
       </div>
 
