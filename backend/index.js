@@ -2,6 +2,7 @@ import express from 'express';
 import "dotenv/config";
 import cors from 'cors';
 import dbConnect from './configs/dbConfig.js';
+import UserRoutes from './routes/users.routes.js'
 
 //initialized express
 const app = express();
@@ -29,6 +30,8 @@ app.get("/",(req,res)=>{
     res.send("Welcome to PMMS!"); 
 });
 
+// redirect to user routes
+app.use('/staff',UserRoutes);
 
 
 app.listen(PORT,()=>{
