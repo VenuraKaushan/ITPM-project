@@ -16,7 +16,9 @@ const LandingPage = () => {
   };
 
   return (
-    <Container>
+
+    <div>
+   
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <Group>
           <Button onClick={handleStaffMemberClick}>Are you a staff member?</Button>
@@ -63,7 +65,7 @@ const LandingPage = () => {
         <Text ref={targetRef}> <StudentLogin/></Text>
        
       </Group>
-    </Container>
+    </div>
   );
 };
 
