@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   TextInput,
   PasswordInput,
@@ -6,7 +5,6 @@ import {
   Anchor,
   Paper,
   Title,
-  Text,
   Container,
   Group,
   Button,
@@ -16,7 +14,7 @@ import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons-react';
 
 import classes from '../../../Styles/login.module.css'
-import StaffLoginAPI from '../../../API/staffLoginAPI/staffLogin.api';
+import StaffAPI from '../../../API/staffAPI/staff.api';
 
 const StaffLogin = () => {
 
@@ -24,7 +22,7 @@ const StaffLogin = () => {
     email: string;
     password: string;
   }) => {
-    StaffLoginAPI.login(values)
+    StaffAPI.staffLogin(values)
       .then((response: any) => {
 
         // save user details in the local storage
