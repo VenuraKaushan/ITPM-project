@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 // import "./App.css";
 import {  MantineProvider } from '@mantine/core';
-import StaffLogin from "./components/Login/AllLogin/StaffLogin";
+import StaffLogin from "./components/Login/StaffLogin";
 import StudentDetails from "./components/Coordinator/AddStudent/StudentTable";
 
 
