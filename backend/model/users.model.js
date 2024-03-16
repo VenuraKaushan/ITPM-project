@@ -7,6 +7,12 @@ const usersSchema = new mongoose.Schema(
             unique : true,
             required : true,
         },
+        regNo:{
+            type : String,
+            unique : true,
+            required : true,
+            default : "NON"
+        },
         name : {
             type : String,
             required : true,
