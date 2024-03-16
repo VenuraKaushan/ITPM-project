@@ -36,7 +36,7 @@ export const staffLogin = async (req, res) => {
             specialization : data.specialization,
           };
 
-          //   sends the user details
+          //   sends the user details asd
           res.status(200).json(userDetails);
 
         } else {

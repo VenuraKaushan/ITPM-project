@@ -2,12 +2,15 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:3001";
 
-class StaffLoginAPI{
+class StaffAPI{
 
-    static login (values : {email : string, password : string}) {
+    //staff member login api
+    static staffLogin (values : {email : string, password : string}) {
         console.log(values)
         return axios.post(`${BASE_URL}/staff/login`,values,{withCredentials:true});
     }
+
+
 }
 
-export default StaffLoginAPI;
+export default StaffAPI;

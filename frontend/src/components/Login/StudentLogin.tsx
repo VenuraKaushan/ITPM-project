@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   TextInput,
   PasswordInput,
@@ -6,36 +5,37 @@ import {
   Anchor,
   Paper,
   Title,
-  Text,
   Container,
   Group,
   Button,
 } from '@mantine/core';
-import { useForm } from "@mantine/form";
+
+import classes from '../../Styles/login.module.css'
+import { useForm } from '@mantine/form';
+import StudentAPI from '../../API/studentAPI/student.api';
 import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
 
-import classes from '../../../Styles/login.module.css'
-import StaffLoginAPI from '../../../API/staffLoginAPI/staffLogin.api';
 
-const StaffLogin = () => {
+export function StudentLogin() {
+  const navigate = useNavigate();
 
   const handleLogin = (values: {
     email: string;
     password: string;
   }) => {
-    StaffLoginAPI.login(values)
+    StudentAPI.studentLogin(values)
       .then((response: any) => {
 
         // save user details in the local storage
-        localStorage.setItem("user-coordinator-session", JSON.stringify(response.data));
-
+        localStorage.setItem("user-student-session", JSON.stringify(response.data));
         console.log(response.data.role)
-        //methanta enwa response ekak userDetails kiyla array ekka eke example ekak widiyata 
-        //if(response.data.role === "COORDINATOR"){
-        //   href = "/coordinator/dashboard"
-        // } kiyala balala condition eka true nam ublage href ekak dpn
-        
+
+        if (response.data.role === "STUDENT") {
+          navigate("/student/dashboard");
+        }
+
       })
       .catch((error) => {
         showNotification({
@@ -66,14 +66,15 @@ const StaffLogin = () => {
           : "Invalid Email",
     },
   });
+
   return (
     <Container size={420} my={40}>
+      <Title ta="center" className={classes.title} >
+        Welcome back Student!
+      </Title>
       <form
         onSubmit={form.onSubmit((values) => handleLogin(values))}
       >
-        <Title ta="center" className={classes.title} >
-          Staff Login
-        </Title>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput
             label="Email"
@@ -102,7 +103,5 @@ const StaffLogin = () => {
         </Paper>
       </form>
     </Container>
-  )
+  );
 }
-
-export default StaffLogin
