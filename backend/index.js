@@ -2,7 +2,8 @@ import express from 'express';
 import "dotenv/config";
 import cors from 'cors';
 import dbConnect from './configs/dbConfig.js';
-import UserRoutes from './routes/users.routes.js'
+import StaffRoutes from './routes/staff.routes.js'
+import StudentRoutes from './routes/student.routes.js'
 
 //initialized express
 const app = express();
@@ -30,9 +31,11 @@ app.get("/",(req,res)=>{
     res.send("Welcome to PMMS!"); 
 });
 
-// redirect to user routes
-app.use('/staff',UserRoutes);
+// redirect to staff routes
+app.use('/staff',StaffRoutes);
 
+// redirect to student routes
+app.use('/student',StudentRoutes);
 
 app.listen(PORT,()=>{
     console.log(`🚀💀 Server is started on port ${PORT}!`);
