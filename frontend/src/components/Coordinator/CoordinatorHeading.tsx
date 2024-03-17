@@ -22,7 +22,6 @@ import {
 } from '@tabler/icons-react';
 import classes from '../../Styles/HeaderTabs.module.css'
 import logo from "../../assets/testlogo.png"
-import StudentDetails from './AddStudent/StudentTable';
 
 const user = {
   name: 'Jane Spoonfighter',

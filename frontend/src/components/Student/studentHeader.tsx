@@ -1,6 +1,7 @@
 import cx from 'clsx';
 import { useState } from 'react';
 import {
+    Container,
     Avatar,
     UnstyledButton,
     Group,
@@ -21,6 +22,7 @@ import {
     IconSwitchHorizontal,
     IconChevronDown,
 } from '@tabler/icons-react';
+// import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from '../../Styles/HeaderTabs.module.css';
 import logo from "../../assets/testlogo.png"
 
@@ -103,18 +105,20 @@ export function StudentHeader() {
                         </Menu.Dropdown>
                     </Menu>
                 </Group>
-                <Tabs
-                    defaultValue="Home"
-                    variant="outline"
-                    visibleFrom="sm"
-                    classNames={{
-                        root: classes.tabs,
-                        list: classes.tabsList,
-                        tab: classes.tab,
-                    }}
-                >
-                    <Tabs.List>{items}</Tabs.List>
-                </Tabs>
+                <Container size="md">
+                    <Tabs
+                        defaultValue="Home"
+                        variant="outline"
+                        visibleFrom="sm"
+                        classNames={{
+                            root: classes.tabs,
+                            list: classes.tabsList,
+                            tab: classes.tab,
+                        }}
+                    >
+                        <Tabs.List>{items}</Tabs.List>
+                    </Tabs>
+                </Container>
             </div>
         </Center>
     );
