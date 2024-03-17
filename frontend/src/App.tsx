@@ -4,23 +4,19 @@ import LandingPage from "./pages/LandingPage";
 import {  MantineProvider } from '@mantine/core';
 import StaffLogin from "./components/AllLogin/StaffLogin";
 import StudentDetails from "./components/Coordinator/AddStudent/StudentTable";
-
+import { StudentHeader } from "./components/Student/studentHeader";
 
 function App() {
   return (
     <MantineProvider>
-      
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/staff-login" element={<StaffLogin />} />
           <Route path ="/studentdetails" element={<StudentDetails/>} />
-         
+          <Route path ="/student/dashboard" element = {<StudentHeader/>}/>
         </Routes>
       </Router>
-
-     
-     
     </MantineProvider>
   );
 }
