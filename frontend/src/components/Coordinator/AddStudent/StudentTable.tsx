@@ -142,21 +142,16 @@ const StudentDetails =()=>{
        <ScrollArea>
 
         <hr></hr>
-        <div>
-      <TextInput
-        placeholder="Search by any field"
-        mt={25}
-        mb={50}
-        w={800}
-        
-        leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
-        value={search}
-        onChange={handleSearchChange}
-        
-      />
-      {/* <Button>Add User</Button> */}
-
-</div>
+        <div style={{ marginBottom: '50px' }}>
+          <TextInput
+            placeholder="Search by any field"
+            style={{ width: 'calc(80% - 60px)', marginRight: '10px', display: 'inline-block' }}
+            leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
+            value={search}
+            onChange={handleSearchChange}
+          />
+          <Button style={{ width: '100px', display: 'inline-block', marginLeft: '50px' }}>Add User</Button>
+        </div>
       
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
         <Table.Tbody>
