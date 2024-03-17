@@ -51,8 +51,10 @@ export function StudentHeader() {
     ));
 
     return (
-        <Center>
-            <div className={classes.header}>
+
+        <div className={classes.header}>
+
+            <Container className={classes.mainSection} size="lg">
                 <Group justify="space-between">
                     <Image width={200} height={50} src={logo} mt={5} />
 
@@ -105,6 +107,10 @@ export function StudentHeader() {
                         </Menu.Dropdown>
                     </Menu>
                 </Group>
+
+            </Container>
+            <Center>
+
                 <Container size="md">
                     <Tabs
                         defaultValue="Home"
@@ -118,8 +124,11 @@ export function StudentHeader() {
                     >
                         <Tabs.List>{items}</Tabs.List>
                     </Tabs>
+
                 </Container>
-            </div>
-        </Center>
+            </Center>
+
+
+        </div>
     );
 }
