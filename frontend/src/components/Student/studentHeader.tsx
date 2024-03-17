@@ -9,6 +9,7 @@ import {
     Tabs,
     Burger,
     rem,
+    Container,
     useMantineTheme,
     Center,
     Image,
@@ -49,8 +50,9 @@ export function StudentHeader() {
     ));
 
     return (
-        <Center>
+        
             <div className={classes.header}>
+                 <Container className={classes.mainSection} size="lg">
                 <Group justify="space-between">
                     <Image width={200} height={50} src={logo} mt={5} />
 
@@ -103,6 +105,8 @@ export function StudentHeader() {
                         </Menu.Dropdown>
                     </Menu>
                 </Group>
+                </Container>
+             <Container size="md">
                 <Tabs
                     defaultValue="Home"
                     variant="outline"
@@ -115,7 +119,9 @@ export function StudentHeader() {
                 >
                     <Tabs.List>{items}</Tabs.List>
                 </Tabs>
+
+                </Container>
             </div>
-        </Center>
+        
     );
 }
