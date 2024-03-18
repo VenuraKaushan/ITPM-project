@@ -6,6 +6,7 @@ import StaffLogin from "./components/AllLogin/StaffLogin";
 import StudentDetails from "./components/Coordinator/AddStudent/StudentTable";
 import { StudentHeader } from "./components/Student/studentHeader";
 
+
 function App() {
   return (
     <MantineProvider>
