@@ -1,6 +1,6 @@
 import { useScrollIntoView } from "@mantine/hooks";
 import { Container, Button, Text, Group, Box } from "@mantine/core";
-import { StudentLogin } from "../../components/Login/StudentLogin";
+import { StudentLogin } from "../../components/AllLogin/StudentLogin";
 import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
@@ -16,7 +16,9 @@ const LandingPage = () => {
   };
 
   return (
-    <Container>
+
+    <div>
+   
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <Group>
           <Button onClick={handleStaffMemberClick}>Are you a staff member?</Button>
@@ -63,7 +65,7 @@ const LandingPage = () => {
         <Text ref={targetRef}> <StudentLogin/></Text>
        
       </Group>
-    </Container>
+    </div>
   );
 };
 
