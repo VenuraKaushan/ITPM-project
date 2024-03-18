@@ -81,7 +81,8 @@ interface RowData {
     );
   }
   
-  const data = [
+  const 
+  data = [
     {
       name: 'Athena Weissnat',
       company: 'Little - Rippin',
