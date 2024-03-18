@@ -7,7 +7,8 @@ import { Select } from "@mantine/core";
 const StaffPage = () => {
   const [value, setValue] = useState<Date | null>(null);
   return (
-    <>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+    <div style={{ maxWidth: "400px", width: "100%", padding: "20px", textAlign: "center" }}>
       <Select
         label="Select the Specialization"
         placeholder="Pick Specialization"
@@ -22,13 +23,10 @@ const StaffPage = () => {
       <Input.Wrapper label="Enter Time Duration" error="Input error" size="md">
         <Input placeholder="Input inside Input.Wrapper" />
       </Input.Wrapper>
-      <br></br>
-
+      <br />
       <Button variant="filled" color="green">Search</Button>
-
-    
-      
-    </>
+    </div>
+  </div>
   );
 };
 
