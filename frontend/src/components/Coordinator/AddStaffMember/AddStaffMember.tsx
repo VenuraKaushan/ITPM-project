@@ -10,8 +10,9 @@ import {
   rem,
   keys,
   Button,
+  Tooltip,
   Modal,
-  TableTh,
+  ActionIcon,
 } from "@mantine/core";
 import {
   IconSelector,
@@ -20,20 +21,21 @@ import {
   IconSearch,
   IconAt,
   IconUser,
+  IconEdit,
+  IconTrash,
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
-import { showNotification } from '@mantine/notifications';
+
 
 interface RowData {
   name: string;
   email: string;
-  company: string;
-  regNo: string;
+  phoneNo: string;
   specialization: string;
-  batch: string;
-  semester: string;
+  role: string;
+  
 }
 
 interface ThProps {
@@ -96,26 +98,22 @@ function sortData(
 
 const data = [
   {
-    name: "Athena Weissnat",
-    company: "Little - Rippin",
-    email: "Elouise.Prohaska@yahoo.com",
-    regNo: "IT21244766",
-    specialization: "IT",
-    batch: "June Batch",
-    semester: "1st",
+    name: "Vinnath",
+    email: "IT21244766@my.sliit.lk",
+    phoneNo: "0711461016",
+    specialization: "string;",
+    role: "string;",
   },
   {
-    name: "Deangelo Runolfsson",
-    company: "Greenfelder - Krajcik",
-    email: "Kadin_Trantow87@yahoo.com",
-    regNo: "IT21244766",
-    specialization: "IT",
-    batch: "June Batch",
-    semester: "1st",
+    name: "Vinnath",
+    email: "IT21244766@my.sliit.lk",
+    phoneNo: "0711461016",
+    specialization: "string;",
+    role: "string;",
   },
 ];
 
-const StudentDetails = () => {
+const AddStaffMember = () => {
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
@@ -143,10 +141,32 @@ const StudentDetails = () => {
     <Table.Tr key={row.name}>
       <Table.Td>{row.name}</Table.Td>
       <Table.Td>{row.email}</Table.Td>
-      <Table.Td>{row.regNo}</Table.Td>
+      <Table.Td>{row.phoneNo}</Table.Td>
       <Table.Td>{row.specialization}</Table.Td>
-      <Table.Td>{row.batch}</Table.Td>
-      <Table.Td>{row.semester}</Table.Td>
+      <Table.Td>{row.role}</Table.Td>
+      <Table.Td>
+        <center>
+        <Tooltip label="Edit">
+          <ActionIcon
+            style={{ marginRight: '30px'}}
+            color="blue"
+          >
+          <IconEdit/>
+          </ActionIcon>  
+        </Tooltip>
+       
+        <Tooltip label="Trash">
+
+        <ActionIcon
+          color="red"
+          
+        >
+          <IconTrash/>
+          </ActionIcon>
+        </Tooltip>
+        </center>
+      
+      </Table.Td>
     </Table.Tr>
   ));
 
@@ -157,10 +177,9 @@ const StudentDetails = () => {
     initialValues: {
       name : "",
       email: "",
-      regNo: "",
+      phoneNo : "",
       specialization :  "",
-      batch : "",
-      semester : "",
+      role : ""
       
     },validate: {
       email: (value) =>
@@ -176,13 +195,13 @@ const StudentDetails = () => {
     <div style={{ position : 'absolute' , top:'160px'}}>
       {/* Add User Modal */}
       <form>
-      <Modal opened={opened} onClose={close} title="Authentication">
+      <Modal opened={opened} onClose={close} title="Add Staff Member">
         <TextInput
           mt="md"
           rightSectionPointerEvents="none"
           rightSection={IconUserr}
           label="Name"
-          placeholder="Student Name"
+          placeholder="Staff Member Name"
         />
         <TextInput
           mt="md"
@@ -195,8 +214,8 @@ const StudentDetails = () => {
         <TextInput
           mt="md"
           rightSectionPointerEvents="none"
-          label="Registration No"
-          placeholder="Registration No"
+          label="Mobile No"
+          placeholder="0711461106"
         />
 
         <TextInput
@@ -209,16 +228,11 @@ const StudentDetails = () => {
         <TextInput
           mt="md"
           rightSectionPointerEvents="none"
-          label="Batch"
-          placeholder="batch"
+          label="Role"
+          placeholder="role"
         />
+        
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Semester"
-          placeholder="Semster"
-        />
 
         <center  style={{paddingTop:'10px'}}>
           <Button
@@ -226,7 +240,7 @@ const StudentDetails = () => {
             gradient={{ from: "gray", to: "blue", deg: 0 }}
            
           >
-            Add Student
+            Add Member
           </Button>
         </center>
       </Modal>
@@ -254,12 +268,12 @@ const StudentDetails = () => {
             <Button
               onClick={open}
               style={{
-                width: "130px",
+                width: "160px",
                 display: "inline-block",
                 marginLeft: "50px",
               }}
             >
-              Add Student
+              Add Staff Member
             </Button>
           </div>
 
@@ -291,9 +305,9 @@ const StudentDetails = () => {
                   Email
                 </Th>
                 <Th
-                  sorted={sortBy === "regNo"}
+                  sorted={sortBy === "phoneNo"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("regNo")}
+                  onSort={() => setSorting("phoneNo")}
                 >
                   Registration No
                 </Th>
@@ -305,19 +319,20 @@ const StudentDetails = () => {
                   specialization
                 </Th>
                 <Th
-                  sorted={sortBy === "batch"}
+                  sorted={sortBy === "role"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("batch")}
+                  onSort={() => setSorting("role")}
                 >
-                  batch
+                  Role
                 </Th>
-                <Th
-                  sorted={sortBy === "semester"}
+
+                <Th  sorted={sortBy === "role"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("semester")}
-                >
-                  semester
+                  onSort={() => setSorting("role")} >
+                  Action
+
                 </Th>
+                
               </Table.Tr>
             </Table.Tbody>
             <Table.Tbody>
@@ -340,4 +355,4 @@ const StudentDetails = () => {
   );
 };
 
-export default StudentDetails;
+export default AddStaffMember;

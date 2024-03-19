@@ -20,6 +20,7 @@ import {
   IconSearch,
   IconAt,
   IconUser,
+  IconFileTypePdf,
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
@@ -27,13 +28,12 @@ import { useForm } from "@mantine/form";
 import { showNotification } from '@mantine/notifications';
 
 interface RowData {
-  name: string;
-  email: string;
-  company: string;
-  regNo: string;
-  specialization: string;
-  batch: string;
+  id : string;
+  assessmentName: string;
+  assessmentUpload: string;
+  deadline: string;
   semester: string;
+  specialization: string;
 }
 
 interface ThProps {
@@ -96,26 +96,25 @@ function sortData(
 
 const data = [
   {
-    name: "Athena Weissnat",
-    company: "Little - Rippin",
-    email: "Elouise.Prohaska@yahoo.com",
-    regNo: "IT21244766",
-    specialization: "IT",
-    batch: "June Batch",
+    id : "A001",
+    assessmentName: "ITPM",
+    assessmentUpload: "PDF",
+    deadline: "12/02/2024 : 00.00",
     semester: "1st",
+    specialization: "IT",
+
   },
   {
-    name: "Deangelo Runolfsson",
-    company: "Greenfelder - Krajcik",
-    email: "Kadin_Trantow87@yahoo.com",
-    regNo: "IT21244766",
-    specialization: "IT",
-    batch: "June Batch",
+    id : "A002",
+    assessmentName: "ITPM",
+    assessmentUpload: "PDF",
+    deadline: "12/02/2024 : 00.00",
     semester: "1st",
+    specialization: "IT",
   },
 ];
 
-const StudentDetails = () => {
+const AddAssessment = () => {
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
@@ -123,6 +122,7 @@ const StudentDetails = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
+  const IconFileTypePdff = <IconFileTypePdf style={{ width: rem(16), height: rem(16) }} />;
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -140,13 +140,12 @@ const StudentDetails = () => {
   };
 
   const rows = sortedData.map((row) => (
-    <Table.Tr key={row.name}>
-      <Table.Td>{row.name}</Table.Td>
-      <Table.Td>{row.email}</Table.Td>
-      <Table.Td>{row.regNo}</Table.Td>
-      <Table.Td>{row.specialization}</Table.Td>
-      <Table.Td>{row.batch}</Table.Td>
+    <Table.Tr key={row.id}>
+      <Table.Td>{row.assessmentName}</Table.Td>
+      <Table.Td>{row.assessmentUpload}</Table.Td>
+      <Table.Td>{row.deadline}</Table.Td>
       <Table.Td>{row.semester}</Table.Td>
+      <Table.Td>{row.specialization}</Table.Td>
     </Table.Tr>
   ));
 
@@ -155,20 +154,13 @@ const StudentDetails = () => {
     validateInputOnChange: true,
 
     initialValues: {
-      name : "",
-      email: "",
-      regNo: "",
-      specialization :  "",
-      batch : "",
-      semester : "",
+        id : "",
+        assessmentName: "",
+        assessmentUpload: "",
+        deadline: "",
+        semester: "",
+        specialization: "",
       
-    },validate: {
-      email: (value) =>
-        /\S+@\S+\.\S+/.test(
-          value
-        )
-          ? null
-          : "Invalid Email",
     },
   });
 
@@ -176,27 +168,27 @@ const StudentDetails = () => {
     <div style={{ position : 'absolute' , top:'160px'}}>
       {/* Add User Modal */}
       <form>
-      <Modal opened={opened} onClose={close} title="Authentication">
+      <Modal opened={opened} onClose={close} title="Add Assessment">
         <TextInput
           mt="md"
           rightSectionPointerEvents="none"
           rightSection={IconUserr}
-          label="Name"
-          placeholder="Student Name"
+          label="Assessment Name"
+          placeholder="Assessment Name"
         />
         <TextInput
           mt="md"
           rightSectionPointerEvents="none"
-          rightSection={icon}
-          label="Email"
-          placeholder="Your email"
-          {...form.getInputProps("email")}
+          rightSection={IconFileTypePdff}
+          label="Assessment Upload"
+          placeholder=""
+         
         />
         <TextInput
           mt="md"
           rightSectionPointerEvents="none"
-          label="Registration No"
-          placeholder="Registration No"
+          label="Deadline"
+          placeholder="Deadline"
         />
 
         <TextInput
@@ -209,16 +201,11 @@ const StudentDetails = () => {
         <TextInput
           mt="md"
           rightSectionPointerEvents="none"
-          label="Batch"
-          placeholder="batch"
+          label="Semester"
+          placeholder="Semester"
         />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Semester"
-          placeholder="Semster"
-        />
+        
 
         <center  style={{paddingTop:'10px'}}>
           <Button
@@ -226,7 +213,7 @@ const StudentDetails = () => {
             gradient={{ from: "gray", to: "blue", deg: 0 }}
            
           >
-            Add Student
+            Add Assessment
           </Button>
         </center>
       </Modal>
@@ -259,7 +246,7 @@ const StudentDetails = () => {
                 marginLeft: "50px",
               }}
             >
-              Add Student
+              Add 
             </Button>
           </div>
 
@@ -276,26 +263,33 @@ const StudentDetails = () => {
           >
             <Table.Tbody>
               <Table.Tr>
-                <Th
-                  sorted={sortBy === "name"}
+              <Th
+                  sorted={sortBy === "id"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("name")}
+                  onSort={() => setSorting("id")}
                 >
-                  Name
+                 ID
+                </Th>                                         
+                <Th
+                  sorted={sortBy === "assessmentName"}
+                  reversed={reverseSortDirection}
+                  onSort={() => setSorting("assessmentName")}
+                >
+                  Assessment Name
                 </Th>
                 <Th
-                  sorted={sortBy === "email"}
+                  sorted={sortBy === "assessmentUpload"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("email")}
+                  onSort={() => setSorting("assessmentUpload")}
                 >
-                  Email
+                  Assessment Upload
                 </Th>
                 <Th
-                  sorted={sortBy === "regNo"}
+                  sorted={sortBy === "deadline"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("regNo")}
+                  onSort={() => setSorting("deadline")}
                 >
-                  Registration No
+                  Deadline
                 </Th>
                 <Th
                   sorted={sortBy === "specialization"}
@@ -305,18 +299,18 @@ const StudentDetails = () => {
                   specialization
                 </Th>
                 <Th
-                  sorted={sortBy === "batch"}
+                  sorted={sortBy === "semester"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("batch")}
+                  onSort={() => setSorting("semester")}
                 >
-                  batch
+                  Semester
                 </Th>
                 <Th
                   sorted={sortBy === "semester"}
                   reversed={reverseSortDirection}
                   onSort={() => setSorting("semester")}
                 >
-                  semester
+                  Action
                 </Th>
               </Table.Tr>
             </Table.Tbody>
@@ -340,4 +334,4 @@ const StudentDetails = () => {
   );
 };
 
-export default StudentDetails;
+export default AddAssessment;
