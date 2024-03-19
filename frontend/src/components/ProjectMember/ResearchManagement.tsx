@@ -54,7 +54,7 @@ const ResearchManagement = () => {
   };
 
   return (
-    <div className="table-container">
+    <div className="table-container" style={{marginTop:'25px'}}>
       <table className="custom-table">
         <thead>
           <tr>
