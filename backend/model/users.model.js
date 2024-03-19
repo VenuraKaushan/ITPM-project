@@ -9,9 +9,8 @@ const usersSchema = new mongoose.Schema(
         },
         regNo:{
             type : String,
-            unique : true,
             required : true,
-            default : "NON"
+            default : "NaN"
         },
         name : {
             type : String,

@@ -7,6 +7,9 @@ import StudentDetails from "./components/Coordinator/AddStudent/StudentTable";
 import { StudentHeader } from "./components/Student/studentHeader";
 import { CoordinatorHeading } from "./components/Coordinator/CoordinatorHeading";
 import { CoodinatorPage } from "./pages/CoodinatorPage";
+import { GroupRegistration } from "./components/Student/GroupRegistration/index.tsx";
+import PMemberHeader from "./components/ProjectMember/PMemberHeader";
+import StaffPage from "./components/StaffPage";
 
 
 function App() {
@@ -14,7 +17,7 @@ function App() {
     <MantineProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={< LandingPage/>} />
           <Route path="/staff-login" element={<StaffLogin />} />
           <Route path ="/studentdetails" element={<StudentDetails/>} />
           <Route path="/coordinator/dashboard" element={<CoordinatorHeading />} />
@@ -22,6 +25,9 @@ function App() {
 
           <Route path ="/coodinatorpage" element = {<CoodinatorPage/>}/>
           
+          <Route path ="/group/register" element = {<GroupRegistration/>}/>
+          <Route path="/pMember/dashboard" element = {<PMemberHeader/>}/>
+          <Route path="/pMember/selection" element = {<StaffPage/>}/>
         </Routes>
       </Router>
     </MantineProvider>
