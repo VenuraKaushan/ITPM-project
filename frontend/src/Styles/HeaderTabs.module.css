@@ -1,8 +1,9 @@
+
 .header {
   padding-top: var(--mantine-spacing-sm);
   background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-2), transparent);
-  margin-bottom: rem(120px);
+  /* margin-bottom: rem(120px); */
 }
 
 .mainSection {
@@ -19,9 +20,9 @@
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
   }
 
-  @media (max-width: mantine-breakpoint-xs) {
+  /* @media (max-width: $mantine-breakpoint-xs) {
     display: none;
-  }
+  } */
 }
 
 .userActive {

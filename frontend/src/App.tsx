@@ -5,6 +5,9 @@ import {  MantineProvider } from '@mantine/core';
 import StaffLogin from "./components/AllLogin/StaffLogin";
 import StudentDetails from "./components/Coordinator/AddStudent/StudentTable";
 import { StudentHeader } from "./components/Student/studentHeader";
+import { CoordinatorHeading } from "./components/Coordinator/CoordinatorHeading";
+import { CoodinatorPage } from "./pages/CoodinatorPage";
+
 
 function App() {
   return (
@@ -14,7 +17,11 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/staff-login" element={<StaffLogin />} />
           <Route path ="/studentdetails" element={<StudentDetails/>} />
+          <Route path="/coordinator/dashboard" element={<CoordinatorHeading />} />
           <Route path ="/student/dashboard" element = {<StudentHeader/>}/>
+
+          <Route path ="/coodinatorpage" element = {<CoodinatorPage/>}/>
+          
         </Routes>
       </Router>
     </MantineProvider>

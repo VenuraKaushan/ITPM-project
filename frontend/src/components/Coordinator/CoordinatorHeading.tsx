@@ -23,6 +23,10 @@ import {
 import classes from '../../Styles/HeaderTabs.module.css'
 import logo from "../../assets/testlogo.png"
 import StudentDetails from './AddStudent/StudentTable';
+import Addassessment from './AddAssessment/AddAssessment';
+import AddUserPortal from './AddUserPortal/AddUserPortal';
+import { CoodinatorPage } from '../../pages/CoodinatorPage';
+
 
 const user = {
   name: 'Jane Spoonfighter',
@@ -44,7 +48,7 @@ export function CoordinatorHeading() {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
   const items = tabs.map((tab) => (
-    <Tabs.Tab value={tab} key={tab}>
+    <Tabs.Tab  value={tab} key={tab}>
       {tab}
     </Tabs.Tab>
   ));
@@ -122,6 +126,15 @@ export function CoordinatorHeading() {
           }}
         >
           <Tabs.List>{items}</Tabs.List>
+
+          {/* Here you can add your own Component to here */}
+          <Tabs.Panel value="Add User">
+            <CoodinatorPage/>
+          </Tabs.Panel>
+
+          <Tabs.Panel value='Assignment'>
+            <Addassessment/>
+          </Tabs.Panel>
         </Tabs>
       </Container>
     </div>
