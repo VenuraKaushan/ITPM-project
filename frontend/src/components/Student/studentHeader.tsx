@@ -1,10 +1,7 @@
-import { useState } from 'react';
 import {
     Container,
     Tabs,
-    useMantineTheme,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import classes from '../../Styles/HeaderTabs.module.css';
 import { GroupRegistration } from './GroupRegistration';
 import { PublishResearch } from './publishResearch';

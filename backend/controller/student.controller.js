@@ -62,7 +62,7 @@ const generateGroupID= async () => {
 
   //check if the result array is empty or not, if its empty then return first Group ID
   if (lastGroupDetails.length == 0) {
-    return "Y4_RSR_GRP-001";
+    return "Y4_RSR_GRP-1";
   }
 
   //if array is not null, last get last group Id
