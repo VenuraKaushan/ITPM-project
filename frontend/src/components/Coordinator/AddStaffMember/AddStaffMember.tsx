@@ -13,6 +13,7 @@ import {
   Tooltip,
   Modal,
   ActionIcon,
+  Box,
 } from "@mantine/core";
 import {
   IconSelector,
@@ -23,6 +24,7 @@ import {
   IconUser,
   IconEdit,
   IconTrash,
+  
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
@@ -30,6 +32,7 @@ import { useForm } from "@mantine/form";
 
 
 interface RowData {
+  _id: string;
   name: string;
   email: string;
   phoneNo: string;
@@ -98,6 +101,7 @@ function sortData(
 
 const data = [
   {
+    _id : "",
     name: "Vinnath",
     email: "IT21244766@my.sliit.lk",
     phoneNo: "0711461016",
@@ -105,6 +109,7 @@ const data = [
     role: "string;",
   },
   {
+    _id: "",
     name: "Vinnath",
     email: "IT21244766@my.sliit.lk",
     phoneNo: "0711461016",
@@ -119,6 +124,8 @@ const AddStaffMember = () => {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
+  const[editOpened , setEditOpened] = useState(false);
+  const[deleteOpen , setDeleteOpen] = useState(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
 
@@ -148,6 +155,18 @@ const AddStaffMember = () => {
         <center>
         <Tooltip label="Edit">
           <ActionIcon
+            onClick={() =>{
+              editForm.setValues({
+                _id : row._id,
+                name : row.name,
+                email : row.email,
+                phoneNo : row.phoneNo,
+                specialization : row.specialization,
+                role : row.role,
+
+              });
+              setEditOpened(true);
+            }}
             style={{ marginRight: '30px'}}
             color="blue"
           >
@@ -155,10 +174,17 @@ const AddStaffMember = () => {
           </ActionIcon>  
         </Tooltip>
        
-        <Tooltip label="Trash">
+        <Tooltip label="Delete Member">
 
         <ActionIcon
           color="red"
+          onClick={() => {
+            deleteForm.setValues({
+              _id : row._id,
+              name: row.name,
+            });
+            setDeleteOpen(true);
+          }}
           
         >
           <IconTrash/>
@@ -190,6 +216,30 @@ const AddStaffMember = () => {
           : "Invalid Email",
     },
   });
+
+  //declare edit form
+  const editForm = useForm({
+    validateInputOnChange:true,
+
+    initialValues:{
+      _id : "",
+      name : "",
+      email : "",
+      phoneNo : "",
+      specialization : "",
+      role : "",
+    },
+  });
+
+  //Declare delete form
+   const deleteForm = useForm({
+    validateInputOnChange:true,
+
+    initialValues:{
+      _id : "",
+      name : "",
+    },
+   });
 
   return (
     <div style={{ position : 'absolute' , top:'160px'}}>
@@ -238,13 +288,116 @@ const AddStaffMember = () => {
           <Button
             variant="gradient"
             gradient={{ from: "gray", to: "blue", deg: 0 }}
-           
           >
             Add Member
           </Button>
         </center>
       </Modal>
       </form>
+
+{/* user edit modal */}
+      <form>
+      <Modal opened={editOpened} onClose={()=>{
+        editForm.reset();
+        setEditOpened(false);
+      }} title="Edit Staff Member">
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          rightSection={IconUserr}
+          label="Name"
+          placeholder="Staff Member Name"
+        />
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          rightSection={icon}
+          label="Email"
+          placeholder="Your email"
+          {...form.getInputProps("email")}
+        />
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          label="Mobile No"
+          placeholder="0711461106"
+        />
+
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          label="Specialization"
+          placeholder="Specialization"
+        />
+
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          label="Role"
+          placeholder="role"
+        />
+        
+
+
+        <center  style={{paddingTop:'10px'}}>
+          <Button
+            variant="gradient"
+            gradient={{ from: "gray", to: "blue", deg: 0 }}
+           
+          >
+           Edit Details
+          </Button>
+        </center>
+      </Modal>
+      </form>
+
+      {/* Delete Modal */}
+      <Modal
+        opened={deleteOpen}
+        centered
+        onClose={()=>{
+          deleteForm.reset();
+          setDeleteOpen(false);
+        }}
+        title="Delete Stock"
+      >
+        <Box>
+          <Text size={"sm"} mb={10}>
+            Are you sure want to delete this member?
+          </Text>
+          <form onSubmit={deleteForm.onSubmit((values) =>{
+            
+          })}
+          >
+            <TextInput
+               withAsterisk
+               label="Member ID"
+               required
+               disabled
+               mb={10}
+             />
+
+              <Button
+                color="gray"
+                variant="outline"
+                onClick={() => {
+                  deleteForm.reset();
+                  setDeleteOpen(false);
+                }}
+              >
+                No I don't delete it
+              </Button>
+              <Button
+                color="red"
+                type="submit"
+                
+              >
+                Delete it
+              </Button>
+          </form>
+        </Box>
+
+      </Modal>
 
       <div style={{marginLeft:'-200px', marginRight:'50px'}} >
         <ScrollArea>

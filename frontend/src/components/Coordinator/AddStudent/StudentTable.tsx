@@ -12,6 +12,9 @@ import {
   Button,
   Modal,
   TableTh,
+  Tooltip,
+  ActionIcon,
+  Box,
 } from "@mantine/core";
 import {
   IconSelector,
@@ -20,6 +23,9 @@ import {
   IconSearch,
   IconAt,
   IconUser,
+  IconEdit,
+  IconTrash,
+  
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
@@ -27,6 +33,7 @@ import { useForm } from "@mantine/form";
 import { showNotification } from '@mantine/notifications';
 
 interface RowData {
+  _id : string;
   name: string;
   email: string;
   company: string;
@@ -96,6 +103,7 @@ function sortData(
 
 const data = [
   {
+    _id : "001",
     name: "Athena Weissnat",
     company: "Little - Rippin",
     email: "Elouise.Prohaska@yahoo.com",
@@ -105,6 +113,7 @@ const data = [
     semester: "1st",
   },
   {
+    _id : "002",
     name: "Deangelo Runolfsson",
     company: "Greenfelder - Krajcik",
     email: "Kadin_Trantow87@yahoo.com",
@@ -121,6 +130,8 @@ const StudentDetails = () => {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
+  const[editOpened , setEditOpened] = useState(false);
+  const[deleteOpen , setDeleteOpen] = useState(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
 
@@ -147,6 +158,52 @@ const StudentDetails = () => {
       <Table.Td>{row.specialization}</Table.Td>
       <Table.Td>{row.batch}</Table.Td>
       <Table.Td>{row.semester}</Table.Td>
+      <Table.Td>
+        <center>
+        <Tooltip label="Edit">
+          <ActionIcon
+            onClick={() =>{
+              editForm.setValues({
+                _id : row._id,
+                name : row.name,
+                email : row.email,
+                regNo : row.regNo,
+                specialization : row.specialization,
+                batch : row.batch,
+                semester : row.semester,
+
+
+              });
+              setEditOpened(true);
+            }}
+            style={{ marginRight: '30px'}}
+            color="blue"
+          >
+          <IconEdit/>
+          </ActionIcon>  
+        </Tooltip>
+       
+        <Tooltip label="Delete Member">
+
+        <ActionIcon
+          color="red"
+          onClick={() => {
+            deleteForm.setValues({
+              _id : row._id,
+              name: row.name,
+            });
+            setDeleteOpen(true);
+          }}
+          
+        >
+          <IconTrash/>
+          </ActionIcon>
+        </Tooltip>
+        </center>
+      
+      </Table.Td>
+  
+     
     </Table.Tr>
   ));
 
@@ -161,6 +218,7 @@ const StudentDetails = () => {
       specialization :  "",
       batch : "",
       semester : "",
+     
       
     },validate: {
       email: (value) =>
@@ -171,6 +229,31 @@ const StudentDetails = () => {
           : "Invalid Email",
     },
   });
+
+  //declare edit form
+  const editForm = useForm({
+    validateInputOnChange:true,
+
+    initialValues:{
+      _id : "",
+      name : "",
+      email : "",
+      regNo : "",
+      specialization : "",
+      batch : "",
+      semester : "",
+    },
+  });
+
+   //Declare delete form
+   const deleteForm = useForm({
+    validateInputOnChange:true,
+
+    initialValues:{
+      _id : "",
+      name : "",
+    },
+   });
 
   return (
     <div style={{ position : 'absolute' , top:'160px'}}>
@@ -227,6 +310,114 @@ const StudentDetails = () => {
            
           >
             Add Student
+          </Button>
+        </center>
+      </Modal>
+      </form>
+
+       {/* Delete student Modal */}
+       <Modal
+        opened={deleteOpen}
+        centered
+        onClose={()=>{
+          deleteForm.reset();
+          setDeleteOpen(false);
+        }}
+        title="Delete Student"
+      >
+        <Box>
+          <Text size={"sm"} mb={10}>
+            Are you sure want to delete this member?
+          </Text>
+          <form onSubmit={deleteForm.onSubmit((values) =>{
+            
+          })}
+          >
+            <TextInput
+               withAsterisk
+               label="Member ID"
+               required
+               disabled
+               mb={10}
+             />
+
+              <Button
+                color="gray"
+                variant="outline"
+                onClick={() => {
+                  deleteForm.reset();
+                  setDeleteOpen(false);
+                }}
+              >
+                No I don't delete it
+              </Button>
+              <Button
+                color="red"
+                type="submit"
+                
+              >
+                Delete it
+              </Button>
+          </form>
+        </Box>
+      </Modal>
+
+      {/* student edit modal */}
+      <form>
+      <Modal opened={editOpened} onClose={()=>{
+        editForm.reset();
+        setEditOpened(false);
+      }} title="Edit Student Details">
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          rightSection={IconUserr}
+          label="Name"
+          placeholder="Student Name"
+        />
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          rightSection={icon}
+          label="Email"
+          placeholder="Your email"
+          {...form.getInputProps("email")}
+        />
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          label="Registration No"
+          placeholder="Registration No"
+        />
+
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          label="Specialization"
+          placeholder="Specialization"
+        />
+
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          label="Batch"
+          placeholder="batch"
+        />
+
+        <TextInput
+          mt="md"
+          rightSectionPointerEvents="none"
+          label="Semester"
+          placeholder="Semster"
+        />
+
+        <center  style={{paddingTop:'10px'}}>
+          <Button
+            variant="gradient"
+            gradient={{ from: "gray", to: "blue", deg: 0 }}
+           
+          >
+            Edit Details
           </Button>
         </center>
       </Modal>
@@ -317,6 +508,13 @@ const StudentDetails = () => {
                   onSort={() => setSorting("semester")}
                 >
                   semester
+                </Th>
+                <Th
+                  sorted={sortBy === "semester"}
+                  reversed={reverseSortDirection}
+                  onSort={() => setSorting("semester")}
+                >
+                  Action
                 </Th>
               </Table.Tr>
             </Table.Tbody>
