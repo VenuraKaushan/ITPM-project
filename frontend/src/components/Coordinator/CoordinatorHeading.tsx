@@ -2,31 +2,18 @@ import cx from 'clsx';
 import { useState } from 'react';
 import {
   Container,
-  Avatar,
-  UnstyledButton,
-  Group,
-  Text,
-  Menu,
   Tabs,
-  Burger,
-  rem,
-  Image,
+ 
+
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import {
-  IconLogout,
-  IconSettings,
-  IconSwitchHorizontal,
-  IconChevronDown,
-} from '@tabler/icons-react';
 import classes from '../../Styles/HeaderTabs.module.css'
-import logo from "../../assets/testlogo.png"
-import StudentDetails from './AddStudent/StudentTable';
+
 import Addassessment from './AddAssessment/AddAssessment';
-import AddUserPortal from './AddUserPortal/AddUserPortal';
 import { CoodinatorPage } from '../../pages/CoodinatorPage';
 import { DashboardHeader } from '../dashboardHeader';
+import { ViewMarkSheet } from './ViewMarkSheet/ViewMarkSheet';
 
 
 const user = {
@@ -80,6 +67,10 @@ export function CoordinatorHeading() {
 
           <Tabs.Panel value='Assignment'>
             <Addassessment/>
+          </Tabs.Panel>
+
+          <Tabs.Panel value='View Mark Sheet'>
+            <ViewMarkSheet/>
           </Tabs.Panel>
         </Tabs>
       </Container>
