@@ -5,6 +5,7 @@ import {  MantineProvider } from '@mantine/core';
 import StaffLogin from "./components/AllLogin/StaffLogin";
 import StudentDetails from "./components/Coordinator/AddStudent/StudentTable";
 import { StudentHeader } from "./components/Student/studentHeader";
+import { GroupRegistration } from "./components/Student/GroupRegistration/index.tsx";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/staff-login" element={<StaffLogin />} />
           <Route path ="/studentdetails" element={<StudentDetails/>} />
           <Route path ="/student/dashboard" element = {<StudentHeader/>}/>
+          <Route path ="/group/register" element = {<GroupRegistration/>}/>
         </Routes>
       </Router>
     </MantineProvider>
