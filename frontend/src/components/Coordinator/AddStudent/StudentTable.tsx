@@ -68,38 +68,81 @@ function sortData(
   if (!sortBy) {
     return filterData(data, payload.search);
   }
-
-  return filterData(
-    [...data].sort((a, b) => {
-      if (payload.reversed) {
-        return b[sortBy].localeCompare(a[sortBy]);
-      }
-
-      return a[sortBy].localeCompare(b[sortBy]);
-    }),
-    payload.search
-  );
-}
-
-const data = [
-  {
-    name: 'Athena Weissnat',
-    company: 'Little - Rippin',
-    email: 'Elouise.Prohaska@yahoo.com',
-    regNo: 'IT21244766',
-    specialization: 'IT',
-    batch: 'June Batch',
-    semester: '1st'
-  },
-  {
-    name: 'Deangelo Runolfsson',
-    company: 'Greenfelder - Krajcik',
-    email: 'Kadin_Trantow87@yahoo.com',
-    regNo: 'IT21244766',
-    specialization: 'IT',
-    batch: 'June Batch',
-    semester: '1st'
-  },
+  
+  interface ThProps {
+    children: React.ReactNode;
+    reversed: boolean;
+    sorted: boolean;
+    onSort(): void;
+  }
+  
+  function Th({ children, reversed, sorted, onSort }: ThProps) {
+    const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+    return (
+      <Table.Th className={classes.th}>
+        <UnstyledButton onClick={onSort} className={classes.control}>
+          <Group justify="space-between">
+            <Text fw={500} fz="sm">
+              {children}
+            </Text>
+            <Center className={classes.icon}>
+              <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            </Center>
+          </Group>
+        </UnstyledButton>
+      </Table.Th>
+    );
+  }
+  
+  function filterData(data: RowData[], search: string) {
+    const query = search.toLowerCase().trim();
+    return data.filter((item) =>
+      keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
+    );
+  }
+  
+  function sortData(
+    data: RowData[],
+    payload: { sortBy: keyof RowData | null; reversed: boolean; search: string }
+  ) {
+    const { sortBy } = payload;
+  
+    if (!sortBy) {
+      return filterData(data, payload.search);
+    }
+  
+    return filterData(
+      [...data].sort((a, b) => {
+        if (payload.reversed) {
+          return b[sortBy].localeCompare(a[sortBy]);
+        }
+  
+        return a[sortBy].localeCompare(b[sortBy]);
+      }),
+      payload.search
+    );
+  }
+  
+  const 
+  data = [
+    {
+      name: 'Athena Weissnat',
+      company: 'Little - Rippin',
+      email: 'Elouise.Prohaska@yahoo.com',
+      regNo : 'IT21244766',
+      specialization : 'IT',
+      batch : 'June Batch',
+      semester : '1st'
+    },
+    {
+      name: 'Deangelo Runolfsson',
+      company: 'Greenfelder - Krajcik',
+      email: 'Kadin_Trantow87@yahoo.com',
+      regNo : 'IT21244766',
+      specialization : 'IT',
+      batch : 'June Batch',
+      semester : '1st'
+    },
 ];
 
 
