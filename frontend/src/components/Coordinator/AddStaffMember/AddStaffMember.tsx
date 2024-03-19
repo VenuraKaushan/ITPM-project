@@ -10,7 +10,9 @@ import {
   rem,
   keys,
   Button,
+  Tooltip,
   Modal,
+  ActionIcon,
 } from "@mantine/core";
 import {
   IconSelector,
@@ -19,6 +21,8 @@ import {
   IconSearch,
   IconAt,
   IconUser,
+  IconEdit,
+  IconTrash,
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
@@ -140,6 +144,29 @@ const AddStaffMember = () => {
       <Table.Td>{row.phoneNo}</Table.Td>
       <Table.Td>{row.specialization}</Table.Td>
       <Table.Td>{row.role}</Table.Td>
+      <Table.Td>
+        <center>
+        <Tooltip label="Edit">
+          <ActionIcon
+            style={{ marginRight: '30px'}}
+            color="blue"
+          >
+          <IconEdit/>
+          </ActionIcon>  
+        </Tooltip>
+       
+        <Tooltip label="Trash">
+
+        <ActionIcon
+          color="red"
+          
+        >
+          <IconTrash/>
+          </ActionIcon>
+        </Tooltip>
+        </center>
+      
+      </Table.Td>
     </Table.Tr>
   ));
 
@@ -204,6 +231,7 @@ const AddStaffMember = () => {
           label="Role"
           placeholder="role"
         />
+        
 
 
         <center  style={{paddingTop:'10px'}}>
@@ -240,12 +268,12 @@ const AddStaffMember = () => {
             <Button
               onClick={open}
               style={{
-                width: "130px",
+                width: "160px",
                 display: "inline-block",
                 marginLeft: "50px",
               }}
             >
-              Add Student
+              Add Staff Member
             </Button>
           </div>
 
@@ -296,6 +324,13 @@ const AddStaffMember = () => {
                   onSort={() => setSorting("role")}
                 >
                   Role
+                </Th>
+
+                <Th  sorted={sortBy === "role"}
+                  reversed={reverseSortDirection}
+                  onSort={() => setSorting("role")} >
+                  Action
+
                 </Th>
                 
               </Table.Tr>
