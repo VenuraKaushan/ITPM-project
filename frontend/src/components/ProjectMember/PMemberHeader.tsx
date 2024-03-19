@@ -25,6 +25,8 @@ import classes from "../../Styles/HeaderTabs.module.css";
 import logo from "../../assets/testlogo.png";
 import ResearchManagement from "./ResearchManagement";
 import MarkingRubrics from "./MarkingRubrics";
+import { DashboardHeader } from "../dashboardHeader";
+import { PMPage } from "../../pages/PMemberPage";
 
 const user = {
   name: "Jane Spoonfighter",
@@ -52,10 +54,10 @@ export function PMemberHeader() {
 
   return (
     <>
-    
+      <DashboardHeader />
       <Container size="md">
         <Tabs
-          defaultValue="Home"
+          defaultValue="Research Management"
           variant="outline"
           visibleFrom="sm"
           classNames={{
@@ -64,10 +66,10 @@ export function PMemberHeader() {
             tab: classes.tab,
           }}
         >
-          <Tabs.List>
+          <Tabs.List grow>
             {items}
             <Tabs.Panel value="Research Management">
-              {<ResearchManagement />}
+              {<PMPage />}
             </Tabs.Panel>
             <Tabs.Panel value="Marking Rubrics Section">
               {<MarkingRubrics />}

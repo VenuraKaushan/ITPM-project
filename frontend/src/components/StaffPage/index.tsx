@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DateInput } from "@mantine/dates";
-import { Input, Button, } from "@mantine/core";
-
+import { Input, Button } from "@mantine/core";
+import "../../Styles/ResearchTable.css";
 import { Select } from "@mantine/core";
 
 const StaffPage = () => {
@@ -12,7 +12,8 @@ const StaffPage = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        width: "100%",
+        height: "80vh",
       }}
     >
       <div
@@ -27,7 +28,6 @@ const StaffPage = () => {
           label="Select the Specialization"
           placeholder="Pick Specialization"
           data={["IT", "DS", "CSNE", "SE"]}
-         
         />
         <p>Select Date</p>
         <input
@@ -47,8 +47,8 @@ const StaffPage = () => {
           }}
         />
 
-          <br></br>
-          <br></br>
+        <br></br>
+        <br></br>
         <Input.Wrapper
           label="Enter Time Duration"
           error="Input error"
