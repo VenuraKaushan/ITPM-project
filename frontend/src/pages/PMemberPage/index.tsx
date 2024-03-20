@@ -12,7 +12,7 @@ export function PMPage() {
       defaultValue="ResearchTable"
       style={{ paddingTop: "20px" }}
     >
-      <Tabs.List grow>
+      <Tabs.List >
         <Tabs.Tab
           value="TimeManagement"
           leftSection={<IconUser style={iconStyle} />}

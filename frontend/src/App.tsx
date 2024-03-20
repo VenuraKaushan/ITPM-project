@@ -10,6 +10,7 @@ import { CoodinatorPage } from "./pages/CoodinatorPage";
 import { GroupRegistration } from "./components/Student/GroupRegistration/index.tsx";
 import PMemberHeader from "./components/ProjectMember/PMemberHeader";
 import StaffPage from "./components/StaffPage";
+import { ViewMarkSheetPage } from "./pages/CoodinatorPage/viewMarkSheetPage.tsx";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path ="/student/dashboard" element = {<StudentHeader/>}/>
 
           <Route path ="/coodinatorpage" element = {<CoodinatorPage/>}/>
+          <Route path ="/ViewMarkSheetPage" element = {<ViewMarkSheetPage/>}/>
           
           <Route path ="/group/register" element = {<GroupRegistration/>}/>
           <Route path="/pMember/dashboard" element = {<PMemberHeader/>}/>
