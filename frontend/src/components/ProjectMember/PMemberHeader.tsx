@@ -26,7 +26,8 @@ import logo from "../../assets/testlogo.png";
 import ResearchManagement from "./ResearchManagement";
 import MarkingRubrics from "./MarkingRubrics";
 import { DashboardHeader } from "../dashboardHeader";
-import { PMPage } from "../../pages/PMemberPage";
+import { PMRersearchDash } from "../../pages/PMResearchManagementDash";
+
 
 const user = {
   name: "Jane Spoonfighter",
@@ -38,7 +39,7 @@ const user = {
 const tabs = [
   "Research Management",
   "Marking Rubrics Section",
-  "Assessment Management  ",
+  "Assessment Management",
 ];
 
 export function PMemberHeader() {
@@ -55,7 +56,8 @@ export function PMemberHeader() {
   return (
     <>
       <DashboardHeader />
-      <Container size="md">
+      
+      <Container>
         <Tabs
           defaultValue="Research Management"
           variant="outline"
@@ -69,10 +71,10 @@ export function PMemberHeader() {
           <Tabs.List grow>
             {items}
             <Tabs.Panel value="Research Management">
-              {<PMPage />}
+              < PMRersearchDash/>
             </Tabs.Panel>
             <Tabs.Panel value="Marking Rubrics Section">
-              {<MarkingRubrics />}
+              <MarkingRubrics />
             </Tabs.Panel>
           </Tabs.List>
         </Tabs>
