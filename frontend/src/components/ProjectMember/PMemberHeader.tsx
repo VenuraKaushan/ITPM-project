@@ -24,6 +24,10 @@ import {
 import classes from "../../Styles/HeaderTabs.module.css";
 import logo from "../../assets/testlogo.png";
 import ResearchManagement from "./ResearchManagement";
+import MarkingRubrics from "./MarkingRubrics";
+import { DashboardHeader } from "../dashboardHeader";
+import { PMRersearchDash } from "../../pages/PMResearchManagementDash";
+
 
 const user = {
   name: "Jane Spoonfighter",
@@ -35,7 +39,7 @@ const user = {
 const tabs = [
   "Research Management",
   "Marking Rubrics Section",
-  "Assessment Management  ",
+  "Assessment Management",
 ];
 
 export function PMemberHeader() {
@@ -50,83 +54,12 @@ export function PMemberHeader() {
   ));
 
   return (
-    <div className={classes.header}>
-      <Container className={classes.mainSection} size="lg">
-        <Group justify="space-between">
-          <Image width={200} height={50} src={logo} mt={5} />
-
-          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-
-          <Menu
-            width={260}
-            position="bottom-end"
-            transitionProps={{ transition: "pop-top-right" }}
-            onClose={() => setUserMenuOpened(false)}
-            onOpen={() => setUserMenuOpened(true)}
-            withinPortal
-          >
-            <Menu.Target>
-              <UnstyledButton
-                className={cx(classes.user, {
-                  [classes.userActive]: userMenuOpened,
-                })}
-              >
-                <Group gap={7}>
-                  <Avatar
-                    src={user.image}
-                    alt={user.name}
-                    radius="xl"
-                    size={20}
-                  />
-                  <Text fw={500} size="sm" lh={1} mr={3}>
-                    {user.name}
-                  </Text>
-                  <IconChevronDown
-                    style={{ width: rem(12), height: rem(12) }}
-                    stroke={1.5}
-                  />
-                </Group>
-              </UnstyledButton>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>Settings</Menu.Label>
-              <Menu.Item
-                leftSection={
-                  <IconSettings
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Account settings
-              </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconSwitchHorizontal
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Change account
-              </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconLogout
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Logout
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </Group>
-      </Container>
-      <Container size="md">
+    <>
+      <DashboardHeader />
+      
+      <Container>
         <Tabs
-          defaultValue="Home"
+          defaultValue="Research Management"
           variant="outline"
           visibleFrom="sm"
           classNames={{
@@ -135,15 +68,18 @@ export function PMemberHeader() {
             tab: classes.tab,
           }}
         >
-          <Tabs.List>
+          <Tabs.List grow>
             {items}
             <Tabs.Panel value="Research Management">
-              {<ResearchManagement />}
+              < PMRersearchDash/>
+            </Tabs.Panel>
+            <Tabs.Panel value="Marking Rubrics Section">
+              <MarkingRubrics />
             </Tabs.Panel>
           </Tabs.List>
         </Tabs>
       </Container>
-    </div>
+    </>
   );
 }
 
