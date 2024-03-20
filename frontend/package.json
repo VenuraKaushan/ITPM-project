@@ -12,6 +12,7 @@
   "dependencies": {
     "@mantine/core": "^7.6.1",
     "@mantine/dates": "^7.6.2",
+    "@mantine/dropzone": "^7.6.2",
     "@mantine/form": "^7.6.2",
     "@mantine/notifications": "^7.6.2",
     "@tabler/icons-react": "^3.0.1",
