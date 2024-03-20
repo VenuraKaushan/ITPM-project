@@ -34,6 +34,8 @@ export const Assessment = () => {
             <Table.Td>
                 <Center>
                     <Button
+                        variant="gradient"
+                        gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
                         onClick={open}
                     >
                         View assessment

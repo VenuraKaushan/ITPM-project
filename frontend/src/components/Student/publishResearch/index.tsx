@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 
 
 const elements = [
@@ -33,9 +33,11 @@ export function PublishResearch() {
             <Table.Td>{element.category}</Table.Td>
             <Table.Td>{element.members}</Table.Td>
             <Table.Td>
-            <Center>
+                <Center>
                     <Button
                         onClick={open}
+                        variant="gradient"
+                        gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
                     >
                         Publish
                     </Button>
@@ -57,7 +59,7 @@ export function PublishResearch() {
                 </Text>
             </Center>
             <Modal opened={opened} onClose={close} title="Publish Research" size="70%">
-                <Text>
+                <Text fw={500}>
                     Y4_RSR_GRP-1
                 </Text>
 
@@ -185,7 +187,7 @@ export function PublishResearch() {
                 <center style={{ paddingTop: '10px' }}>
                     <Button
                         variant="gradient"
-                        gradient={{ from: "gray", to: "blue", deg: 0 }}
+                        gradient={{ from: 'red', to: 'violet', deg: 90 }}
 
                     >
                         Publish Research
