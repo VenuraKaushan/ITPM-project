@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import {
   Table,
@@ -10,18 +9,16 @@ import {
   TextInput,
   rem,
   keys,
-  Button,
 } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react';
-import classes from '../../../Styles/TableSort.module.css';
-import { ViewMarkSheetPage } from '../../../pages/CoodinatorPage/viewMarkSheetPage';
-import { Navigate, useNavigate } from 'react-router-dom';
+import classes from '../../../Styles/TableSort.module.css'
+import { Select } from '@mantine/core';
 
 interface RowData {
-    _id :string;
+  _id : string;
   groupNo: string;
-  topic: string;
-  
+  title: string;
+  regNo: string;
 }
 
 interface ThProps {
@@ -80,25 +77,24 @@ function sortData(
 
 const data = [
   {
-    _id :'string',
-    groupNo: "string",
-    topic: "string",
+    _id : "01",
+    groupNo: "Grp001",
+    title: "Social Media",
+    regNo: "IT21244766",
   },
   {
-    _id :'string',
-    groupNo: "string",
-    topic: "string",
+    _id : "02",
+    groupNo: "Grp002",
+    title: "Social Media",
+    regNo: "IT21244766", 
   },
-  
-
 ];
 
-export function ViewMarkSheet() {
+export function AssignProjectMember() {
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
-  const navigate = useNavigate();
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -117,26 +113,29 @@ export function ViewMarkSheet() {
     <Table.Tr key={row._id}>
       <Table.Td>{row._id}</Table.Td>
       <Table.Td>{row.groupNo}</Table.Td>
-      <Table.Td>{row.topic}</Table.Td>
-      <center>
-      <Table.Td><Button onClick={() => navigate('/ViewMarkSheetPage')} variant="filled" color="teal" size="xs" radius="xs">View</Button></Table.Td>
-      </center>
-      
+      <Table.Td>{row.title}</Table.Td>
+      <Table.Td>{row.regNo}</Table.Td>
+      <Table.Td>
+      <Select
+      w={'200px'}
+      placeholder="Select Project Member"
+      data={['Project Member', 'Project Coordinator', 'Examiner', 'Supervisor','Co-Supervisor']}
+    />
+      </Table.Td>
     </Table.Tr>
   ));
 
   return (
     <ScrollArea>
       <TextInput
-      style={{paddingTop:'20px'}}
+        style={{paddingTop:'20px'}}
         placeholder="Search by any field"
         mb="md"
         leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
         value={search}
         onChange={handleSearchChange}
-       
       />
-      <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed" withTableBorder withColumnBorders>
+      <Table horizontalSpacing="lg" verticalSpacing="lg" miw={900} layout="auto">
         <Table.Tbody>
           <Table.Tr>
             <Th
@@ -154,16 +153,23 @@ export function ViewMarkSheet() {
               Group No
             </Th>
             <Th
-              sorted={sortBy === 'topic'}
+              sorted={sortBy === 'title'}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('topic')}
+              onSort={() => setSorting('title')}
             >
-              Topic
+              Title
             </Th>
             <Th
-              sorted={sortBy === 'topic'}
+              sorted={sortBy === 'regNo'}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('topic')}
+              onSort={() => setSorting('regNo')}
+            >
+              Student Number
+            </Th>
+            <Th
+              sorted={sortBy === 'regNo'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('regNo')}
             >
               Action
             </Th>

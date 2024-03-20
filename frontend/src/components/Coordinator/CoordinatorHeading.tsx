@@ -1,4 +1,3 @@
-import cx from 'clsx';
 import { useState } from 'react';
 import {
   Container,
@@ -14,6 +13,8 @@ import Addassessment from './AddAssessment/AddAssessment';
 import { CoodinatorPage } from '../../pages/CoodinatorPage';
 import { DashboardHeader } from '../dashboardHeader';
 import { ViewMarkSheet } from './ViewMarkSheet/ViewMarkSheet';
+import { AssignProjectMember } from './AssignProjectMember/AssignProjectMember';
+import { ResearchPapers } from './ResearchPapers/ResearchPapers';
 
 
 const user = {
@@ -72,7 +73,17 @@ export function CoordinatorHeading() {
           <Tabs.Panel value='View Mark Sheet'>
             <ViewMarkSheet/>
           </Tabs.Panel>
+
+          <Tabs.Panel value='Assign Project Member'>
+            <AssignProjectMember/>
+          </Tabs.Panel>
+
+          <Tabs.Panel value='Research Papers'>
+            <ResearchPapers/>
+          </Tabs.Panel>
         </Tabs>
+
+        
       </Container>
       </>
     
