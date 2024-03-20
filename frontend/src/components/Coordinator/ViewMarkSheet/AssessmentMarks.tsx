@@ -25,22 +25,22 @@ import {
   IconUser,
   IconEdit,
   IconTrash,
-  
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
-import { showNotification } from '@mantine/notifications';
+import { showNotification } from "@mantine/notifications";
+import { CoordinatorHeading } from "../CoordinatorHeading";
 
 interface RowData {
-  _id : string;
-  name: string;
-  email: string;
-  company: string;
+  _id: string;
+  groupNo: string;
+  studentName: string;
   regNo: string;
-  specialization: string;
-  batch: string;
-  semester: string;
+  proposal: string;
+  progress1: string;
+  progress2: string;
+  final: string;
 }
 
 interface ThProps {
@@ -103,35 +103,35 @@ function sortData(
 
 const data = [
   {
-    _id : "001",
-    name: "Athena Weissnat",
-    company: "Little - Rippin",
-    email: "Elouise.Prohaska@yahoo.com",
-    regNo: "IT21244766",
-    specialization: "IT",
-    batch: "June Batch",
-    semester: "1st",
+    _id: "string",
+    groupNo: "string",
+    studentName: "string",
+    regNo: "string",
+    proposal: "string",
+    progress1: "string",
+    progress2: "string",
+    final: "string",
   },
   {
-    _id : "002",
-    name: "Deangelo Runolfsson",
-    company: "Greenfelder - Krajcik",
-    email: "Kadin_Trantow87@yahoo.com",
-    regNo: "IT21244766",
-    specialization: "IT",
-    batch: "June Batch",
-    semester: "1st",
+    _id: "string",
+    groupNo: "string",
+    studentName: "string",
+    regNo: "string",
+    proposal: "string",
+    progress1: "string",
+    progress2: "string",
+    final: "string",
   },
 ];
 
-const StudentDetails = () => {
+const AssessmentMark = () => {
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
-  const[editOpened , setEditOpened] = useState(false);
-  const[deleteOpen , setDeleteOpen] = useState(false);
+  const [editOpened, setEditOpened] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
 
@@ -151,59 +151,43 @@ const StudentDetails = () => {
   };
 
   const rows = sortedData.map((row) => (
-    <Table.Tr key={row.name}>
-      <Table.Td>{row.name}</Table.Td>
-      <Table.Td>{row.email}</Table.Td>
+    <Table.Tr key={row._id}>
+       <Table.Td>{row._id}</Table.Td>
+      <Table.Td>{row.groupNo}</Table.Td>
+      <Table.Td>{row.studentName}</Table.Td>
       <Table.Td>{row.regNo}</Table.Td>
-      <Table.Td>{row.specialization}</Table.Td>
-      <Table.Td>{row.batch}</Table.Td>
-      <Table.Td>{row.semester}</Table.Td>
+      <Table.Td>{row.proposal}</Table.Td>
+      <Table.Td>{row.progress1}</Table.Td>
+      <Table.Td>{row.progress2}</Table.Td>
+      <Table.Td>{row.final}</Table.Td>
+
       <Table.Td>
         <center>
-        <Tooltip label="Edit">
-          <ActionIcon
-            onClick={() =>{
-              editForm.setValues({
-                _id : row._id,
-                name : row.name,
-                email : row.email,
-                regNo : row.regNo,
-                specialization : row.specialization,
-                batch : row.batch,
-                semester : row.semester,
+          <Tooltip label="Edit">
+            <ActionIcon
+              onClick={() => {
+                editForm.setValues({
+                  _id: row._id,
+                  groupNo: row.groupNo,
+                  studentName: row.studentName,
+                  regNo: row.regNo,
+                  proposal: row.proposal,
+                  progress1: row.progress1,
+                  progress2: row.progress2,
+                  final : row.final,
+                });
+                setEditOpened(true);
+              }}
+              style={{ marginRight: "30px" }}
+              color="blue"
+            >
+              <IconEdit />
+            </ActionIcon>
+          </Tooltip>
 
-
-              });
-              setEditOpened(true);
-            }}
-            style={{ marginRight: '30px'}}
-            color="blue"
-          >
-          <IconEdit/>
-          </ActionIcon>  
-        </Tooltip>
-       
-        <Tooltip label="Delete Member">
-
-        <ActionIcon
-          color="red"
-          onClick={() => {
-            deleteForm.setValues({
-              _id : row._id,
-              name: row.name,
-            });
-            setDeleteOpen(true);
-          }}
           
-        >
-          <IconTrash/>
-          </ActionIcon>
-        </Tooltip>
         </center>
-      
       </Table.Td>
-  
-     
     </Table.Tr>
   ));
 
@@ -212,49 +196,38 @@ const StudentDetails = () => {
     validateInputOnChange: true,
 
     initialValues: {
-      name: "",
-      email: "",
-      regNo: "",
-      specialization :  "",
-      batch : "",
-      semester : "",      
-    },validate: {
-      email: (value) =>
-        /\S+@\S+\.\S+/.test(
-          value
-        )
-          ? null
-          : "Invalid Email",
+        _id: "",
+        groupNo: "",
+        studentName: "",
+        regNo: "",
+        proposal: "",
+        progress1: "",
+        progress2: "",
+        final: "",
     },
+   
   });
 
   //declare edit form
   const editForm = useForm({
-    validateInputOnChange:true,
+    validateInputOnChange: true,
 
-    initialValues:{
-      _id : "",
-      name : "",
-      email : "",
-      regNo : "",
-      specialization : "",
-      batch : "",
-      semester : "",
+    initialValues: {
+        _id: "",
+        groupNo: "",
+        studentName: "",
+        regNo: "",
+        proposal: "",
+        progress1: "",
+        progress2: "",
+        final: "",
     },
   });
 
-   //Declare delete form
-   const deleteForm = useForm({
-    validateInputOnChange:true,
-
-    initialValues:{
-      _id : "",
-      name : "",
-    },
-   });
-
   return (
-    <div style={{ position : 'absolute' , top:'160px'}}>
+    <>
+    
+    <div style={{ position: "absolute", top: "160px" }}>
       {/* Add User Modal */}
       <form>
         <Modal opened={opened} onClose={close} title="Authentication">
@@ -301,11 +274,10 @@ const StudentDetails = () => {
             placeholder="Semster"
           />
 
-          <center style={{ paddingTop: '10px' }}>
+          <center style={{ paddingTop: "10px" }}>
             <Button
               variant="gradient"
               gradient={{ from: "gray", to: "blue", deg: 0 }}
-
             >
               Add Student
             </Button>
@@ -313,116 +285,73 @@ const StudentDetails = () => {
         </Modal>
       </form>
 
-      <div style={{ marginLeft: '-200px', marginRight: '50px' }} >
-       {/* Delete student Modal */}
-       <Modal
-        opened={deleteOpen}
-        centered
-        onClose={()=>{
-          deleteForm.reset();
-          setDeleteOpen(false);
-        }}
-        title="Delete Student"
-      >
-        <Box>
-          <Text size={"sm"} mb={10}>
-            Are you sure want to delete this member?
-          </Text>
-          <form onSubmit={deleteForm.onSubmit((values) =>{
-            
-          })}
-          >
-            <TextInput
-               withAsterisk
-               label="Member ID"
-               required
-               disabled
-               mb={10}
-             />
-
-              <Button
-                color="gray"
-                variant="outline"
-                onClick={() => {
-                  deleteForm.reset();
-                  setDeleteOpen(false);
-                }}
-              >
-                No I don't delete it
-              </Button>
-              <Button
-                color="red"
-                type="submit"
-                
-              >
-                Delete it
-              </Button>
-          </form>
-        </Box>
-      </Modal>
-
+      {/* Delete student Modal */}
+      
       {/* student edit modal */}
       <form>
-      <Modal opened={editOpened} onClose={()=>{
-        editForm.reset();
-        setEditOpened(false);
-      }} title="Edit Student Details">
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          rightSection={IconUserr}
-          label="Name"
-          placeholder="Student Name"
-        />
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          rightSection={icon}
-          label="Email"
-          placeholder="Your email"
-          {...form.getInputProps("email")}
-        />
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Registration No"
-          placeholder="Registration No"
-        />
+        <Modal
+          opened={editOpened}
+          onClose={() => {
+            editForm.reset();
+            setEditOpened(false);
+          }}
+          title="Edit Student Details"
+        >
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            rightSection={IconUserr}
+            label="Name"
+            placeholder="Student Name"
+          />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            rightSection={icon}
+            label="Email"
+            placeholder="Your email"
+            {...form.getInputProps("email")}
+          />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Registration No"
+            placeholder="Registration No"
+          />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Specialization"
-          placeholder="Specialization"
-        />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Specialization"
+            placeholder="Specialization"
+          />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Batch"
-          placeholder="batch"
-        />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Batch"
+            placeholder="batch"
+          />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Semester"
-          placeholder="Semster"
-        />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Semester"
+            placeholder="Semster"
+          />
 
-        <center  style={{paddingTop:'10px'}}>
-          <Button
-            variant="gradient"
-            gradient={{ from: "gray", to: "blue", deg: 0 }}
-           
-          >
-            Edit Details
-          </Button>
-        </center>
-      </Modal>
+          <center style={{ paddingTop: "10px" }}>
+            <Button
+              variant="gradient"
+              gradient={{ from: "gray", to: "blue", deg: 0 }}
+            >
+              Edit Details
+            </Button>
+          </center>
+        </Modal>
       </form>
 
-      <div style={{marginLeft:'-50px', marginRight:'50px'}} >
+      <div style={{ marginLeft: "-200px", marginRight: "50px" }}>
         <ScrollArea>
           <div style={{ marginBottom: "50px" }}>
             <TextInput
@@ -454,8 +383,6 @@ const StudentDetails = () => {
           </div>
 
           <Table
-
-
             highlightOnHover
             withTableBorder
             withColumnBorders
@@ -466,52 +393,76 @@ const StudentDetails = () => {
           >
             <Table.Tbody>
               <Table.Tr>
+
+              _id: "",
+        groupNo: "",
+        studentName: "",
+        regNo: "",
+        proposal: "",
+        progress1: "",
+        progress2: "",
+        final: "",
+
                 <Th
-                  sorted={sortBy === "name"}
+                  sorted={sortBy === "_id"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("name")}
+                  onSort={() => setSorting("_id")}
                 >
-                  Name
+                  ID
                 </Th>
                 <Th
-                  sorted={sortBy === "email"}
+                  sorted={sortBy === "groupNo"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("email")}
+                  onSort={() => setSorting("groupNo")}
                 >
-                  Email
+                  Group No
+                </Th>
+                <Th
+                  sorted={sortBy === "studentName"}
+                  reversed={reverseSortDirection}
+                  onSort={() => setSorting("studentName")}
+                >
+                  Student Name
                 </Th>
                 <Th
                   sorted={sortBy === "regNo"}
                   reversed={reverseSortDirection}
                   onSort={() => setSorting("regNo")}
                 >
-                  Registration No
+                  Registration number
                 </Th>
                 <Th
-                  sorted={sortBy === "specialization"}
+                  sorted={sortBy === "proposal"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("specialization")}
+                  onSort={() => setSorting("proposal")}
                 >
-                  specialization
+                  Proposal
                 </Th>
                 <Th
-                  sorted={sortBy === "batch"}
+                  sorted={sortBy === "progress1"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("batch")}
+                  onSort={() => setSorting("progress1")}
                 >
-                  batch
+                  Progress 1
                 </Th>
                 <Th
-                  sorted={sortBy === "semester"}
+                  sorted={sortBy === "progress2"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("semester")}
+                  onSort={() => setSorting("progress2")}
                 >
-                  semester
+                  Progress 2
                 </Th>
                 <Th
-                  sorted={sortBy === "semester"}
+                  sorted={sortBy === "final"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("semester")}
+                  onSort={() => setSorting("final")}
+                >
+                  Final
+                </Th>
+                <Th
+                  sorted={sortBy === "final"}
+                  reversed={reverseSortDirection}
+                  onSort={() => setSorting("final")}
                 >
                   Action
                 </Th>
@@ -534,8 +485,8 @@ const StudentDetails = () => {
         </ScrollArea>
       </div>
     </div>
-  </div>
+    </>
   );
 };
 
-export default StudentDetails;
+export default AssessmentMark;

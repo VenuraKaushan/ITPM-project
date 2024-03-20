@@ -12,7 +12,7 @@ export function PMRersearchDash() {
       defaultValue="Time Management"
       style={{ paddingTop: "20px" }}
     >
-      <Tabs.List grow>
+      <Tabs.List >
         <Tabs.Tab
           value="Time Management"
           leftSection={<IconUser style={iconStyle} />}
