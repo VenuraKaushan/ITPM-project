@@ -3,20 +3,16 @@ import {
     Tabs,
 } from '@mantine/core';
 import classes from '../../Styles/HeaderTabs.module.css';
-import { GroupRegistration } from './GroupRegistration';
-import { PublishResearch } from './publishResearch';
-import { Assessment } from './AssessmentUpload';
 import { DashboardHeader } from '../dashboardHeader';
-import { StudentSemesterMarks } from '../../pages/StudentAssessmentDash';
+import { ManageMarks } from './addMarks/addMarking';
+import { CompletedMarks } from './completedMarks/completedMarks';
 
 const tabs = [
-    'Group Registration',
-    'Publish Research',
-    'Assessment',
-    'Semester marks',
+    'Marking',
+    'Completed Mark',
 ];
 
-export function StudentHeader() {
+export function ExaminerHeader() {
 
     const items = tabs.map((tab) => (
         <Tabs.Tab value={tab} key={tab}>
@@ -30,7 +26,7 @@ export function StudentHeader() {
 
             <Container>
                 <Tabs
-                    defaultValue="Group Registration"
+                    defaultValue="Marking"
                     variant="outline"
                     visibleFrom="sm"
                     classNames={{
@@ -42,18 +38,14 @@ export function StudentHeader() {
                     <Tabs.List grow>{items}</Tabs.List>
 
                     {/* Here you can add your own Component to here */}
-                    <Tabs.Panel value="Group Registration">
-                        <GroupRegistration />
+                    <Tabs.Panel value="Marking">
+                        <ManageMarks />
                     </Tabs.Panel>
-                    <Tabs.Panel value="Publish Research">
-                        <PublishResearch />
+
+                    <Tabs.Panel value="Completed Mark">
+                        <CompletedMarks />
                     </Tabs.Panel>
-                    <Tabs.Panel value="Assessment">
-                        <Assessment />
-                    </Tabs.Panel>
-                    <Tabs.Panel value="Semester marks">
-                        <StudentSemesterMarks />
-                    </Tabs.Panel>
+
                 </Tabs>
             </Container>
         </>

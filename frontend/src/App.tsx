@@ -12,6 +12,7 @@ import PMemberHeader from "./components/ProjectMember/PMemberHeader";
 import StaffPage from "./components/StaffPage";
 import { ViewMarkSheetPage } from "./pages/CoodinatorPage/viewMarkSheetPage.tsx";
 
+import { ExaminerHeader } from "./components/Examiner/examinerHeader.tsx";
 
 function App() {
   return (
@@ -23,13 +24,14 @@ function App() {
           <Route path ="/studentdetails" element={<StudentDetails/>} />
           <Route path="/coordinator/dashboard" element={<CoordinatorHeading />} />
           <Route path ="/student/dashboard" element = {<StudentHeader/>}/>
-
           <Route path ="/coodinatorpage" element = {<CoodinatorPage/>}/>
           <Route path ="/ViewMarkSheetPage" element = {<ViewMarkSheetPage/>}/>
           
           <Route path ="/group/register" element = {<GroupRegistration/>}/>
           <Route path="/pMember/dashboard" element = {<PMemberHeader/>}/>
           <Route path="/pMember/selection" element = {<StaffPage/>}/>
+          <Route path="/examiner/dashboard" element = {<ExaminerHeader/>}/>
+
         </Routes>
       </Router>
     </MantineProvider>

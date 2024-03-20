@@ -9,7 +9,6 @@ const usersSchema = new mongoose.Schema(
         },
         regNo:{
             type : String,
-            required : true,
             default : "NaN"
         },
         name : {
@@ -28,6 +27,7 @@ const usersSchema = new mongoose.Schema(
         },
         specialization :{
             type : String,
+            default : "all",
             required : true,
         },
         role : {

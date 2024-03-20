@@ -12,11 +12,14 @@ import {
 import { useForm } from "@mantine/form";
 import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons-react';
-
+import { useNavigate } from 'react-router-dom';
 import classes from '../../Styles/login.module.css'
 import StaffAPI from '../../API/staffAPI/staff.api';
 
 const StaffLogin = () => {
+
+  const navigate = useNavigate();
+
 
   const handleLogin = (values: {
     email: string;
@@ -26,13 +29,14 @@ const StaffLogin = () => {
       .then((response: any) => {
 
         // save user details in the local storage
-        localStorage.setItem("user-coordinator-session", JSON.stringify(response.data));
+        localStorage.setItem("user-staff-session", JSON.stringify(response.data));
 
         console.log(response.data.role)
-        //methanta enwa response ekak userDetails kiyla array ekka eke example ekak widiyata 
-        //if(response.data.role === "COORDINATOR"){
-        //   href = "/coordinator/dashboard"
-        // } kiyala balala condition eka true nam ublage href ekak dpn
+        
+        if (response.data.role === "EXAMINERS") {
+          navigate("/examiner/dashboard");
+        }
+
         
       })
       .catch((error) => {
