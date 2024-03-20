@@ -9,7 +9,6 @@ import { CoordinatorHeading } from "./components/Coordinator/CoordinatorHeading"
 import { CoodinatorPage } from "./pages/CoodinatorPage";
 import { GroupRegistration } from "./components/Student/GroupRegistration/index.tsx";
 import PMemberHeader from "./components/ProjectMember/PMemberHeader";
-import StaffPage from "./components/StaffPage";
 
 
 function App() {
@@ -27,7 +26,6 @@ function App() {
           
           <Route path ="/group/register" element = {<GroupRegistration/>}/>
           <Route path="/pMember/dashboard" element = {<PMemberHeader/>}/>
-          <Route path="/pMember/selection" element = {<StaffPage/>}/>
         </Routes>
       </Router>
     </MantineProvider>
