@@ -9,7 +9,8 @@ import { CoordinatorHeading } from "./components/Coordinator/CoordinatorHeading"
 import { CoodinatorPage } from "./pages/CoodinatorPage";
 import { GroupRegistration } from "./components/Student/GroupRegistration/index.tsx";
 import PMemberHeader from "./components/ProjectMember/PMemberHeader";
-
+import StaffPage from "./components/StaffPage";
+import { ExaminerHeader } from "./components/Examiner/examinerHeader.tsx";
 
 function App() {
   return (
@@ -21,11 +22,12 @@ function App() {
           <Route path ="/studentdetails" element={<StudentDetails/>} />
           <Route path="/coordinator/dashboard" element={<CoordinatorHeading />} />
           <Route path ="/student/dashboard" element = {<StudentHeader/>}/>
-
           <Route path ="/coodinatorpage" element = {<CoodinatorPage/>}/>
-          
           <Route path ="/group/register" element = {<GroupRegistration/>}/>
           <Route path="/pMember/dashboard" element = {<PMemberHeader/>}/>
+          <Route path="/pMember/selection" element = {<StaffPage/>}/>
+          <Route path="/examiner/dashboard" element = {<ExaminerHeader/>}/>
+
         </Routes>
       </Router>
     </MantineProvider>

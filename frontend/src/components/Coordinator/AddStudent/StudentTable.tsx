@@ -207,19 +207,17 @@ const StudentDetails = () => {
     </Table.Tr>
   ));
 
-   //from Structure
-   const form = useForm({
+  //from Structure
+  const form = useForm({
     validateInputOnChange: true,
 
     initialValues: {
-      name : "",
+      name: "",
       email: "",
       regNo: "",
       specialization :  "",
       batch : "",
-      semester : "",
-     
-      
+      semester : "",      
     },validate: {
       email: (value) =>
         /\S+@\S+\.\S+/.test(
@@ -256,65 +254,66 @@ const StudentDetails = () => {
    });
 
   return (
-    <div style={{ position : 'absolute' , top:'160px'}}>
+    <div style={{ position: 'absolute', top: '160px' }}>
       {/* Add User Modal */}
       <form>
-      <Modal opened={opened} onClose={close} title="Authentication">
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          rightSection={IconUserr}
-          label="Name"
-          placeholder="Student Name"
-        />
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          rightSection={icon}
-          label="Email"
-          placeholder="Your email"
-          {...form.getInputProps("email")}
-        />
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Registration No"
-          placeholder="Registration No"
-        />
+        <Modal opened={opened} onClose={close} title="Authentication">
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            rightSection={IconUserr}
+            label="Name"
+            placeholder="Student Name"
+          />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            rightSection={icon}
+            label="Email"
+            placeholder="Your email"
+            {...form.getInputProps("email")}
+          />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Registration No"
+            placeholder="Registration No"
+          />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Specialization"
-          placeholder="Specialization"
-        />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Specialization"
+            placeholder="Specialization"
+          />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Batch"
-          placeholder="batch"
-        />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Batch"
+            placeholder="batch"
+          />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Semester"
-          placeholder="Semster"
-        />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Semester"
+            placeholder="Semster"
+          />
 
-        <center  style={{paddingTop:'10px'}}>
-          <Button
-            variant="gradient"
-            gradient={{ from: "gray", to: "blue", deg: 0 }}
-           
-          >
-            Add Student
-          </Button>
-        </center>
-      </Modal>
+          <center style={{ paddingTop: '10px' }}>
+            <Button
+              variant="gradient"
+              gradient={{ from: "gray", to: "blue", deg: 0 }}
+
+            >
+              Add Student
+            </Button>
+          </center>
+        </Modal>
       </form>
 
+      <div style={{ marginLeft: '-200px', marginRight: '50px' }} >
        {/* Delete student Modal */}
        <Modal
         opened={deleteOpen}
@@ -455,11 +454,11 @@ const StudentDetails = () => {
           </div>
 
           <Table
-          
-           
-           highlightOnHover
-           withTableBorder
-           withColumnBorders
+
+
+            highlightOnHover
+            withTableBorder
+            withColumnBorders
             horizontalSpacing="md"
             verticalSpacing="xs"
             miw={700}
