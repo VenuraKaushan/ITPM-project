@@ -1,17 +1,13 @@
-import { useState } from 'react';
 import {
     Container,
     Tabs,
-    useMantineTheme,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import classes from '../../Styles/HeaderTabs.module.css';
 import { GroupRegistration } from './GroupRegistration';
 import { PublishResearch } from './publishResearch';
 import { Assessment } from './AssessmentUpload';
-import { SemesterMarks } from './SemesterMarks';
 import { DashboardHeader } from '../dashboardHeader';
-
+import { StudentSemesterMarks } from '../../pages/StudentAssessmentDash';
 
 const tabs = [
     'Group Registration',
@@ -56,7 +52,7 @@ export function StudentHeader() {
                         <Assessment />
                     </Tabs.Panel>
                     <Tabs.Panel value="Semester marks">
-                        <SemesterMarks />
+                        <StudentSemesterMarks />
                     </Tabs.Panel>
                 </Tabs>
             </Container>

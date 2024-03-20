@@ -1,8 +1,8 @@
-import { Text, NativeSelect, TextInput, Button } from '@mantine/core';
+import { Text, NativeSelect, TextInput, Button, Center } from '@mantine/core';
 import { useState } from 'react';
 import StudentAPI from '../../../API/studentAPI/student.api';
-import { IconX,IconCheck } from '@tabler/icons-react';
-import { showNotification,updateNotification } from '@mantine/notifications';
+import { IconX, IconCheck } from '@tabler/icons-react';
+import { showNotification, updateNotification } from '@mantine/notifications';
 
 export const GroupRegistration = () => {
     const [formData, setFormData] = useState({
@@ -95,17 +95,9 @@ export const GroupRegistration = () => {
 
     // Function to handle group registration
     const handleRegistration = (formData: any) => {
-        showNotification({
-            id: "Register-Group",
-            loading: true,
-            title: "Adding Group record",
-            message: "Please wait while we add Group details..",
-            autoClose: false,
-            disallowClose: true,
-        });
         StudentAPI.groupReg(formData)
             .then((res) => {
-                updateNotification({
+                showNotification({
                     id: "Register-Group",
                     color: "teal",
                     title: "Group Registered successfully",
@@ -114,8 +106,31 @@ export const GroupRegistration = () => {
                     autoClose: 5000,
                 });
 
-                formData.reset();
-                
+                // Clear text inputs
+                Array.from(document.querySelectorAll("input")).forEach(
+                    (input) => (input.value = "")
+                );
+
+                // Clear form data state
+                setFormData({
+                    batch: "",
+                    memberDetails: [],
+                    leaderDetails: {
+                        name: "",
+                        registrationNumber: "",
+                        contactNumber: "",
+                        email: "",
+                        specialization: "",
+                    },
+                    projectDetails: {
+                        title: "",
+                        researchArea: "",
+                        projectCategory: "",
+                        supervisorName: "",
+                        coSupervisorName: "",
+                    },
+                });
+
             })
             .catch((error) => {
                 showNotification({
@@ -129,31 +144,31 @@ export const GroupRegistration = () => {
     };
 
     return (
-        <div style={{ position: "absolute" }}>
-            <div>
+        <>
+            <Center style={{marginTop:"20px"}}>
                 <Text
                     size="lg"
                     fw={700}
-                    style={{ position: "relative", top: 20, right: -250 }}
                 >
                     Group Details
                 </Text>
-            </div>
+            </Center>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <NativeSelect
-                        name="batch"
-                        style={{ position: "relative", top: 60, right: -700, width: 250 }}
-                        label="Batch"
-                        data={['Regular', 'June']}
-                        required
-                    />
-
+                    <div>
+                        <NativeSelect
+                            name="batch"
+                            style={{ position: "relative", top: 60, right: -900, width: 250 }}
+                            label="Batch"
+                            data={['Regular', 'June']}
+                            required
+                        />
+                    </div>
                     {/* Member's Details */}
-                    <Text style={{ position: "relative", top: 40, left: -400 }} fw={500}>
+                    <Text style={{ position: "relative", top: 40, left: -100 }} fw={500}>
                         Member's Details
                     </Text>
-                    <div style={{ display: "flex", flexDirection: "row", gap: 250, position: "relative", top: 60, left: -200 }}>
+                    <div style={{ display: "flex", flexDirection: "row", gap: 250, position: "relative", top: 60 }}>
                         {[1, 2, 3].map((index) => (
                             <div key={index}>
                                 <TextInput name={`memberName${index}`} label="Member name" placeholder="Member name" required />
@@ -166,10 +181,10 @@ export const GroupRegistration = () => {
                     </div>
 
                     {/* Leader's Details */}
-                    <Text style={{ position: "relative", top: 120, left: -400 }} fw={500}>
+                    <Text style={{ position: "relative", top: 120, left: -100 }} fw={500}>
                         Leader's Details
                     </Text>
-                    <div style={{ display: "flex", flexDirection: "row", gap: 30, position: "relative", top: 140, left: -200 }}>
+                    <div style={{ display: "flex", flexDirection: "row", gap: 30, position: "relative", top: 140 }}>
                         <TextInput name="leaderName" label="Leader name" placeholder="Leader name" required />
                         <TextInput name="leaderRegistrationNumber" label="Registration Number" placeholder="ITxxxxxx" required />
                         <TextInput name="leaderContactNumber" label="Contact Number" placeholder="+94" required />
@@ -178,10 +193,10 @@ export const GroupRegistration = () => {
                     </div>
 
                     {/* Project Details */}
-                    <Text style={{ position: "relative", top: 260, left: -400 }} fw={500}>
+                    <Text style={{ position: "relative", top: 260, left: -100 }} fw={500}>
                         Project Details
                     </Text>
-                    <div style={{ display: "flex", flexDirection: "row", gap: 30, position: "relative", top: 280, left: -200 }}>
+                    <div style={{ display: "flex", flexDirection: "row", gap: 30, position: "relative", top: 280 }}>
                         <TextInput name="title" label="Title" placeholder="Title" required />
                         <TextInput name="researchArea" label="Research Area" placeholder="ML" required />
                         <TextInput name="projectCategory" label="Project Category" placeholder="Fashion" required />
@@ -195,6 +210,6 @@ export const GroupRegistration = () => {
                     </Button>
                 </div>
             </form>
-        </div>
+        </>
     );
 };
