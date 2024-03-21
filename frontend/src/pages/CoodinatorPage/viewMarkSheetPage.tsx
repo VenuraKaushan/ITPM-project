@@ -1,9 +1,6 @@
 import { Tabs, rem } from '@mantine/core';
 import { IconUser} from '@tabler/icons-react';
-import StudentDetails from '../../components/Coordinator/AddStudent/StudentTable';
-import AddStaffMember from '../../components/Coordinator/AddStaffMember/AddStaffMember';
-import { ViewMarkSheet } from '../../components/Coordinator/ViewMarkSheet/ViewMarkSheet';
-
+import ReportsMarks from '../../components/Coordinator/ViewMarkSheet/ReportsMarks';
 import AssessmentMark from '../../components/Coordinator/ViewMarkSheet/AssessmentMarks';
 
 
@@ -12,11 +9,9 @@ export function ViewMarkSheetPage() {
 
   return (
     <>
-    <Tabs color="lime" defaultValue="Student" style={{paddingTop:'20px'}}>
+    <Tabs color="lime" defaultValue="AssessmentMark" style={{paddingTop:'20px'}}>
       <Tabs.List>
-        <Tabs.Tab value="ViewMarkSheet" leftSection={<IconUser style={iconStyle} />}>
-          View Mark Sheet
-        </Tabs.Tab>
+        
         <Tabs.Tab value="AssessmentMark" leftSection={<IconUser style={iconStyle} />}>
           Assessment Mark
         </Tabs.Tab>
@@ -29,8 +24,8 @@ export function ViewMarkSheetPage() {
         <AssessmentMark/>
       </Tabs.Panel>
 
-      <Tabs.Panel value="Staff Member">
-       <AddStaffMember/>
+      <Tabs.Panel value="ReportsMark">
+       <ReportsMarks/>
       </Tabs.Panel>
 
     

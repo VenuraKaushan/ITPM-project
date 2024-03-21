@@ -257,7 +257,7 @@ const StudentDetails = () => {
     <div style={{ position : 'absolute' , top:'160px'}}>
       {/* Add User Modal */}
       <form>
-        <Modal opened={opened} onClose={close} title="Authentication">
+        <Modal opened={opened} onClose={close} title="Add Student">
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
@@ -422,7 +422,7 @@ const StudentDetails = () => {
       </Modal>
       </form>
 
-      <div style={{marginLeft:'-50px', marginRight:'50px'}} >
+      <div >
         <ScrollArea>
           <div style={{ marginBottom: "50px" }}>
             <TextInput
