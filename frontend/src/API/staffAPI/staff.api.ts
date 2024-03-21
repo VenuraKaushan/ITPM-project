@@ -10,7 +10,7 @@ class StaffAPI{
         return axios.post(`${BASE_URL}/staff/login`,values,{withCredentials:true});
     }
 
-
-}
+  
+};
 
 export default StaffAPI;

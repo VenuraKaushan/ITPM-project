@@ -4,6 +4,9 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 
 
+
+
+
 export const staffLogin = async (req, res) => {
   const { email, password } = req.body;
   console.log(email, password);
@@ -53,3 +56,4 @@ export const staffLogin = async (req, res) => {
       res.status(404).json({ error: error.message });
     });
 };
+
