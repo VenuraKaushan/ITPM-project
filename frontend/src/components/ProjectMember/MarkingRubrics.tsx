@@ -8,7 +8,7 @@ const MarkingRubrics = () => {
   ]);
   const [idCounter, setIdCounter] = useState(2);
 
-  const handleInputChange = (index, event) => {
+  const handleInputChange = (index:any, event:any) => {
     const { name, value } = event.target;
     const newData = [...tableData];
     newData[index][name] = value;
@@ -36,7 +36,7 @@ const MarkingRubrics = () => {
   return (
     <div>
       <div className="table-container" style={{marginTop:'40px'}}>
-        <table className="custom-table">
+        <table className="custom-table" >
           <thead>
             <tr>
               <th>Criteria</th>
