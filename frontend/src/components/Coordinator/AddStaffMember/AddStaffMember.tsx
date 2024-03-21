@@ -24,21 +24,21 @@ import {
   IconUser,
   IconEdit,
   IconTrash,
-  
+  IconCheck,
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
-
+import CoordinatorAPI from "../../../API/coordinatorAPI/coordinator.api";
+import { showNotification, updateNotification } from "@mantine/notifications";
 
 interface RowData {
   _id: string;
   name: string;
   email: string;
-  phoneNo: string;
+  phone: string;
   specialization: string;
   role: string;
-  
 }
 
 interface ThProps {
@@ -101,18 +101,18 @@ function sortData(
 
 const data = [
   {
-    _id : "",
+    _id: "",
     name: "Vinnath",
     email: "IT21244766@my.sliit.lk",
-    phoneNo: "0711461016",
+    phone: "0711461016",
     specialization: "string;",
     role: "string;",
   },
   {
     _id: "",
-    name: "Vinnath",
-    email: "IT21244766@my.sliit.lk",
-    phoneNo: "0711461016",
+    name: "Vinnathh",
+    email: "IT212447566@my.sliit.lk",
+    phone: "0711461016",
     specialization: "string;",
     role: "string;",
   },
@@ -124,10 +124,23 @@ const AddStaffMember = () => {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
-  const[editOpened , setEditOpened] = useState(false);
-  const[deleteOpen , setDeleteOpen] = useState(false);
+  const [editOpened, setEditOpened] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
+
+  // const {
+  //   data = [],
+  //   isError,
+  //   isLoading,
+  //   refetch,
+  // } = useQuery(
+  //   ["workerData"],
+  //   () => {
+  //     return StaffAPI.getAllWorkerDetails().then((res) => res.data);
+  //   },
+  //   { initialData: [] }
+  // );
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -144,218 +157,251 @@ const AddStaffMember = () => {
     );
   };
 
+  const registerMember = async (values: {
+    name: string;
+    email: string;
+    phone: string;
+    specialization: string;
+    role: string;
+  }) => {
+    console.log(values);
+    showNotification({
+      id: "Add Member",
+      loading: true,
+      title: "Adding Member Record",
+      message: "please wait while we add member record..",
+      autoClose: false,
+    });
+
+    CoordinatorAPI.memberRegister(values).then((Response) => {
+      updateNotification({
+        id: "Add Worker",
+        color: "teal",
+        title: "Adding Worker record",
+        message: "Please wait while we add Worker record..",
+        icon: <IconCheck />,
+        autoClose: 2500,
+      });
+
+      //  registerForm.reset();
+      //  open(false);
+
+      //getting updated details from the DB
+      //  refetch();
+    });
+  };
+
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.name}>
       <Table.Td>{row.name}</Table.Td>
       <Table.Td>{row.email}</Table.Td>
-      <Table.Td>{row.phoneNo}</Table.Td>
+      <Table.Td>{row.phone}</Table.Td>
       <Table.Td>{row.specialization}</Table.Td>
       <Table.Td>{row.role}</Table.Td>
       <Table.Td>
         <center>
-        <Tooltip label="Edit">
-          <ActionIcon
-            onClick={() =>{
-              editForm.setValues({
-                _id : row._id,
-                name : row.name,
-                email : row.email,
-                phoneNo : row.phoneNo,
-                specialization : row.specialization,
-                role : row.role,
+          <Tooltip label="Edit">
+            <ActionIcon
+              onClick={() => {
+                editForm.setValues({
+                  _id: row._id,
+                  name: row.name,
+                  email: row.email,
+                  phone: row.phone,
+                  specialization: row.specialization,
+                  role: row.role,
+                });
+                setEditOpened(true);
+              }}
+              style={{ marginRight: "30px" }}
+              color="blue"
+            >
+              <IconEdit />
+            </ActionIcon>
+          </Tooltip>
 
-              });
-              setEditOpened(true);
-            }}
-            style={{ marginRight: '30px'}}
-            color="blue"
-          >
-          <IconEdit/>
-          </ActionIcon>  
-        </Tooltip>
-       
-        <Tooltip label="Delete Member">
-
-        <ActionIcon
-          color="red"
-          onClick={() => {
-            deleteForm.setValues({
-              _id : row._id,
-              name: row.name,
-            });
-            setDeleteOpen(true);
-          }}
-          
-        >
-          <IconTrash/>
-          </ActionIcon>
-        </Tooltip>
+          <Tooltip label="Delete Member">
+            <ActionIcon
+              color="red"
+              onClick={() => {
+                deleteForm.setValues({
+                  _id: row._id,
+                  name: row.name,
+                });
+                setDeleteOpen(true);
+              }}
+            >
+              <IconTrash />
+            </ActionIcon>
+          </Tooltip>
         </center>
-      
       </Table.Td>
     </Table.Tr>
   ));
 
-   //from Structure
-   const form = useForm({
+  //from Structure
+  const registerForm = useForm({
     validateInputOnChange: true,
 
     initialValues: {
-      name : "",
+      name: "",
       email: "",
-      phoneNo : "",
-      specialization :  "",
-      role : ""
-      
-    },validate: {
-      email: (value) =>
-        /\S+@\S+\.\S+/.test(
-          value
-        )
-          ? null
-          : "Invalid Email",
+      phone: "",
+      specialization: "",
+      role: "",
+    },
+    validate: {
+      email: (value) => (/\S+@\S+\.\S+/.test(value) ? null : "Invalid Email"),
     },
   });
 
   //declare edit form
   const editForm = useForm({
-    validateInputOnChange:true,
+    validateInputOnChange: true,
 
-    initialValues:{
-      _id : "",
-      name : "",
-      email : "",
-      phoneNo : "",
-      specialization : "",
-      role : "",
+    initialValues: {
+      _id: "",
+      name: "",
+      email: "",
+      phone: "",
+      specialization: "",
+      role: "",
     },
   });
 
   //Declare delete form
-   const deleteForm = useForm({
-    validateInputOnChange:true,
+  const deleteForm = useForm({
+    validateInputOnChange: true,
 
-    initialValues:{
-      _id : "",
-      name : "",
+    initialValues: {
+      _id: "",
+      name: "",
     },
-   });
+  });
 
   return (
-    <div style={{ position : 'absolute' , top:'160px'}}>
+    <div style={{ position: "absolute", top: "160px" }}>
       {/* Add User Modal */}
+      
+        <Modal opened={opened} onClose={close} title="Add Staff Member">
+        <form
+        onSubmit={registerForm.onSubmit((values) => registerMember(values))}
+      >
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            rightSection={IconUserr}
+            label="Name"
+            placeholder="Staff Member Name"
+            {...registerForm.getInputProps("name")}
+          />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            rightSection={icon}
+            label="Email"
+            placeholder="Your email"
+            {...registerForm.getInputProps("email")}
+          />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Mobile No"
+            placeholder="0711461106"
+            {...registerForm.getInputProps("phone")}
+          />
+
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Specialization"
+            placeholder="Specialization"
+            {...registerForm.getInputProps("specialization")}
+          />
+
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Role"
+            placeholder="role"
+            {...registerForm.getInputProps("role")}
+          />
+
+          <center style={{ paddingTop: "10px" }}>
+            <Button
+              variant="gradient"
+              gradient={{ from: "gray", to: "blue", deg: 0 }}
+              type="submit"
+            >
+              Add Member
+            </Button>
+          </center>
+          </form>
+        </Modal>
+     
+
+      {/* user edit modal */}
       <form>
-      <Modal opened={opened} onClose={close} title="Add Staff Member">
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          rightSection={IconUserr}
-          label="Name"
-          placeholder="Staff Member Name"
-        />
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          rightSection={icon}
-          label="Email"
-          placeholder="Your email"
-          {...form.getInputProps("email")}
-        />
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Mobile No"
-          placeholder="0711461106"
-        />
+        <Modal
+          opened={editOpened}
+          onClose={() => {
+            editForm.reset();
+            setEditOpened(false);
+          }}
+          title="Edit Staff Member"
+        >
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            rightSection={IconUserr}
+            label="Name"
+            placeholder="Staff Member Name"
+          />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            rightSection={icon}
+            label="Email"
+            placeholder="Your email"
+            {...registerForm.getInputProps("email")}
+          />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Mobile No"
+            placeholder="0711461106"
+          />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Specialization"
-          placeholder="Specialization"
-        />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Specialization"
+            placeholder="Specialization"
+          />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Role"
-          placeholder="role"
-        />
-        
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Role"
+            placeholder="role"
+          />
 
-
-        <center  style={{paddingTop:'10px'}}>
-          <Button
-            variant="gradient"
-            gradient={{ from: "gray", to: "blue", deg: 0 }}
-          >
-            Add Member
-          </Button>
-        </center>
-      </Modal>
-      </form>
-
-{/* user edit modal */}
-      <form>
-      <Modal opened={editOpened} onClose={()=>{
-        editForm.reset();
-        setEditOpened(false);
-      }} title="Edit Staff Member">
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          rightSection={IconUserr}
-          label="Name"
-          placeholder="Staff Member Name"
-        />
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          rightSection={icon}
-          label="Email"
-          placeholder="Your email"
-          {...form.getInputProps("email")}
-        />
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Mobile No"
-          placeholder="0711461106"
-        />
-
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Specialization"
-          placeholder="Specialization"
-        />
-
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Role"
-          placeholder="role"
-        />
-        
-
-
-        <center  style={{paddingTop:'10px'}}>
-          <Button
-            variant="gradient"
-            gradient={{ from: "gray", to: "blue", deg: 0 }}
-           
-          >
-           Edit Details
-          </Button>
-        </center>
-      </Modal>
+          <center style={{ paddingTop: "10px" }}>
+            <Button
+              variant="gradient"
+              gradient={{ from: "gray", to: "blue", deg: 0 }}
+            >
+              Edit Details
+            </Button>
+          </center>
+        </Modal>
       </form>
 
       {/* Delete Modal */}
       <Modal
         opened={deleteOpen}
         centered
-        onClose={()=>{
+        onClose={() => {
           deleteForm.reset();
           setDeleteOpen(false);
         }}
@@ -365,41 +411,33 @@ const AddStaffMember = () => {
           <Text size={"sm"} mb={10}>
             Are you sure want to delete this member?
           </Text>
-          <form onSubmit={deleteForm.onSubmit((values) =>{
-            
-          })}
-          >
+          <form onSubmit={deleteForm.onSubmit((values) => {})}>
             <TextInput
-               withAsterisk
-               label="Member ID"
-               required
-               disabled
-               mb={10}
-             />
+              withAsterisk
+              label="Member ID"
+              required
+              disabled
+              mb={10}
+            />
 
-              <Button
-                color="gray"
-                variant="outline"
-                onClick={() => {
-                  deleteForm.reset();
-                  setDeleteOpen(false);
-                }}
-              >
-                No I don't delete it
-              </Button>
-              <Button
-                color="red"
-                type="submit"
-                
-              >
-                Delete it
-              </Button>
+            <Button
+              color="gray"
+              variant="outline"
+              onClick={() => {
+                deleteForm.reset();
+                setDeleteOpen(false);
+              }}
+            >
+              No I don't delete it
+            </Button>
+            <Button color="red" type="submit">
+              Delete it
+            </Button>
           </form>
         </Box>
-
       </Modal>
 
-      <div style={{marginLeft:'-200px', marginRight:'50px'}} >
+      <div style={{ marginLeft: "-200px", marginRight: "50px" }}>
         <ScrollArea>
           <div style={{ marginBottom: "50px" }}>
             <TextInput
@@ -431,11 +469,9 @@ const AddStaffMember = () => {
           </div>
 
           <Table
-          
-           
-           highlightOnHover
-           withTableBorder
-           withColumnBorders
+            highlightOnHover
+            withTableBorder
+            withColumnBorders
             horizontalSpacing="md"
             verticalSpacing="xs"
             miw={700}
@@ -458,18 +494,18 @@ const AddStaffMember = () => {
                   Email
                 </Th>
                 <Th
-                  sorted={sortBy === "phoneNo"}
+                  sorted={sortBy === "phone"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("phoneNo")}
+                  onSort={() => setSorting("phone")}
                 >
-                  Registration No
+                  Phone NO
                 </Th>
                 <Th
                   sorted={sortBy === "specialization"}
                   reversed={reverseSortDirection}
                   onSort={() => setSorting("specialization")}
                 >
-                  specialization
+                  Specialization
                 </Th>
                 <Th
                   sorted={sortBy === "role"}
@@ -479,13 +515,13 @@ const AddStaffMember = () => {
                   Role
                 </Th>
 
-                <Th  sorted={sortBy === "role"}
+                <Th
+                  sorted={sortBy === "role"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("role")} >
+                  onSort={() => setSorting("role")}
+                >
                   Action
-
                 </Th>
-                
               </Table.Tr>
             </Table.Tbody>
             <Table.Tbody>
