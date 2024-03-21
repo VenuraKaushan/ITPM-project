@@ -27,6 +27,8 @@ import ResearchManagement from "./ResearchManagement";
 import MarkingRubrics from "./MarkingRubrics";
 import { DashboardHeader } from "../dashboardHeader";
 import { PMRersearchDash } from "../../pages/PMResearchManagementDash";
+import PMAddAssestment from "./PMAddAssestment";
+
 
 
 const user = {
@@ -76,6 +78,10 @@ export function PMemberHeader() {
             <Tabs.Panel value="Marking Rubrics Section">
               <MarkingRubrics />
             </Tabs.Panel>
+            <Tabs.Panel value="Assessment Management">
+              <PMAddAssestment />
+            </Tabs.Panel>
+           
           </Tabs.List>
         </Tabs>
       </Container>
