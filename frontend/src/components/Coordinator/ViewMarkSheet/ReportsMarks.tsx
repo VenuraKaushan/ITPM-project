@@ -35,10 +35,11 @@ interface RowData {
   groupNo: string;
   studentName: string;
   regNo: string;
-  proposal: string;
-  progress1: string;
-  progress2: string;
-  final: string;
+  statusReport1: string;
+  proposalDocument: string;
+  statusReport2: string;
+  logBook: string;
+  finalThesis: string;
 }
 
 interface ThProps {
@@ -105,24 +106,28 @@ const data = [
     groupNo: "string",
     studentName: "string",
     regNo: "string",
-    proposal: "string",
-    progress1: "string",
-    progress2: "string",
-    final: "string",
+    statusReport1: "string",
+    proposalDocument: "string",
+    statusReport2: "string",
+    logBook: "string",
+    finalThesis: "string",
   },
+
+ 
   {
     _id: "string",
     groupNo: "string",
     studentName: "string",
     regNo: "string",
-    proposal: "string",
-    progress1: "string",
-    progress2: "string",
-    final: "string",
+    statusReport1: "string",
+    proposalDocument: "string",
+    statusReport2: "string",
+    logBook: "string",
+    finalThesis: "string",
   },
 ];
 
-const AssessmentMark = () => {
+const ReportsMarks = () => {
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
@@ -153,10 +158,11 @@ const AssessmentMark = () => {
       <Table.Td>{row.groupNo}</Table.Td>
       <Table.Td>{row.studentName}</Table.Td>
       <Table.Td>{row.regNo}</Table.Td>
-      <Table.Td>{row.proposal}</Table.Td>
-      <Table.Td>{row.progress1}</Table.Td>
-      <Table.Td>{row.progress2}</Table.Td>
-      <Table.Td>{row.final}</Table.Td>
+      <Table.Td>{row.statusReport1}</Table.Td>
+      <Table.Td>{row.proposalDocument}</Table.Td>
+      <Table.Td>{row.statusReport2}</Table.Td>
+      <Table.Td>{row.logBook}</Table.Td>
+      <Table.Td>{row.finalThesis}</Table.Td>
 
       <Table.Td>
         <center>
@@ -168,10 +174,11 @@ const AssessmentMark = () => {
                   groupNo: row.groupNo,
                   studentName: row.studentName,
                   regNo: row.regNo,
-                  proposal: row.proposal,
-                  progress1: row.progress1,
-                  progress2: row.progress2,
-                  final : row.final,
+                  statusReport1: row.statusReport1,
+                  proposalDocument: row.proposalDocument,
+                  statusReport2: row.statusReport2,
+                  logBook : row.logBook,
+                  finalThesis : row.finalThesis,
                 });
                 setEditOpened(true);
               }}
@@ -194,13 +201,14 @@ const AssessmentMark = () => {
 
     initialValues: {
         _id: "",
-        groupNo: "",
-        studentName: "",
-        regNo: "",
-        proposal: "",
-        progress1: "",
-        progress2: "",
-        final: "",
+    groupNo: "",
+    studentName: "",
+    regNo: "",
+    statusReport1: "",
+    proposalDocument: "",
+    statusReport2: "",
+    logBook: "",
+    finalThesis: "",
     },
    
   });
@@ -214,10 +222,11 @@ const AssessmentMark = () => {
         groupNo: "",
         studentName: "",
         regNo: "",
-        proposal: "",
-        progress1: "",
-        progress2: "",
-        final: "",
+        statusReport1: "",
+        proposalDocument: "",
+        statusReport2: "",
+        logBook: "",
+        finalThesis: "",
     },
   });
 
@@ -227,9 +236,8 @@ const AssessmentMark = () => {
     <div style={{ position: "absolute", top: "160px" }}>
       
 
-      {/* Delete student Modal */}
       
-      {/* student edit modal */}
+      {/* Reports edit modal */}
       <form>
         <Modal
           opened={editOpened}
@@ -237,8 +245,15 @@ const AssessmentMark = () => {
             editForm.reset();
             setEditOpened(false);
           }}
-          title="Edit Student Details"
+          title="Edit Reports Marks"
         >
+        <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            rightSection={IconUserr}
+            label="Group No"
+            placeholder="Group No"
+          />
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
@@ -250,36 +265,43 @@ const AssessmentMark = () => {
             mt="md"
             rightSectionPointerEvents="none"
             rightSection={icon}
-            label="Email"
-            placeholder="Your email"
-            {...form.getInputProps("email")}
-          />
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
             label="Registration No"
             placeholder="Registration No"
+            
+          />
+          <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Status Report 1"  
+            placeholder=""
           />
 
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
-            label="Specialization"
-            placeholder="Specialization"
+            label="Proposal Document"
+            placeholder="Proposal Document"
           />
 
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
-            label="Batch"
-            placeholder="batch"
+            label="Status Reports 2"  
+            placeholder="Status Report 2"
           />
 
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
-            label="Semester"
-            placeholder="Semster"
+            label="Log Book"  
+            placeholder="Log Book"
+          />
+
+        <TextInput
+            mt="md"
+            rightSectionPointerEvents="none"
+            label="Final Thesis"  
+            placeholder="Final Thesis"  
           />
 
           <center style={{ paddingTop: "10px" }}>
@@ -339,37 +361,45 @@ const AssessmentMark = () => {
                   Registration number
                 </Th>
                 <Th
-                  sorted={sortBy === "proposal"}
+                  sorted={sortBy === "statusReport1"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("proposal")}
+                  onSort={() => setSorting("statusReport1")}
                 >
-                  Proposal
+                  Status Reports 1
                 </Th>
                 <Th
-                  sorted={sortBy === "progress1"}
+                  sorted={sortBy === "proposalDocument"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("progress1")}
+                  onSort={() => setSorting("proposalDocument")}
                 >
-                  Progress 1
+                  Proposal Document
                 </Th>
                 <Th
-                  sorted={sortBy === "progress2"}
+                  sorted={sortBy === "statusReport2"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("progress2")}
+                  onSort={() => setSorting("statusReport2")}
                 >
-                  Progress 2
+                  Status Report 2
                 </Th>
                 <Th
-                  sorted={sortBy === "final"}
+                  sorted={sortBy === "logBook"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("final")}
+                  onSort={() => setSorting("logBook")}
                 >
-                  Final
+                  Log Book
                 </Th>
                 <Th
-                  sorted={sortBy === "final"}
+                  sorted={sortBy === "finalThesis"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("final")}
+                  onSort={() => setSorting("finalThesis")}
+                >
+                  Final Thesis
+                </Th>
+
+                <Th
+                  sorted={sortBy === "finalThesis"}
+                  reversed={reverseSortDirection}
+                  onSort={() => setSorting("finalThesis")}
                 >
                   Action
                 </Th>
@@ -396,4 +426,4 @@ const AssessmentMark = () => {
   );
 };
 
-export default AssessmentMark;
+export default ReportsMarks;

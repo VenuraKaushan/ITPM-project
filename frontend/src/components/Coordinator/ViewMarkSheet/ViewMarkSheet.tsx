@@ -11,11 +11,15 @@ import {
   rem,
   keys,
   Button,
+  Modal,
 } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react';
 import classes from '../../../Styles/TableSort.module.css';
 import { ViewMarkSheetPage } from '../../../pages/CoodinatorPage/viewMarkSheetPage';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { useDisclosure } from '@mantine/hooks';
+import AssessmentMark from './AssessmentMarks';
+
 
 interface RowData {
     _id :string;
@@ -99,6 +103,7 @@ export function ViewMarkSheet() {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const navigate = useNavigate();
+  const [opened, { open, close }] = useDisclosure(false);
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -119,7 +124,7 @@ export function ViewMarkSheet() {
       <Table.Td>{row.groupNo}</Table.Td>
       <Table.Td>{row.topic}</Table.Td>
       <center>
-      <Table.Td><Button onClick={() => navigate('/ViewMarkSheetPage')} variant="filled" color="teal" size="xs" radius="xs">View</Button></Table.Td>
+      <Table.Td><Button onClick={open}>View</Button></Table.Td>
       </center>
       
     </Table.Tr>
@@ -183,6 +188,19 @@ export function ViewMarkSheet() {
           )}
         </Table.Tbody>
       </Table>
+
+      <Modal
+        opened={opened}
+        onClose={close}
+      fullScreen
+        radius={0}
+        transitionProps={{ transition: 'fade', duration: 200 }}
+        
+      >
+
+        <ViewMarkSheetPage/>
+        {/* Modal content */}
+      </Modal>
     </ScrollArea>
   );
 }
