@@ -1,8 +1,6 @@
 import { Tabs, rem } from '@mantine/core';
 import { IconUser} from '@tabler/icons-react';
-import StudentDetails from '../../components/Coordinator/AddStudent/StudentTable';
 import AddStaffMember from '../../components/Coordinator/AddStaffMember/AddStaffMember';
-import { ViewMarkSheet } from '../../components/Coordinator/ViewMarkSheet/ViewMarkSheet';
 
 import AssessmentMark from '../../components/Coordinator/ViewMarkSheet/AssessmentMarks';
 

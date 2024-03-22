@@ -14,7 +14,9 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-
+import { useQuery } from "@tanstack/react-query";
+import StudentAPI from '../../../API/studentAPI/student.api';
+import axios from 'axios';
 
 const elements = [
     { registrationNo: " JUN_WE_001", title: "VD room", category: 'Fasion', members: 4 },
@@ -24,6 +26,18 @@ const elements = [
 export function PublishResearch() {
 
     const [opened, { open, close }] = useDisclosure(false);
+
+
+
+    //use react query and fetch research data
+    const {
+        data = [],
+        isLoading,
+        isError,
+        refetch,
+    } = useQuery({
+        queryKey: ["researchData"], queryFn: () => StudentAPI.getResearch().then((res) => res.data),
+    });
 
 
     const rows = elements.map((element) => (

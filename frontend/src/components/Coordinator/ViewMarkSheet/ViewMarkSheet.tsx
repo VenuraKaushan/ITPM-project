@@ -18,10 +18,10 @@ import { ViewMarkSheetPage } from '../../../pages/CoodinatorPage/viewMarkSheetPa
 import { Navigate, useNavigate } from 'react-router-dom';
 
 interface RowData {
-    _id :string;
+  _id: string;
   groupNo: string;
   topic: string;
-  
+
 }
 
 interface ThProps {
@@ -80,16 +80,16 @@ function sortData(
 
 const data = [
   {
-    _id :'string',
+    _id: 'string',
     groupNo: "string",
     topic: "string",
   },
   {
-    _id :'string',
+    _id: 'string',
     groupNo: "string",
     topic: "string",
   },
-  
+
 
 ];
 
@@ -119,22 +119,22 @@ export function ViewMarkSheet() {
       <Table.Td>{row.groupNo}</Table.Td>
       <Table.Td>{row.topic}</Table.Td>
       <center>
-      <Table.Td><Button onClick={() => navigate('/ViewMarkSheetPage')} variant="filled" color="teal" size="xs" radius="xs">View</Button></Table.Td>
+        <Table.Td><Button onClick={() => navigate('/ViewMarkSheetPage')} variant="filled" color="teal" size="xs" radius="xs">View</Button></Table.Td>
       </center>
-      
+
     </Table.Tr>
   ));
 
   return (
     <ScrollArea>
       <TextInput
-      style={{paddingTop:'20px'}}
+        style={{ paddingTop: '20px' }}
         placeholder="Search by any field"
         mb="md"
         leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
         value={search}
         onChange={handleSearchChange}
-       
+
       />
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed" withTableBorder withColumnBorders>
         <Table.Tbody>

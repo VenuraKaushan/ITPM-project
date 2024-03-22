@@ -13,6 +13,10 @@ class StudentAPI{
         return axios.post(`${BASE_URL}/student/group/registration`,formData,{withCredentials:true});
     }
 
+    static getResearch(){
+        return axios.get(`${BASE_URL}/student/get/research`,{withCredentials:true});
+    }
+
 
 }
 
