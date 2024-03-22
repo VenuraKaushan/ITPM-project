@@ -145,7 +145,7 @@ export const GroupRegistration = () => {
 
     return (
         <>
-            <Center style={{marginTop:"20px"}}>
+            <Center style={{ marginTop: "20px" }}>
                 <Text
                     size="lg"
                     fw={700}
@@ -205,7 +205,11 @@ export const GroupRegistration = () => {
                     </div>
 
                     {/* Submit Button */}
-                    <Button type="submit" variant="filled" radius="xl" style={{ position: "relative", top: 360, right: -840, marginBottom: 20 }}>
+                    <Button
+                        type="submit"
+                        variant="gradient"
+                        gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
+                        style={{ position: "relative", top: 360, right: -840, marginBottom: 20 }}>
                         Submit
                     </Button>
                 </div>
