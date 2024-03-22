@@ -44,17 +44,17 @@ export const registerMember = async(req,res) =>{
       console.log(customId);
   
       //hashing the password
-      const salt = await bcryptjs.genSalt(10);
-      const hashedPassword = await bcrypt.hash(re.body.password, salt);
+    //   const salt = await bcryptjs.genSalt(10);
+    //   const hashedPassword = await bcrypt.hash(re.body.password, salt);
   
   
-      console.log(hashedPassword);
+    //   console.log(hashedPassword);
   
       const newMember = new User({
         id : customId,
         name: req.body.name,
         email: req.body.email,
-        mobileNo : req.body.phone,
+        phone : req.body.phone,
         specialization : req.body.specialization,
         role : "MEMBER",
       });
@@ -65,7 +65,7 @@ export const registerMember = async(req,res) =>{
       res.status(201).json(savedMember);
   
     }catch(error){
-      console.log(error)
+      console.log(error.message)
   
     }
   }

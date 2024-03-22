@@ -5,7 +5,8 @@ const usersSchema = new mongoose.Schema(
         id:{
             type : String,
             unique : true,
-            required : true,
+            required : true
+            
         },
         regNo:{
             type : String,
@@ -36,7 +37,10 @@ const usersSchema = new mongoose.Schema(
         },
         password : {
             type : String,
-            required:true,
+            
+        },
+        batch:{
+            type : String,
         }
     },{ timestamps: true }
 );
