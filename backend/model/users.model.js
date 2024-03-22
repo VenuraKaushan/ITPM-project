@@ -10,7 +10,9 @@ const usersSchema = new mongoose.Schema(
         },
         regNo:{
             type : String,
-            default : "NaN"
+            default : "NaN",
+            unique : true,
+            required : true,
         },
         name : {
             type : String,
@@ -25,6 +27,7 @@ const usersSchema = new mongoose.Schema(
         phone : {
             type : String,
             required : true,
+            default : "NaN",
         },
         specialization :{
             type : String,

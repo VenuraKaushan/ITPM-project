@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 
 
-
+//generate Staff Member Custom ID
 const  generateMemberId = async () =>{
     //get last Member object, If there is a member, then return that member object, otherwise return empty array
     const lastMemberDetails = await User.find({role:"MEMBER"}).sort({_id : -1}).limit(1);
@@ -27,8 +27,11 @@ const  generateMemberId = async () =>{
   
     return `MEMBER-${newMemberId}`; //return new Member ID
   };
+
+ 
   
 
+//Register STAFF member function
 export const registerMember = async(req,res) =>{
     try{
       const existingMember = await User.findOne({email:req.body.email});
@@ -63,6 +66,51 @@ export const registerMember = async(req,res) =>{
   
       const savedMember = await newMember.save();
       res.status(201).json(savedMember);
+  
+    }catch(error){
+      console.log(error.message)
+  
+    }
+  }
+
+  //Register Student Function
+  export const registerStudent = async(req,res) =>{
+    try{
+      console.log(req.body);
+      const existingStudent = await User.findOne({email:req.body.email});
+  
+      if(existingStudent) {
+        console.log("Student Exist");
+        return res.status(409).json({ message : "Student already exists"});
+      }
+  
+      //generating the custom user ID
+      const customId = await generateMemberId();
+  
+      console.log(customId);
+  
+      //hashing the password
+    //   const salt = await bcryptjs.genSalt(10);
+    //   const hashedPassword = await bcrypt.hash(re.body.password, salt);
+  
+  
+    //   console.log(hashedPassword);
+  
+      const newMember = new User({
+        id : customId,
+        name: req.body.name,
+        email: req.body.email,
+        regNo : req.body.regNo,
+        specialization : req.body.specialization,
+        batch : req.body.batch,
+        semester : req.body.semester,
+        role : "STUDENT",
+      });
+  
+      console.log(newMember);
+  
+      const savedStudent = await newMember.save();
+      res.status(201).json(savedStudent);
   
     }catch(error){
       console.log(error.message)
