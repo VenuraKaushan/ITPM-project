@@ -104,3 +104,15 @@ export const regResearchGroup =async (req,res)=>{
     res.status(500).json({message: "Failed to add group",err});
   }
 };
+
+export const getResearch = async (req,res)=>{
+
+  try{
+    const research = await ResearchGroups.find()
+
+    res.status(200).json(research)
+
+  }catch(err){
+    res.status(500).json({message: "Failed to get research",err});
+  }
+}
