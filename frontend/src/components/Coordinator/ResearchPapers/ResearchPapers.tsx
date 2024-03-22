@@ -10,10 +10,13 @@ import {
   rem,
   keys,
   Button,
+  Modal,
+  NativeSelect,
 } from '@mantine/core';
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react';
+import { IconSelector, IconChevronDown, IconChevronUp, IconSearch,IconUpload,IconX,IconPhoto } from '@tabler/icons-react';
 import classes from '../../../Styles/TableSort.module.css'
-import { Select } from '@mantine/core';
+import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { useDisclosure } from '@mantine/hooks';
 
 interface RowData {
   _id : string;
@@ -94,11 +97,17 @@ const data = [
   },
 ];
 
+const elements = [
+    { registrationNo: " JUN_WE_001", title: "VD room", category: 'Fasion', members: 4 },
+
+];
+
 export function ResearchPapers() {
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -121,7 +130,13 @@ export function ResearchPapers() {
       <Table.Td>{row.description}</Table.Td>
       <Table.Td>{row.category}</Table.Td>
       <Table.Td>
-        <Button>View</Button>
+      <Button
+      variant="gradient"
+      gradient={{ from: 'grape', to: 'indigo', deg: 0 }}
+      onClick={open}
+    >
+      View
+    </Button>
       </Table.Td>
     </Table.Tr>
   ));
@@ -198,6 +213,144 @@ export function ResearchPapers() {
           )}
         </Table.Tbody>
       </Table>
+
+
+      <Modal opened={opened} onClose={close} title="Publish Research" size="70%">
+                <Text>
+                    Y4_RSR_GRP-1
+                </Text>
+
+                <Text fw={500} style={{ marginTop: "40px" }}>
+                    Group Members
+                </Text>
+
+                <div style={{ display: "flex", gap: 30 }}>
+                    <TextInput
+                        rightSectionPointerEvents="none"
+                        label="Name"
+                        placeholder="Venura"
+                        disabled
+                    />
+                    <TextInput
+                        rightSectionPointerEvents="none"
+                        label="Name"
+                        placeholder="Vinnath"
+                        disabled
+                    // {...form.getInputProps("email")}
+                    />
+                    <TextInput
+                        rightSectionPointerEvents="none"
+                        label="Name"
+                        placeholder="Sahan"
+                        disabled
+                    />
+
+                    <TextInput
+                        rightSectionPointerEvents="none"
+                        label="Name"
+                        placeholder="Shehan"
+                        disabled
+                    />
+                </div>
+
+                <Text fw={500} style={{ marginTop: "30px" }}>
+                    Supervisors
+                </Text>
+                <div style={{ display: "flex", gap: 30 }}>
+                    <NativeSelect name="SupervisorName" w="200px" label="Supervisor Name" data={['XYZ', 'NMO']} required />
+
+                    <NativeSelect name="coSupervisorName" w="200px" label="Co-Supervisor Name" data={['XYZ', 'NMO']} required />
+
+                </div>
+
+                <div style={{ display: "flex", gap: 30, marginTop: "20px" }}>
+
+                    <Text fw={500} style={{ marginTop: "30px" }}>
+                        Name of the conference or journal
+                    </Text>
+
+                    <TextInput
+                        style={{ marginTop: "25px" }}
+                        rightSectionPointerEvents="none"
+                        placeholder="VD Room"
+                        disabled
+                    />
+                </div>
+
+                <div style={{ display: "flex", gap: 30, marginTop: "20px" }}>
+
+                    <Text fw={500} style={{ marginTop: "30px" }}>
+                        Link for view H-index
+                    </Text>
+
+                    <TextInput
+                        style={{ marginTop: "25px" }}
+                        rightSectionPointerEvents="none"
+                    />
+
+                    <Text fw={500} style={{ marginTop: "30px" }}>
+                        Link for  verify the Scopus indexing                    </Text>
+
+                    <TextInput
+                        style={{ marginTop: "25px" }}
+                        rightSectionPointerEvents="none"
+                    />
+                </div>
+
+                <Text fw={500} style={{ marginTop: "30px" }}>
+                    Photo of the acceptance
+                </Text>
+
+                <div>
+                    <Dropzone
+                        onDrop={(files) => console.log('accepted files', files)}
+                        onReject={(files) => console.log('rejected files', files)}
+                        maxSize={5 * 1024 ** 2}
+                        accept={IMAGE_MIME_TYPE}
+                    // {...props}
+                    >
+                        <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
+                            <Dropzone.Accept>
+                                <IconUpload
+                                    style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
+                                    stroke={1.5}
+                                />
+                            </Dropzone.Accept>
+                            <Dropzone.Reject>
+                                <IconX
+                                    style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
+                                    stroke={1.5}
+                                />
+                            </Dropzone.Reject>
+                            <Dropzone.Idle>
+                                <IconPhoto
+                                    style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
+                                    stroke={1.5}
+                                />
+                            </Dropzone.Idle>
+
+                            <div>
+                                <Text size="xl" inline>
+                                    Drag images here or click to select files
+                                </Text>
+                                <Text size="sm" c="dimmed" inline mt={7}>
+                                    The file should not exceed 5mb
+                                </Text>
+                            </div>
+                        </Group>
+                    </Dropzone>
+                </div>
+
+                <center style={{ paddingTop: '10px' }}>
+                    <Button
+                        variant="gradient"
+                        gradient={{ from: "gray", to: "blue", deg: 0 }}
+
+                    >
+                        Publish Research
+                    </Button>
+                </center>
+            </Modal>
     </ScrollArea>
   );
 }

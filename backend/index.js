@@ -4,6 +4,7 @@ import cors from 'cors';
 import dbConnect from './configs/dbConfig.js';
 import StaffRoutes from './routes/staff.routes.js'
 import StudentRoutes from './routes/student.routes.js'
+import CoordinatorRoutes from './routes/coordinator.routes.js'
 
 //initialized express
 const app = express();
@@ -36,6 +37,8 @@ app.use('/staff',StaffRoutes);
 
 // redirect to student routes
 app.use('/student',StudentRoutes);
+
+app.use('/coordinator',CoordinatorRoutes);
 
 app.listen(PORT,()=>{
     console.log(`🚀💀 Server is started on port ${PORT}!`);
