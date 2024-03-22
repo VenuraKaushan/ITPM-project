@@ -1,3 +1,4 @@
+import React, { useState } from 'react'; // Import useState
 import {
     Table,
     ScrollArea,
@@ -16,40 +17,62 @@ import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { useQuery } from "@tanstack/react-query";
 import StudentAPI from '../../../API/studentAPI/student.api';
-import axios from 'axios';
-
-const elements = [
-    { registrationNo: " JUN_WE_001", title: "VD room", category: 'Fasion', members: 4 },
-
-];
+import { useForm } from '@mantine/form';
 
 export function PublishResearch() {
-
     const [opened, { open, close }] = useDisclosure(false);
 
+    // Declare publish research form
+    const publishReseach = useForm({
+        validateInputOnChange: true,
+        initialValues: {
+            groupID: "",
+            leaderName: "",
+            member1Name: "",
+            member2Name: "",
+            member3Name: "",
+            supervisorName: "",
+            coSupervisorName: "",
+            title: "",
+            hindex: "",
+            scopusIndexing: "",
+        },
+    });
 
-
-    //use react query and fetch research data
+    // Use react query and fetch research data
     const {
         data = [],
         isLoading,
         isError,
         refetch,
     } = useQuery({
-        queryKey: ["researchData"], queryFn: () => StudentAPI.getResearch().then((res) => res.data),
+        queryKey: ["researchData"],
+        queryFn: () => StudentAPI.getResearch().then((res) => res.data),
     });
 
 
-    const rows = elements.map((element) => (
-        <Table.Tr key={element.registrationNo}>
-            <Table.Td>{element.registrationNo}</Table.Td>
+    const rows = data.map((element: any) => (
+        <Table.Tr key={element.id}>
+            <Table.Td>{element.id}</Table.Td>
             <Table.Td>{element.title}</Table.Td>
             <Table.Td>{element.category}</Table.Td>
-            <Table.Td>{element.members}</Table.Td>
+            <Table.Td>{element.members.length + element.leader.length}</Table.Td>
             <Table.Td>
                 <Center>
                     <Button
-                        onClick={open}
+                        onClick={() => {
+                            publishReseach.setValues({
+                                groupID: element.id,
+                                leaderName: element.leader[0].name,
+                                member1Name: element.members[0].name,
+                                member2Name: element.members[1].name,
+                                member3Name: element.members[2].name,
+                                supervisorName: element.supervisorName,
+                                coSupervisorName: element.coSupervisorName,
+                                title: element.title,
+                            })
+                            open();
+                        }}
                         variant="gradient"
                         gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
                     >
@@ -57,8 +80,6 @@ export function PublishResearch() {
                     </Button>
                 </Center>
             </Table.Td>
-
-
         </Table.Tr>
     ));
 
@@ -68,14 +89,18 @@ export function PublishResearch() {
                 <Text
                     size="lg"
                     fw={700}
+
                 >
                     RESEARCHES
                 </Text>
             </Center>
             <Modal opened={opened} onClose={close} title="Publish Research" size="70%">
-                <Text fw={500}>
-                    Y4_RSR_GRP-1
-                </Text>
+                <TextInput fw={500}
+                    {...publishReseach.getInputProps("groupID")}
+                    disabled
+
+                >
+                </TextInput>
 
                 <Text fw={500} style={{ marginTop: "40px" }}>
                     Group Members
@@ -84,39 +109,53 @@ export function PublishResearch() {
                 <div style={{ display: "flex", gap: 30 }}>
                     <TextInput
                         rightSectionPointerEvents="none"
-                        label="Name"
-                        placeholder="Venura"
+                        label="Leader Name"
                         disabled
+                        {...publishReseach.getInputProps("leaderName")}
+
                     />
                     <TextInput
                         rightSectionPointerEvents="none"
                         label="Name"
-                        placeholder="Vinnath"
                         disabled
-                    // {...form.getInputProps("email")}
+                        {...publishReseach.getInputProps("member1Name")}
                     />
                     <TextInput
                         rightSectionPointerEvents="none"
                         label="Name"
-                        placeholder="Sahan"
                         disabled
+                        {...publishReseach.getInputProps("member2Name")}
+
                     />
 
                     <TextInput
                         rightSectionPointerEvents="none"
                         label="Name"
-                        placeholder="Shehan"
                         disabled
+                        {...publishReseach.getInputProps("member3Name")}
+
                     />
                 </div>
 
                 <Text fw={500} style={{ marginTop: "30px" }}>
-                    Supervisors
+                    Supervisors 
                 </Text>
                 <div style={{ display: "flex", gap: 30 }}>
-                    <NativeSelect name="SupervisorName" w="200px" label="Supervisor Name" data={['XYZ', 'NMO']} required />
+                    <TextInput
+                        rightSectionPointerEvents="none"
+                        label="Supervisor"
+                        disabled
+                        {...publishReseach.getInputProps("supervisorName")}
 
-                    <NativeSelect name="coSupervisorName" w="200px" label="Co-Supervisor Name" data={['XYZ', 'NMO']} required />
+                    />
+
+                    <TextInput
+                        rightSectionPointerEvents="none"
+                        label="Co-Supervisor"
+                        disabled
+                        {...publishReseach.getInputProps("coSupervisorName")}
+
+                    />
 
                 </div>
 
@@ -129,8 +168,8 @@ export function PublishResearch() {
                     <TextInput
                         style={{ marginTop: "25px" }}
                         rightSectionPointerEvents="none"
-                        placeholder="VD Room"
                         disabled
+                        {...publishReseach.getInputProps("title")}
                     />
                 </div>
 
