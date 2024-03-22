@@ -9,6 +9,13 @@ class CoordinatorAPI{
     }){
         return axios.post(`${BASE_URL}/coordinator/member/register`,values,{withCredentials:true});
     }
+
+    static studentRegister(values:{
+        name : string, email : string , regNo : string , specialization : string , batch : string , semester : string
+    }){
+        return axios.post(`${BASE_URL}/coordinator/student/register`,values,{withCredentials:true});
+    }
+
 };
 
 export default CoordinatorAPI;
