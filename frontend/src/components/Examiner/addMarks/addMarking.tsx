@@ -71,13 +71,25 @@ export const ManageMarks = () => {
             </Table.Td>
 
             <Table.Td>
-                <TextInput>
+                <TextInput
+                    disabled
+                >
 
                 </TextInput>
             </Table.Td>
 
             <Table.Td>
-                <TextInput>
+                <TextInput
+                    disabled
+                >
+
+                </TextInput>
+            </Table.Td>
+
+            <Table.Td>
+                <TextInput
+                    disabled
+                >
 
                 </TextInput>
             </Table.Td>
@@ -138,12 +150,21 @@ export const ManageMarks = () => {
                             <Table.Th>Student Number</Table.Th>
                             <Table.Th>Student Name</Table.Th>
                             <Table.Th>Proposal</Table.Th>
+                            <Table.Th>Progress 1</Table.Th>
                             <Table.Th>Progress 2</Table.Th>
                             <Table.Th>Final Presentation</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>{modalRows}</Table.Tbody>
                 </Table>
+
+                <TextInput
+                    mt={30}
+                    label="Add Comment"
+                    styles={{ input: { height: '50px', width: '400px' } }}
+                >
+
+                </TextInput>
 
                 <Button
                     ml={730}

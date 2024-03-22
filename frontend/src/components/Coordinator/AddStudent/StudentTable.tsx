@@ -25,12 +25,14 @@ import {
   IconUser,
   IconEdit,
   IconTrash,
+  IconCheck,
   
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
-import { showNotification } from '@mantine/notifications';
+import { showNotification, updateNotification } from "@mantine/notifications";
+import CoordinatorAPI from "../../../API/coordinatorAPI/coordinator.api";
 
 interface RowData {
   _id : string;
@@ -150,6 +152,43 @@ const StudentDetails = () => {
     );
   };
 
+
+  const registerStudent = async (values: {
+    name: string;
+    email: string;
+    regNo: string;
+    specialization: string;
+    batch: string;
+    semester : string;
+  }) => {
+    console.log(values);
+    showNotification({
+      id: "Add Student",
+      loading: true,
+      title: "Adding Studnet Record",
+      message: "please wait while we add student record..",
+      autoClose: false,
+    });
+
+    CoordinatorAPI.studentRegister(values).then((Response) => {
+      updateNotification({
+        id: "Add Student",
+        color: "teal",
+        title: "Adding Studnet record",
+        message: "Please wait while we add Studnet record..",
+        icon: <IconCheck />,
+        autoClose: 2500,
+      });
+
+      //  registerForm.reset();
+      //  open(false);
+
+      //getting updated details from the DB
+      //  refetch();
+    });
+  };
+
+
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.name}>
       <Table.Td>{row.name}</Table.Td>
@@ -208,7 +247,7 @@ const StudentDetails = () => {
   ));
 
   //from Structure
-  const form = useForm({
+  const registerForm = useForm({
     validateInputOnChange: true,
 
     initialValues: {
@@ -256,14 +295,16 @@ const StudentDetails = () => {
   return (
     <div style={{ position : 'absolute' , top:'160px'}}>
       {/* Add User Modal */}
-      <form>
+     
         <Modal opened={opened} onClose={close} title="Add Student">
+        <form onSubmit={registerForm.onSubmit((values)=> registerStudent(values))}>
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
             rightSection={IconUserr}
             label="Name"
             placeholder="Student Name"
+            {...registerForm.getInputProps("name")}
           />
           <TextInput
             mt="md"
@@ -271,13 +312,14 @@ const StudentDetails = () => {
             rightSection={icon}
             label="Email"
             placeholder="Your email"
-            {...form.getInputProps("email")}
+            {...registerForm.getInputProps("email")}
           />
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
             label="Registration No"
             placeholder="Registration No"
+            {...registerForm.getInputProps("regNo")}
           />
 
           <TextInput
@@ -285,6 +327,7 @@ const StudentDetails = () => {
             rightSectionPointerEvents="none"
             label="Specialization"
             placeholder="Specialization"
+            {...registerForm.getInputProps("specialization")}
           />
 
           <TextInput
@@ -292,6 +335,7 @@ const StudentDetails = () => {
             rightSectionPointerEvents="none"
             label="Batch"
             placeholder="batch"
+            {...registerForm.getInputProps("batch")}
           />
 
           <TextInput
@@ -299,10 +343,12 @@ const StudentDetails = () => {
             rightSectionPointerEvents="none"
             label="Semester"
             placeholder="Semster"
+            {...registerForm.getInputProps("semester")}
           />
 
           <center style={{ paddingTop: '10px' }}>
             <Button
+              type="submit"
               variant="gradient"
               gradient={{ from: "gray", to: "blue", deg: 0 }}
 
@@ -310,8 +356,9 @@ const StudentDetails = () => {
               Add Student
             </Button>
           </center>
+          </form>
         </Modal>
-      </form>
+      
 
       <div style={{ marginLeft: '-200px', marginRight: '50px' }} >
        {/* Delete student Modal */}
@@ -380,7 +427,7 @@ const StudentDetails = () => {
           rightSection={icon}
           label="Email"
           placeholder="Your email"
-          {...form.getInputProps("email")}
+          {...registerForm.getInputProps("email")}
         />
         <TextInput
           mt="md"

@@ -5,11 +5,14 @@ const usersSchema = new mongoose.Schema(
         id:{
             type : String,
             unique : true,
-            required : true,
+            required : true
+            
         },
         regNo:{
             type : String,
-            default : "NaN"
+            default : "NaN",
+            unique : true,
+            required : true,
         },
         name : {
             type : String,
@@ -24,6 +27,7 @@ const usersSchema = new mongoose.Schema(
         phone : {
             type : String,
             required : true,
+            default : "NaN",
         },
         specialization :{
             type : String,
@@ -36,7 +40,10 @@ const usersSchema = new mongoose.Schema(
         },
         password : {
             type : String,
-            required:true,
+            
+        },
+        batch:{
+            type : String,
         }
     },{ timestamps: true }
 );
