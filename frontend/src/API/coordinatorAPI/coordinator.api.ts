@@ -16,6 +16,15 @@ class CoordinatorAPI{
         return axios.post(`${BASE_URL}/coordinator/student/register`,values,{withCredentials:true});
     }
 
+    //Get All Staff Member Details
+    static getAllStaffMemberDetails(){
+
+        console.log("api weda");
+        return axios.get(`${BASE_URL}/coordinator/getmembers`,{withCredentials:true});
+    }
+
+
+
 };
 
 export default CoordinatorAPI;

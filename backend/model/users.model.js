@@ -11,7 +11,6 @@ const usersSchema = new mongoose.Schema(
         regNo:{
             type : String,
             default : "NaN",
-            unique : true,
             required : true,
         },
         name : {

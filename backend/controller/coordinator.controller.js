@@ -7,7 +7,12 @@ import "dotenv/config";
 //generate Staff Member Custom ID
 const  generateMemberId = async () =>{
     //get last Member object, If there is a member, then return that member object, otherwise return empty array
-    const lastMemberDetails = await User.find({role:"MEMBER"}).sort({_id : -1}).limit(1);
+    const lastMemberDetails = await User.find({ $or: [
+      { role: "PROJECTMEMBER" },
+      { role: "SUPERVISOR" },
+      { role: "EXAMINER" },
+      { role: "STUDENT" }
+  ]}).sort({_id : -1}).limit(1);
   
     //check the result array is empty or not, if its empty then return first member ID
     if(lastMemberDetails.length == 0){
@@ -59,7 +64,7 @@ export const registerMember = async(req,res) =>{
         email: req.body.email,
         phone : req.body.phone,
         specialization : req.body.specialization,
-        role : "MEMBER",
+        role : req.body.role,
       });
   
       console.log(newMember);
@@ -117,3 +122,23 @@ export const registerMember = async(req,res) =>{
   
     }
   }
+
+  export const getStaffMembers = async (req, res) => {
+    try{
+      const members = await User.find({ $or: [
+        { role: "PROJECTMEMBER" },
+        { role: "SUPERVISOR" },
+        { role: "EXAMINER" },
+      ]})
+
+        //If no members found, send a 404 status code with a message
+         res.status(200).json(members);
+    
+    }catch(error){
+      res.status(500).json({message : "Cannot Find Member"})
+
+    }
+
+  }
+  
+

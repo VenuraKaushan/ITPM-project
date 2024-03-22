@@ -14,6 +14,7 @@ import {
   TableTh,
   Tooltip,
   ActionIcon,
+  Select,
   Box,
 } from "@mantine/core";
 import {
@@ -322,27 +323,46 @@ const StudentDetails = () => {
             {...registerForm.getInputProps("regNo")}
           />
 
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
+          <Select
+            name="role"
             label="Specialization"
-            placeholder="Specialization"
+            placeholder="Select Specialization"
+            required
+            data={[
+              { value: "IT", label: "IT" },
+              { value: "SE", label: "SE" },
+              { value: "IS", label: "IS" },
+              { value: "CS", label: "CS" },
+              { value: "DS", label: "DS" },
+              { value: "CSNE", label: "CSNE" },
+            ]}
             {...registerForm.getInputProps("specialization")}
           />
 
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
+
+          <Select
+            name="batch"
             label="Batch"
-            placeholder="batch"
+            placeholder="Select Batch"
+            required
+            data={[
+              { value: "JUNE", label: "JUNE Batch" },
+              { value: "REGULAR", label: "Regular Batch" },
+              
+            ]}
             {...registerForm.getInputProps("batch")}
           />
 
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
+          <Select
+            name="semester"
             label="Semester"
-            placeholder="Semster"
+            placeholder="Select Semester"
+            required
+            data={[
+              { value: "1ST", label: "1 st Semester" },
+              { value: "2ND", label: "2 nd Semester" },
+              
+            ]}
             {...registerForm.getInputProps("semester")}
           />
 
