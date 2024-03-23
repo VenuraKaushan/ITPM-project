@@ -220,6 +220,24 @@ export const registerMember = async(req,res) =>{
 
   };
 
+  //Delete staff member function
+  export const deleteStaffMember = async (req, res) => {
+    const _id = req.params.id;
+  
+    try {
+      const deletedMember = await User.findByIdAndDelete(_id);
+  
+      if (!deletedMember) {
+        // If the worker is not found, send a 404 status code with a message
+        return res.status(404).json({ message: "Staff Member not found" });
+      }
+  
+      res.status(200).json({ message: "Member deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete Member", error });
+    }
+  };
+
 
 
 
