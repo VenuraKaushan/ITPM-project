@@ -42,7 +42,7 @@ export const DashboardHeader = () => {
 
             <Container className={classes.mainSection} size="lg">
                 <Group justify="space-between">
-                    <Image width={200} height={50} src={logo} mt={5} />
+                    <Image width={300} height={60} src={logo} mt={5} />
 
                     <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
 

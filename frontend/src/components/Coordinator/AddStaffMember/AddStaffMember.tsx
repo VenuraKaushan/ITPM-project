@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   ScrollArea,
@@ -14,6 +14,7 @@ import {
   Modal,
   ActionIcon,
   Box,
+  Select,
 } from "@mantine/core";
 import {
   IconSelector,
@@ -25,12 +26,14 @@ import {
   IconEdit,
   IconTrash,
   IconCheck,
+  IconX,
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import CoordinatorAPI from "../../../API/coordinatorAPI/coordinator.api";
 import { showNotification, updateNotification } from "@mantine/notifications";
+import { useQuery } from "@tanstack/react-query";
 
 interface RowData {
   _id: string;
@@ -99,28 +102,18 @@ function sortData(
   );
 }
 
-const data = [
-  {
-    _id: "",
-    name: "Vinnath",
-    email: "IT21244766@my.sliit.lk",
-    phone: "0711461016",
-    specialization: "string;",
-    role: "string;",
-  },
-  {
-    _id: "",
-    name: "Vinnathh",
-    email: "IT212447566@my.sliit.lk",
-    phone: "0711461016",
-    specialization: "string;",
-    role: "string;",
-  },
-];
-
 const AddStaffMember = () => {
+  //use react query and fetch research data
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["staffMemberData"],
+    queryFn: () =>
+      CoordinatorAPI.getAllStaffMemberDetails().then((res) => res.data),
+  });
+
+  
+
   const [search, setSearch] = useState("");
-  const [sortedData, setSortedData] = useState(data);
+  const [sortedData, setSortedData] = useState(data ? data : []);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
@@ -129,18 +122,11 @@ const AddStaffMember = () => {
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
 
-  // const {
-  //   data = [],
-  //   isError,
-  //   isLoading,
-  //   refetch,
-  // } = useQuery(
-  //   ["workerData"],
-  //   () => {
-  //     return StaffAPI.getAllWorkerDetails().then((res) => res.data);
-  //   },
-  //   { initialData: [] }
-  // );
+  useEffect(() => {
+    if (data) {
+      setSortedData(data);
+    }
+  }, [data]);
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -183,16 +169,64 @@ const AddStaffMember = () => {
         autoClose: 2500,
       });
 
-      //  registerForm.reset();
+      registerForm.reset();
       //  open(false);
 
-      //getting updated details from the DB
-      //  refetch();
+      // getting updated details from the DB
+      refetch();
     });
   };
 
-  const rows = sortedData.map((row) => (
-    <Table.Tr key={row.name}>
+
+  //Update the Member Details
+  const updateStaffMember = async(values:{
+    _id : string;
+    name: string;
+    email: string;
+    phone: string;
+    specialization: string;
+    role: string;
+  }) =>{
+    console.log(values)
+    showNotification({
+      id: "update-Member",
+      loading: true,
+      title: "Updating Member record",
+      message: "Please wait while we update record..",
+      autoClose: false,
+    });
+    CoordinatorAPI.updateStaffMember(values)
+      .then((response) => {
+        updateNotification({
+          id: "update-Member",
+          color: "teal",
+          icon: <IconCheck />,
+          title: "Member updated successfully",
+          message: "Member data updated successfully.",
+          //icon: <IconCheck />,
+          autoClose: 5000,
+        });
+        editForm.reset();
+        setEditOpened(false);
+
+        //getting updated items from database
+        refetch();
+      })
+      .catch((error) => {
+        updateNotification({
+          id: "update-member",
+          color: "red",
+          title: "Member updating failed",
+          icon: <IconX />,
+          message: "We were unable to update the Member",
+          // icon: <IconAlertTriangle />,
+          autoClose: 5000,
+        });
+      });
+  };
+
+  const rows = sortedData?.map((row: any) => (
+    <Table.Tr key={row._id}>
       <Table.Td>{row.name}</Table.Td>
       <Table.Td>{row.email}</Table.Td>
       <Table.Td>{row.phone}</Table.Td>
@@ -220,7 +254,7 @@ const AddStaffMember = () => {
             </ActionIcon>
           </Tooltip>
 
-          <Tooltip label="Delete Member">
+          <Tooltip label="Delete Member" >
             <ActionIcon
               color="red"
               onClick={() => {
@@ -279,14 +313,17 @@ const AddStaffMember = () => {
     },
   });
 
+  if (isLoading) {
+    return <div>Loading....</div>;
+  }
   return (
     <div style={{ position: "absolute", top: "160px" }}>
       {/* Add User Modal */}
-      
-        <Modal opened={opened} onClose={close} title="Add Staff Member">
+
+      <Modal opened={opened} onClose={close} title="Add Staff Member">
         <form
-        onSubmit={registerForm.onSubmit((values) => registerMember(values))}
-      >
+          onSubmit={registerForm.onSubmit((values) => registerMember(values))}
+        >
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
@@ -311,19 +348,32 @@ const AddStaffMember = () => {
             {...registerForm.getInputProps("phone")}
           />
 
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
+          <Select
+            name="role"
             label="Specialization"
-            placeholder="Specialization"
+            placeholder="Select Specialization"
+            required
+            data={[
+              { value: "IT", label: "IT" },
+              { value: "SE", label: "SE" },
+              { value: "IS", label: "IS" },
+              { value: "CS", label: "CS" },
+              { value: "DS", label: "DS" },
+              { value: "CSNE", label: "CSNE" },
+            ]}
             {...registerForm.getInputProps("specialization")}
           />
 
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
+          <Select
+            name="role"
             label="Role"
-            placeholder="role"
+            placeholder="Select role"
+            required
+            data={[
+              { value: "PROJECTMEMBER", label: "Project Member" },
+              { value: "EXAMINER", label: "Examiner" },
+              { value: "SUPERVISOR", label: "Supervisor" },
+            ]}
             {...registerForm.getInputProps("role")}
           />
 
@@ -336,12 +386,11 @@ const AddStaffMember = () => {
               Add Member
             </Button>
           </center>
-          </form>
-        </Modal>
-     
+        </form>
+      </Modal>
 
       {/* user edit modal */}
-      <form>
+      
         <Modal
           opened={editOpened}
           onClose={() => {
@@ -350,12 +399,14 @@ const AddStaffMember = () => {
           }}
           title="Edit Staff Member"
         >
+          <form onSubmit={editForm.onSubmit((values) => updateStaffMember(values))}>
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
             rightSection={IconUserr}
             label="Name"
             placeholder="Staff Member Name"
+            {...editForm.getInputProps("name")}
           />
           <TextInput
             mt="md"
@@ -363,13 +414,14 @@ const AddStaffMember = () => {
             rightSection={icon}
             label="Email"
             placeholder="Your email"
-            {...registerForm.getInputProps("email")}
+            {...editForm.getInputProps("email")}
           />
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
             label="Mobile No"
             placeholder="0711461106"
+            {...editForm.getInputProps("phone")}
           />
 
           <TextInput
@@ -377,6 +429,7 @@ const AddStaffMember = () => {
             rightSectionPointerEvents="none"
             label="Specialization"
             placeholder="Specialization"
+            {...editForm.getInputProps("specialization")}
           />
 
           <TextInput
@@ -384,18 +437,21 @@ const AddStaffMember = () => {
             rightSectionPointerEvents="none"
             label="Role"
             placeholder="role"
+            {...editForm.getInputProps("role")}
           />
 
           <center style={{ paddingTop: "10px" }}>
             <Button
+              type="submit"
               variant="gradient"
               gradient={{ from: "gray", to: "blue", deg: 0 }}
             >
               Edit Details
             </Button>
           </center>
+          </form>
         </Modal>
-      </form>
+     
 
       {/* Delete Modal */}
       <Modal
@@ -430,7 +486,7 @@ const AddStaffMember = () => {
             >
               No I don't delete it
             </Button>
-            <Button color="red" type="submit">
+            <Button color="red" type="submit" style={{marginLeft:'10px'}}>
               Delete it
             </Button>
           </form>
@@ -515,13 +571,7 @@ const AddStaffMember = () => {
                   Role
                 </Th>
 
-                <Th
-                  sorted={sortBy === "role"}
-                  reversed={reverseSortDirection}
-                  onSort={() => setSorting("role")}
-                >
-                  Action
-                </Th>
+                <th>Action</th>
               </Table.Tr>
             </Table.Tbody>
             <Table.Tbody>
