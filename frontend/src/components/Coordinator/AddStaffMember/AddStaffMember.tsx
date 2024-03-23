@@ -26,6 +26,7 @@ import {
   IconEdit,
   IconTrash,
   IconCheck,
+  IconX,
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
@@ -109,7 +110,7 @@ const AddStaffMember = () => {
       CoordinatorAPI.getAllStaffMemberDetails().then((res) => res.data),
   });
 
-  console.log(data);
+  
 
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data ? data : []);
@@ -176,6 +177,54 @@ const AddStaffMember = () => {
     });
   };
 
+
+  //Update the Member Details
+  const updateStaffMember = async(values:{
+    _id : string;
+    name: string;
+    email: string;
+    phone: string;
+    specialization: string;
+    role: string;
+  }) =>{
+    console.log(values)
+    showNotification({
+      id: "update-Member",
+      loading: true,
+      title: "Updating Member record",
+      message: "Please wait while we update record..",
+      autoClose: false,
+    });
+    CoordinatorAPI.updateStaffMember(values)
+      .then((response) => {
+        updateNotification({
+          id: "update-Member",
+          color: "teal",
+          icon: <IconCheck />,
+          title: "Member updated successfully",
+          message: "Member data updated successfully.",
+          //icon: <IconCheck />,
+          autoClose: 5000,
+        });
+        editForm.reset();
+        setEditOpened(false);
+
+        //getting updated items from database
+        refetch();
+      })
+      .catch((error) => {
+        updateNotification({
+          id: "update-member",
+          color: "red",
+          title: "Member updating failed",
+          icon: <IconX />,
+          message: "We were unable to update the Member",
+          // icon: <IconAlertTriangle />,
+          autoClose: 5000,
+        });
+      });
+  };
+
   const rows = sortedData?.map((row: any) => (
     <Table.Tr key={row._id}>
       <Table.Td>{row.name}</Table.Td>
@@ -205,7 +254,7 @@ const AddStaffMember = () => {
             </ActionIcon>
           </Tooltip>
 
-          <Tooltip label="Delete Member">
+          <Tooltip label="Delete Member" >
             <ActionIcon
               color="red"
               onClick={() => {
@@ -341,7 +390,7 @@ const AddStaffMember = () => {
       </Modal>
 
       {/* user edit modal */}
-      <form>
+      
         <Modal
           opened={editOpened}
           onClose={() => {
@@ -350,12 +399,14 @@ const AddStaffMember = () => {
           }}
           title="Edit Staff Member"
         >
+          <form onSubmit={editForm.onSubmit((values) => updateStaffMember(values))}>
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
             rightSection={IconUserr}
             label="Name"
             placeholder="Staff Member Name"
+            {...editForm.getInputProps("name")}
           />
           <TextInput
             mt="md"
@@ -363,13 +414,14 @@ const AddStaffMember = () => {
             rightSection={icon}
             label="Email"
             placeholder="Your email"
-            {...registerForm.getInputProps("email")}
+            {...editForm.getInputProps("email")}
           />
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
             label="Mobile No"
             placeholder="0711461106"
+            {...editForm.getInputProps("phone")}
           />
 
           <TextInput
@@ -377,6 +429,7 @@ const AddStaffMember = () => {
             rightSectionPointerEvents="none"
             label="Specialization"
             placeholder="Specialization"
+            {...editForm.getInputProps("specialization")}
           />
 
           <TextInput
@@ -384,18 +437,21 @@ const AddStaffMember = () => {
             rightSectionPointerEvents="none"
             label="Role"
             placeholder="role"
+            {...editForm.getInputProps("role")}
           />
 
           <center style={{ paddingTop: "10px" }}>
             <Button
+              type="submit"
               variant="gradient"
               gradient={{ from: "gray", to: "blue", deg: 0 }}
             >
               Edit Details
             </Button>
           </center>
+          </form>
         </Modal>
-      </form>
+     
 
       {/* Delete Modal */}
       <Modal
@@ -430,7 +486,7 @@ const AddStaffMember = () => {
             >
               No I don't delete it
             </Button>
-            <Button color="red" type="submit">
+            <Button color="red" type="submit" style={{marginLeft:'10px'}}>
               Delete it
             </Button>
           </form>

@@ -123,6 +123,7 @@ export const registerMember = async(req,res) =>{
     }
   }
 
+  //get all staff member details
   export const getStaffMembers = async (req, res) => {
     try{
       const members = await User.find({ $or: [
@@ -140,5 +141,87 @@ export const registerMember = async(req,res) =>{
     }
 
   }
+
+  //get all student details
+  export const getAllStudentDetails = async(req,res) =>{
+    try{
+      const students = await User.find({role: "STUDENT"})
+
+      //If no students found , send 200 status code with a message
+      res.status(200).json(students);
+
+    }catch(error){
+      res.status(500).json({message : "Cannot find Students"})
+    }
+  }
+
+  //edit the staff member details
+  export const updateStaffMember = async(req,res) =>{
+
+    const _id = req.params.id;
+
+    const updateFields = {
+      name : req.body.name,
+      email : req.body.email,
+      phone : req.body.phone,
+      specialization : req.body.specialization,
+      role : req.body.role,
+    }
+
+   try {
+    const updateStaffMember = await User.findByIdAndUpdate(_id, updateFields,{
+      new : true,
+    });
+
+    if(!updateStaffMember){
+      //If the worker is not found, send a 404 status code with a message
+      return res.status(404).json({ message : " Worker Not Found"});
+    }
+
+    res.status(200).json(updateStaffMember); //Send the updated staff member as the response
+    
+   } catch (error) {
+    res.status(500).json({ message : "Failed to update staff member",error});
+    
+   }
+
+  };
+
+  //edit the student details
+  export const updateStudentDetails = async(req,res) =>{
+
+    const _id = req.params.id;
+
+    const updateFields = {
+      name : req.body.name,
+      email : req.body.email,
+      regNo : req.body.regNo,
+      specialization : req.body.specialization,
+      batch : req.body.batch,
+      semester : req.body.semester,
+    }
+
+   try {
+    const updateStudent = await User.findByIdAndUpdate(_id, updateFields,{
+      new : true,
+    });
+
+    if(!updateStudent){
+      //If the student is not found, send a 404 status code with a message
+      return res.status(404).json({ message : " Student Not Found"});
+    }
+
+    res.status(200).json(updateStudent); //Send the updated Student as the response
+    
+   } catch (error) {
+    res.status(500).json({ message : "Failed to update student",error});
+    
+   }
+
+  };
+
+
+
+
   
 

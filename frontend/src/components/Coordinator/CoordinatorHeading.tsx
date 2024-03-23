@@ -50,7 +50,7 @@ export function CoordinatorHeading() {
         
       <Container size="md">
         <Tabs
-          defaultValue="Home"
+          defaultValue="Add User"
           variant="outline"
           visibleFrom="sm"
           classNames={{

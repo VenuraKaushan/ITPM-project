@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import {
   Table,
   ScrollArea,
@@ -26,6 +26,7 @@ import {
   IconUser,
   IconEdit,
   IconTrash,
+  IconX,
   IconCheck,
   
 } from "@tabler/icons-react";
@@ -33,6 +34,7 @@ import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { showNotification, updateNotification } from "@mantine/notifications";
+import { useQuery } from "@tanstack/react-query";
 import CoordinatorAPI from "../../../API/coordinatorAPI/coordinator.api";
 
 interface RowData {
@@ -104,32 +106,21 @@ function sortData(
   );
 }
 
-const data = [
-  {
-    _id : "001",
-    name: "Athena Weissnat",
-    company: "Little - Rippin",
-    email: "Elouise.Prohaska@yahoo.com",
-    regNo: "IT21244766",
-    specialization: "IT",
-    batch: "June Batch",
-    semester: "1st",
-  },
-  {
-    _id : "002",
-    name: "Deangelo Runolfsson",
-    company: "Greenfelder - Krajcik",
-    email: "Kadin_Trantow87@yahoo.com",
-    regNo: "IT21244766",
-    specialization: "IT",
-    batch: "June Batch",
-    semester: "1st",
-  },
-];
+
 
 const StudentDetails = () => {
+
+ //use react query and fetch research data
+ const { data, isLoading, isError, refetch } = useQuery({
+  queryKey: ["StudentData"],
+  queryFn: () =>
+    CoordinatorAPI.getAllStudentDetails().then((res) => res.data),
+});
+
+
+
   const [search, setSearch] = useState("");
-  const [sortedData, setSortedData] = useState(data);
+  const [sortedData, setSortedData] = useState(data ? data : []);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
@@ -137,6 +128,12 @@ const StudentDetails = () => {
   const[deleteOpen , setDeleteOpen] = useState(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
+
+  useEffect(() => {
+    if (data) {
+      setSortedData(data);
+    }
+  }, [data]);
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -181,17 +178,66 @@ const StudentDetails = () => {
         autoClose: 2500,
       });
 
-      //  registerForm.reset();
+       registerForm.reset();
       //  open(false);
 
-      //getting updated details from the DB
-      //  refetch();
+      // getting updated details from the DB
+       refetch();
     });
   };
 
+  //Update Student details
+  const updateStudent = async(values:{
+    _id :string;
+    name: string;
+    email: string;
+    regNo: string;
+    specialization: string;
+    batch: string;
+    semester : string;
+  }) =>{
+    console.log(values)
+    showNotification({
+      id: "update-Student",
+      loading: true,
+      title: "Updating Student record",
+      message: "Please wait while we update record..",
+      autoClose: false,
+    });
+    CoordinatorAPI.updateStudentDetails(values)
+      .then((response) => {
+        updateNotification({
+          id: "update-Member",
+          color: "teal",
+          icon: <IconCheck />,
+          title: "Member updated successfully",
+          message: "Member data updated successfully.",
+          //icon: <IconCheck />,
+          autoClose: 5000,
+        });
+        editForm.reset();
+        setEditOpened(false);
 
-  const rows = sortedData.map((row) => (
-    <Table.Tr key={row.name}>
+        //getting updated items from database
+        refetch();
+      })
+      .catch((error) => {
+        updateNotification({
+          id: "update-student",
+          color: "red",
+          title: "Student updating failed",
+          icon: <IconX />,
+          message: "We were unable to update the Student",
+          // icon: <IconAlertTriangle />,
+          autoClose: 5000,
+        });
+      });
+  };
+
+
+
+  const rows = sortedData.map((row:any) => (
+    <Table.Tr key={row._id}>
       <Table.Td>{row.name}</Table.Td>
       <Table.Td>{row.email}</Table.Td>
       <Table.Td>{row.regNo}</Table.Td>
@@ -292,6 +338,10 @@ const StudentDetails = () => {
       name : "",
     },
    });
+
+   if (isLoading) {
+    return <div>Loading....</div>;
+  }
 
   return (
     <div style={{ position : 'absolute' , top:'160px'}}>
@@ -429,17 +479,19 @@ const StudentDetails = () => {
       </Modal>
 
       {/* student edit modal */}
-      <form>
+      
       <Modal opened={editOpened} onClose={()=>{
         editForm.reset();
         setEditOpened(false);
       }} title="Edit Student Details">
+         <form onSubmit={editForm.onSubmit((values) => updateStudent(values))}>
         <TextInput
           mt="md"
           rightSectionPointerEvents="none"
           rightSection={IconUserr}
           label="Name"
           placeholder="Student Name"
+          {...editForm.getInputProps("name")}
         />
         <TextInput
           mt="md"
@@ -447,38 +499,56 @@ const StudentDetails = () => {
           rightSection={icon}
           label="Email"
           placeholder="Your email"
-          {...registerForm.getInputProps("email")}
+          {...editForm.getInputProps("email")}
         />
         <TextInput
           mt="md"
           rightSectionPointerEvents="none"
           label="Registration No"
           placeholder="Registration No"
+          {...editForm.getInputProps("regNo")}
         />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Specialization"
-          placeholder="Specialization"
-        />
+<Select
+            name="role"
+            label="Specialization"
+            placeholder="Select Specialization"
+            required
+            data={[
+              { value: "IT", label: "IT" },
+              { value: "SE", label: "SE" },
+              { value: "IS", label: "IS" },
+              { value: "CS", label: "CS" },
+              { value: "DS", label: "DS" },
+              { value: "CSNE", label: "CSNE" },
+            ]}
+            {...editForm.getInputProps("specialization")}
+          />
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Batch"
-          placeholder="batch"
-        />
+        <Select
+            name="batch"
+            label="Batch"
+            placeholder="Select Batch"
+            required
+            data={[
+              { value: "JUNE", label: "JUNE Batch" },
+              { value: "REGULAR", label: "Regular Batch" },
+              
+            ]}
+            {...editForm.getInputProps("batch")}
+          />
 
         <TextInput
           mt="md"
           rightSectionPointerEvents="none"
           label="Semester"
           placeholder="Semster"
+          {...editForm.getInputProps("semester")}
         />
 
         <center  style={{paddingTop:'10px'}}>
           <Button
+          type="submit"
             variant="gradient"
             gradient={{ from: "gray", to: "blue", deg: 0 }}
            
@@ -486,8 +556,9 @@ const StudentDetails = () => {
             Edit Details
           </Button>
         </center>
+        </form>
       </Modal>
-      </form>
+      
 
       <div >
         <ScrollArea>
