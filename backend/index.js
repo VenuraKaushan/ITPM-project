@@ -5,6 +5,7 @@ import dbConnect from './configs/dbConfig.js';
 import StaffRoutes from './routes/staff.routes.js'
 import StudentRoutes from './routes/student.routes.js'
 import CoordinatorRoutes from './routes/coordinator.routes.js'
+import PmemberRoutes from "./routes/pMember.routes.js"
 
 //initialized express
 const app = express();
@@ -40,7 +41,12 @@ app.use('/student',StudentRoutes);
 
 app.use('/coordinator',CoordinatorRoutes);
 
+app.use('/pm',PmemberRoutes);
+
 app.listen(PORT,()=>{
     console.log(`🚀💀 Server is started on port ${PORT}!`);
     dbConnect();
+
 });
+
+
