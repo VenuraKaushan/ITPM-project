@@ -225,6 +225,44 @@ const AddStaffMember = () => {
       });
   };
 
+  // delete Stock function
+  const deleteMember = (values: {
+    _id: string;
+   
+  }) => {
+    CoordinatorAPI.deleteMember(values)
+      .then((res) => {
+        showNotification({
+          title: `${values._id} was deleted`,
+          message: "Member was deleted successfully",
+          autoClose: 1500,
+          icon: <IconCheck />,
+          color: "teal",
+        });
+
+        // after successing the deletion refetch the data from the database
+        refetch();
+
+        // clear all the fields
+        deleteForm.reset();
+
+        // then close the delete modal
+        setDeleteOpen(false);
+      })
+      .catch((err) => {
+        showNotification({
+          title: `${values._id} was not deleted`,
+          message: "Stock was not deleted",
+          autoClose: 1500,
+          icon: <IconX />,
+          color: "red",
+        });
+      });
+  };
+
+
+
+
   const rows = sortedData?.map((row: any) => (
     <Table.Tr key={row._id}>
       <Table.Td>{row.name}</Table.Td>
@@ -467,13 +505,14 @@ const AddStaffMember = () => {
           <Text size={"sm"} mb={10}>
             Are you sure want to delete this member?
           </Text>
-          <form onSubmit={deleteForm.onSubmit((values) => {})}>
+          <form onSubmit={deleteForm.onSubmit((values) => deleteMember(values))}>
             <TextInput
               withAsterisk
               label="Member ID"
               required
               disabled
               mb={10}
+              {...deleteForm.getInputProps("_id")}
             />
 
             <Button

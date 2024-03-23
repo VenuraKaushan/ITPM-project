@@ -1,5 +1,5 @@
 import express from "express";
-import { registerMember , registerStudent , getStaffMembers , getAllStudentDetails , updateStaffMember , updateStudentDetails}  from "../controller/coordinator.controller.js";
+import { registerMember , registerStudent , getStaffMembers , getAllStudentDetails , updateStaffMember , updateStudentDetails , deleteStaffMember}  from "../controller/coordinator.controller.js";
 
 const router = express.Router();
 
@@ -15,6 +15,7 @@ router.put("/member/update/:id",updateStaffMember);
 
 router.put("/student/update/:id",updateStudentDetails);
 
+router.delete("/member/delete/:id",deleteStaffMember);
 
 
 
