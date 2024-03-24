@@ -107,22 +107,21 @@ export function AssignProjectMember() {
 
   console.log(data)
 
-  const rows = data.map((item: any, index: any) => (
-    <Table.Tr key={index}>
+  const rows = data.map((item: any) => (
+    <Table.Tr key={item.groupID}>
       <Table.Td>{item.groupID}</Table.Td>
       <Table.Td>{item.title}</Table.Td>
       <Table.Td>
-        {item.leader && item.leader.map((leader: any, index: any) => (
-          <span key={index}>
+        {item.leader && item.leader.map((leader: any) => (
+          <span key={leader._id}>
             {leader.registrationNumber}
-            {index < item.leader.length - 1 ? <br /> : ''}
           </span>
         ))}
-        <br/>
-        {item.members && item.members.map((member: any, index: any) => (
-          <span key={index}>
+        <br />
+        {item.members && item.members.map((member: any) => (
+          <span key={member._id}>
             {member.registrationNumber}
-            {index < item.members.length - 1 ? <br /> : ''}
+            <br />
           </span>
         ))}
 
@@ -131,7 +130,13 @@ export function AssignProjectMember() {
         <Select
           w={'200px'}
           placeholder="Select Project Member"
-          //data={item.members.map(member => member.name)}
+          data={
+            item.members 
+            ? item.members
+                .filter((member: any) => member.role === 'PROJECTMEMBER')
+                .map((member: { name: string }) => member.name) 
+            : []
+          }
         />
       </Table.Td>
     </Table.Tr>
