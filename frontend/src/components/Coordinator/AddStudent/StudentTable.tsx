@@ -234,6 +234,42 @@ const StudentDetails = () => {
       });
   };
 
+  // delete Staff Member function
+  const deleteStudent = (values: {
+    _id : string;
+    name: string;
+   
+  }) => {
+    CoordinatorAPI.deleteStudent(values)
+      .then((res) => {
+        showNotification({
+          title: `${values.name} was deleted`,
+          message: "Member was deleted successfully",
+          autoClose: 1500,
+          icon: <IconCheck />,
+          color: "teal",
+        });
+
+        // after successing the deletion refetch the data from the database
+        refetch();
+
+        // clear all the fields
+        deleteForm.reset();
+
+        // then close the delete modal
+        setDeleteOpen(false);
+      })
+      .catch((err) => {
+        showNotification({
+          title: `${values.name} was not deleted`,
+          message: "Student was not deleted",
+          autoClose: 1500,
+          icon: <IconX />,
+          color: "red",
+        });
+      });
+  };
+
 
 
   const rows = sortedData.map((row:any) => (
@@ -445,16 +481,16 @@ const StudentDetails = () => {
           <Text size={"sm"} mb={10}>
             Are you sure want to delete this member?
           </Text>
-          <form onSubmit={deleteForm.onSubmit((values) =>{
+          <form onSubmit={deleteForm.onSubmit((values)  => deleteStudent(values))}>
             
-          })}
-          >
+          
             <TextInput
                withAsterisk
                label="Member ID"
                required
                disabled
                mb={10}
+               {...deleteForm.getInputProps("name")}
              />
 
               <Button
@@ -468,9 +504,9 @@ const StudentDetails = () => {
                 No I don't delete it
               </Button>
               <Button
+                style={{marginLeft : '10px'}}
                 color="red"
                 type="submit"
-                
               >
                 Delete it
               </Button>
