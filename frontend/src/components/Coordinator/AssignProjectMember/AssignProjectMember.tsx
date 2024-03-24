@@ -1,4 +1,4 @@
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   ScrollArea,
@@ -18,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 
 
 interface RowData {
-  _id : string;
+  _id: string;
   groupNo: string;
   title: string;
   regNo: string;
@@ -28,7 +28,7 @@ interface ThProps {
   children: React.ReactNode;
   reversed: boolean;
   sorted: boolean;
-  
+
 }
 
 // function Th({ children, reversed, sorted}: ThProps) {
@@ -83,13 +83,13 @@ function sortData(
 
 export function AssignProjectMember() {
 
-   //use react query and fetch Group data
- const { data =[], isLoading, isError, refetch } = useQuery({
-  queryKey: ["GroupData"],
-  queryFn: () =>
-    CoordinatorAPI.getGroupDetails().then((res) => res.data),
-    
-});
+  //use react query and fetch Group data
+  const { data = [], isLoading, isError, refetch } = useQuery({
+    queryKey: ["GroupData"],
+    queryFn: () =>
+      CoordinatorAPI.getGroupDetails().then((res) => res.data),
+
+  });
 
 
   const [search, setSearch] = useState('');
@@ -107,20 +107,37 @@ export function AssignProjectMember() {
 
   console.log(data)
 
-  const rows = data.map((row : any) => (
-    <Table.Tr key={row.groups.groupID}>
-      <Table.Td>{row.groups.groupID}</Table.Td>
-      <Table.Td>{row.groups.title}</Table.Td>
-      <Table.Td>{row.groups.registrationNumber}</Table.Td>
+  const rows = data.map((item: any, index: any) => (
+    <Table.Tr key={index}>
+      <Table.Td>{item.groupID}</Table.Td>
+      <Table.Td>{item.title}</Table.Td>
       <Table.Td>
-      <Select
-      w={'200px'}
-      placeholder="Select Project Member"
-      data={['Project Member', 'Project Coordinator', 'Examiner', 'Supervisor','Co-Supervisor']}
-    />
+        {item.leader && item.leader.map((leader: any, index: any) => (
+          <span key={index}>
+            {leader.registrationNumber}
+            {index < item.leader.length - 1 ? <br /> : ''}
+          </span>
+        ))}
+        <br/>
+        {item.members && item.members.map((member: any, index: any) => (
+          <span key={index}>
+            {member.registrationNumber}
+            {index < item.members.length - 1 ? <br /> : ''}
+          </span>
+        ))}
+
+      </Table.Td>
+      <Table.Td>
+        <Select
+          w={'200px'}
+          placeholder="Select Project Member"
+          //data={item.members.map(member => member.name)}
+        />
       </Table.Td>
     </Table.Tr>
   ));
+
+
 
   if (isLoading) {
     return <div>Loading....</div>;
@@ -129,42 +146,42 @@ export function AssignProjectMember() {
   return (
     <ScrollArea>
       <TextInput
-        style={{paddingTop:'20px'}}
+        style={{ paddingTop: '20px' }}
         placeholder="Search by any field"
         mb="md"
         leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
         value={search}
-        // onChange={handleSearchChange}
+      // onChange={handleSearchChange}
       />
-      <Table horizontalSpacing="lg" verticalSpacing="lg" miw={900} layout="auto"  withColumnBorders>
+      <Table horizontalSpacing="lg" verticalSpacing="lg" miw={900} layout="auto" withColumnBorders>
         <Table.Tbody>
           <Table.Tr>
-           
+
             <Table.Th
             >
               Group No
             </Table.Th>
             <Table.Th
-             
-            
-            
+
+
+
             >
               Title
-              </Table.Th>
+            </Table.Th>
             <Table.Th
-             
-            
-              
+
+
+
             >
               Student Number
-              </Table.Th>
+            </Table.Th>
             <Table.Th
-             
-             
-              
+
+
+
             >
               Action
-              </Table.Th>
+            </Table.Th>
           </Table.Tr>
         </Table.Tbody>
         <Table.Tbody>
