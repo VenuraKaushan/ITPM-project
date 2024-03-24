@@ -101,6 +101,7 @@ export const regResearchGroup =async (req,res)=>{
 
     res.status(201).json(saveGroup);
   }catch(err){
+    console.log(err.message)
     res.status(500).json({message: "Failed to add group",err});
   }
 };
