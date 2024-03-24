@@ -27,11 +27,13 @@ import {
   IconTrash,
   IconEdit,
 } from "@tabler/icons-react";
+import { Select } from "@mantine/core";
 import classes from "../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { FileInput } from "@mantine/core";
+import PMemberAPI from "../../API/PMemberAPI/pmember.api";
 
 interface RowData {
   id: string;
@@ -124,9 +126,10 @@ const PMAddAssestment = () => {
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
-  const [opened, { open, close }] = useDisclosure(false);
+  // const [opened, { open, close }] = useDisclosure(false);
   const [editOpened, setEditOpened] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [opened, setOpened] = useState(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
   const IconFileTypePdff = (
@@ -148,6 +151,43 @@ const PMAddAssestment = () => {
     );
   };
 
+  /*Add Assestment*/
+  const [formData, setFormData] = useState({
+    assessmentName: "",
+    assessmentUpload: "",
+    deadline: "",
+    specialization: "",
+    semester: "",
+  });
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    try {
+      const res = await PMemberAPI.addAssestment(formData);
+      // Optionally, you can show a success notification or perform other actions upon successful addition
+      console.log("Assestment added successfully!");
+      setFormData({
+        assessmentName: "",
+        assessmentUpload: "",
+        deadline: "",
+        specialization: "",
+        semester: "",
+      });
+      setOpened(false); // Close modal after successful submission
+    } catch (error) {
+      // Handle error
+      console.error("Error adding assessment:", error);
+    }
+  };
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.id}>
       <Table.Td>{row.assessmentName}</Table.Td>
@@ -236,52 +276,64 @@ const PMAddAssestment = () => {
 
   return (
     <div style={{ position: "absolute", top: "160px" }}>
-      {/* Add assessment Modal */}
-      <form>
-        <Modal opened={opened} onClose={close} title="Add Assessment">
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title="Add Assessment"
+      >
+        {/* Add assessment Modal */}
+        <form onSubmit={handleSubmit}>
           <TextInput
             mt="md"
-            rightSectionPointerEvents="none"
-            rightSection={IconUserr}
             label="Assessment Name"
             placeholder="Assessment Name"
+            name="assessmentName"
+            value={formData.assessmentName}
+            onChange={handleChange}
           />
-          <FileInput
+          {/* <FileInput
             placeholder="Pick file"
-            label="Add Assestment"
+            label="Add Assessment"
             withAsterisk
-          />
+            name="assessmentUpload"
+            onChange={handleChange}
+          /> */}
           <TextInput
             mt="md"
-            rightSectionPointerEvents="none"
             label="Deadline"
             placeholder="Deadline"
+            type="date"
+            name="deadline"
+            value={formData.deadline}
+            onChange={handleChange}
           />
-
+          <Select
+            required
+            label="Select Specialization"
+            placeholder="Choose..."
+            data={["IT", "SE", "DS", "CSNE"]}
+            style={{ maxWidth: "200px" }}
+            value={formData.specialization}
+            onChange={(e) => setFormData({ ...formData, specialization: e!! })}
+          />
           <TextInput
             mt="md"
-            rightSectionPointerEvents="none"
-            label="Specialization"
-            placeholder="Specialization"
-          />
-
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
             label="Semester"
             placeholder="Semester"
+            name="semester"
+            value={formData.semester}
+            onChange={handleChange}
           />
-
-          <center style={{ paddingTop: "10px" }}>
-            <Button
-              variant="gradient"
-              gradient={{ from: "gray", to: "blue", deg: 0 }}
-            >
-              Add Assessment
-            </Button>
-          </center>
-        </Modal>
-      </form>
+          <Button
+            mt="lg"
+            variant="gradient"
+            gradient={{ from: "gray", to: "blue", deg: 0 }}
+            type="submit"
+          >
+            Add Assessment
+          </Button>
+        </form>
+      </Modal>
 
       {/* Delete Assessment Modal */}
       <Modal
@@ -323,7 +375,6 @@ const PMAddAssestment = () => {
         </Box>
       </Modal>
 
-      {/* edit assessment form */}
       <form>
         <Modal
           opened={editOpened}
@@ -340,25 +391,41 @@ const PMAddAssestment = () => {
             label="Assessment Name"
             placeholder="Assessment Name"
           />
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
-            rightSection={IconFileTypePdff}
-            label="Assessment Upload"
-            placeholder=""
+          <FileInput
+            placeholder="Pick file"
+            label="Add Assestment"
+            withAsterisk
           />
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
-            label="Deadline"
-            placeholder="Deadline"
-          />
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              htmlFor="date"
+              style={{
+                display: "block",
+                fontWeight: "bold",
+                marginBottom: "5px",
+              }}
+            >
+              Deadline
+            </label>
+            <input
+              type="date"
+              id="date"
+              style={{
+                width: "100%",
+                padding: "8px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
 
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
-            label="Specialization"
-            placeholder="Specialization"
+          <Select
+            required
+            label="Select Specialization"
+            placeholder="Choose..."
+            data={["IT", "SE", "DS", "CSNE"]}
+            style={{ maxWidth: "200px" }}
           />
 
           <TextInput
@@ -399,7 +466,7 @@ const PMAddAssestment = () => {
               onChange={handleSearchChange}
             />
             <Button
-              onClick={open}
+              onClick={() => setOpened(true)}
               style={{
                 width: "130px",
                 display: "inline-block",
@@ -410,6 +477,7 @@ const PMAddAssestment = () => {
             </Button>
           </div>
 
+          {/* Table */}
           <Table
             highlightOnHover
             withTableBorder

@@ -38,6 +38,9 @@ const pMemberRubricsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+
+
 const MarkingRubrics = mongoose.model("markingRubrics", pMemberRubricsSchema);
+
 
 export default MarkingRubrics;
