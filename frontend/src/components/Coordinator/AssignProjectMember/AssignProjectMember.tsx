@@ -28,26 +28,26 @@ interface ThProps {
   children: React.ReactNode;
   reversed: boolean;
   sorted: boolean;
-  onSort(): void;
+  
 }
 
-function Th({ children, reversed, sorted, onSort }: ThProps) {
-  const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
-  return (
-    <Table.Th className={classes.th}>
-      <UnstyledButton onClick={onSort} className={classes.control}>
-        <Group justify="space-between">
-          <Text fw={500} fz="sm">
-            {children}
-          </Text>
-          <Center className={classes.icon}>
-            <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </Center>
-        </Group>
-      </UnstyledButton>
-    </Table.Th>
-  );
-}
+// function Th({ children, reversed, sorted}: ThProps) {
+//   const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+//   return (
+//     <Table.Th className={classes.th}>
+//       <UnstyledButton className={classes.control}>
+//         <Group justify="space-between">
+//           <Text fw={500} fz="sm">
+//             {children}
+//           </Text>
+//           <Center className={classes.icon}>
+//             <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+//           </Center>
+//         </Group>
+//       </UnstyledButton>
+//     </Table.Th>
+//   );
+// }
 
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
@@ -80,56 +80,38 @@ function sortData(
 
 
 
+
 export function AssignProjectMember() {
 
    //use react query and fetch Group data
- const { data, isLoading, isError, refetch } = useQuery({
+ const { data =[], isLoading, isError, refetch } = useQuery({
   queryKey: ["GroupData"],
   queryFn: () =>
     CoordinatorAPI.getGroupDetails().then((res) => res.data),
     
 });
 
-// const { data, isLoading:projectMemberLoading, isError:projectMemberIsError, refetch:projectMemberRefetch } = useQuery({
-//   queryKey: ["GroupData"],
-//   queryFn: () =>
-//     CoordinatorAPI.getGroupDetails().then((res) => res.data),
-    
-// });
-
-  
-
-
 
   const [search, setSearch] = useState('');
-  const [sortedData, setSortedData] = useState(data ? data : []);
+
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
-  useEffect(() => {
-    if (data) {
-      setSortedData(data);
-    }
-  }, [data]);
 
-  const setSorting = (field: keyof RowData) => {
-    const reversed = field === sortBy ? !reverseSortDirection : false;
-    setReverseSortDirection(reversed);
-    setSortBy(field);
-    setSortedData(sortData(data, { sortBy: field, reversed, search }));
-  };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setSearch(value);
-    setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
-  };
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value } = event.currentTarget;
+  //   setSearch(value);
+  //   setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
+  // };
 
-  const rows = sortedData.map((row : any) => (
-    <Table.Tr key={row._id}>
-      <Table.Td>{row.groupID}</Table.Td>
-      <Table.Td>{row.title}</Table.Td>
-      <Table.Td>{row.regNo}</Table.Td>
+  console.log(data)
+
+  const rows = data.map((row : any) => (
+    <Table.Tr key={row.groups.groupID}>
+      <Table.Td>{row.groups.groupID}</Table.Td>
+      <Table.Td>{row.groups.title}</Table.Td>
+      <Table.Td>{row.groups.registrationNumber}</Table.Td>
       <Table.Td>
       <Select
       w={'200px'}
@@ -152,40 +134,37 @@ export function AssignProjectMember() {
         mb="md"
         leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
         value={search}
-        onChange={handleSearchChange}
+        // onChange={handleSearchChange}
       />
       <Table horizontalSpacing="lg" verticalSpacing="lg" miw={900} layout="auto"  withColumnBorders>
         <Table.Tbody>
           <Table.Tr>
            
-            <Th
-              sorted={sortBy === 'groupNo'}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting('groupNo')}
+            <Table.Th
             >
               Group No
-            </Th>
-            <Th
-              sorted={sortBy === 'title'}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting('title')}
+            </Table.Th>
+            <Table.Th
+             
+            
+            
             >
               Title
-            </Th>
-            <Th
-              sorted={sortBy === 'regNo'}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting('regNo')}
+              </Table.Th>
+            <Table.Th
+             
+            
+              
             >
               Student Number
-            </Th>
-            <Th
-              sorted={sortBy === 'regNo'}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting('regNo')}
+              </Table.Th>
+            <Table.Th
+             
+             
+              
             >
               Action
-            </Th>
+              </Table.Th>
           </Table.Tr>
         </Table.Tbody>
         <Table.Tbody>
