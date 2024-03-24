@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const researchGroupSchema = new mongoose.Schema(
     {
-        id:{
+        groupID:{
             type : String,
             unique : true,
             required : true,

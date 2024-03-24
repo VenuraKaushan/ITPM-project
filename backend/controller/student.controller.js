@@ -67,7 +67,7 @@ const generateGroupID= async () => {
 
   //if array is not null, last get last group Id
   const groupId = lastGroupDetails.map((data) => {
-    return data.id;
+    return data.groupID;
   });
 
   //then we get the Integer value from the last part of the ID
@@ -86,7 +86,7 @@ export const regResearchGroup =async (req,res)=>{
   try{
     console.log(req.body.batch)
     const newGroup = new ResearchGroups({
-      id : customGroupId,
+      groupID : customGroupId,
       leader : req.body.leaderDetails,
       members : req.body.memberDetails,
       title : req.body.projectDetails.title,

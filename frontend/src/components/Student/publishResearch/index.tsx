@@ -52,8 +52,8 @@ export function PublishResearch() {
 
 
     const rows = data.map((element: any) => (
-        <Table.Tr key={element.id}>
-            <Table.Td>{element.id}</Table.Td>
+        <Table.Tr key={element._id}>
+            <Table.Td>{element.groupID}</Table.Td>
             <Table.Td>{element.title}</Table.Td>
             <Table.Td>{element.category}</Table.Td>
             <Table.Td>{element.members.length + element.leader.length}</Table.Td>
@@ -62,7 +62,7 @@ export function PublishResearch() {
                     <Button
                         onClick={() => {
                             publishReseach.setValues({
-                                groupID: element.id,
+                                groupID: element.groupID,
                                 leaderName: element.leader[0].name,
                                 member1Name: element.members[0].name,
                                 member2Name: element.members[1].name,
@@ -116,13 +116,13 @@ export function PublishResearch() {
                     />
                     <TextInput
                         rightSectionPointerEvents="none"
-                        label="Name"
+                        label="Member Name"
                         disabled
                         {...publishReseach.getInputProps("member1Name")}
                     />
                     <TextInput
                         rightSectionPointerEvents="none"
-                        label="Name"
+                        label=" Member Name"
                         disabled
                         {...publishReseach.getInputProps("member2Name")}
 
@@ -130,7 +130,7 @@ export function PublishResearch() {
 
                     <TextInput
                         rightSectionPointerEvents="none"
-                        label="Name"
+                        label="Member Name"
                         disabled
                         {...publishReseach.getInputProps("member3Name")}
 
