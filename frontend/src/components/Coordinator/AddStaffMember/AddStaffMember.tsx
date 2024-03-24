@@ -225,15 +225,16 @@ const AddStaffMember = () => {
       });
   };
 
-  // delete Stock function
+  // delete Staff Member function
   const deleteMember = (values: {
-    _id: string;
+    _id : string;
+    name: string;
    
   }) => {
     CoordinatorAPI.deleteMember(values)
       .then((res) => {
         showNotification({
-          title: `${values._id} was deleted`,
+          title: `${values.name} was deleted`,
           message: "Member was deleted successfully",
           autoClose: 1500,
           icon: <IconCheck />,
@@ -251,8 +252,8 @@ const AddStaffMember = () => {
       })
       .catch((err) => {
         showNotification({
-          title: `${values._id} was not deleted`,
-          message: "Stock was not deleted",
+          title: `${values.name} was not deleted`,
+          message: "Member was not deleted",
           autoClose: 1500,
           icon: <IconX />,
           color: "red",
@@ -499,20 +500,20 @@ const AddStaffMember = () => {
           deleteForm.reset();
           setDeleteOpen(false);
         }}
-        title="Delete Stock"
+        title="Delete Member"
       >
         <Box>
           <Text size={"sm"} mb={10}>
             Are you sure want to delete this member?
           </Text>
-          <form onSubmit={deleteForm.onSubmit((values) => deleteMember(values))}>
+          <form onSubmit={deleteForm.onSubmit((values) => deleteMember(values))}> 
             <TextInput
               withAsterisk
-              label="Member ID"
+              label="Member Name"
               required
               disabled
               mb={10}
-              {...deleteForm.getInputProps("_id")}
+              {...deleteForm.getInputProps("name")}
             />
 
             <Button

@@ -238,6 +238,26 @@ export const registerMember = async(req,res) =>{
     }
   };
 
+   //Delete Student function
+   export const deleteStudent = async (req, res) => {
+    const _id = req.params.id;
+  
+    try {
+      const deletedStudent = await User.findByIdAndDelete(_id);
+  
+      if (!deletedStudent) {
+        // If the worker is not found, send a 404 status code with a message
+        return res.status(404).json({ message: "Student not found" });
+      }
+  
+      res.status(200).json({ message: "Student deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete Student", error });
+    }
+  };
+
+
+
 
 
 

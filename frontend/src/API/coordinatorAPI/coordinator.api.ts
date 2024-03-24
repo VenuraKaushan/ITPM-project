@@ -61,6 +61,11 @@ class CoordinatorAPI{
         return axios.delete(`${BASE_URL}/coordinator/member/delete/${values._id}`,{withCredentials:true});
     };
 
+    //delete Student
+    static deleteStudent = (values : {_id : string}) =>{
+        return axios.delete(`${BASE_URL}/coordinator/student/delete/${values._id}`,{withCredentials:true});
+    };
+
 };
 
 export default CoordinatorAPI;
