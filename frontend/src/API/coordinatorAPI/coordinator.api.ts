@@ -66,6 +66,13 @@ class CoordinatorAPI{
         return axios.delete(`${BASE_URL}/coordinator/student/delete/${values._id}`,{withCredentials:true});
     };
 
+    //get all group details to assign project member
+    static getGroupDetails(){
+
+        return axios.get(`${BASE_URL}/coordinator/getgroupdetails`,{withCredentials:true});
+        
+    }
+
 };
 
 export default CoordinatorAPI;
