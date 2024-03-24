@@ -1,4 +1,5 @@
 import User from "../model/users.model.js";
+import ResearchGroups from "../model/group.model.js";
 import bcryptjs from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import "dotenv/config";
@@ -255,6 +256,19 @@ export const registerMember = async(req,res) =>{
       res.status(500).json({ message: "Failed to delete Student", error });
     }
   };
+
+  //Assign Project Member get details function
+    export const getGroupDetails = async(req,res) =>{
+      try{
+        const groups = await ResearchGroups.find({role: "STUDENT"})
+  
+        //If no group found , send 200 status code with a message
+        res.status(200).json(groups);
+  
+      }catch(error){
+        res.status(500).json({message : "Cannot find Group"})
+      }
+    }
 
 
 
