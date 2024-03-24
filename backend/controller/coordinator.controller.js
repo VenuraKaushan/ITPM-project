@@ -260,7 +260,7 @@ export const registerMember = async(req,res) =>{
   //Assign Project Member get details function
     export const getGroupDetails = async(req,res) =>{
       try{
-        const groups = await ResearchGroups.find({role: "STUDENT"})
+        const groups = await ResearchGroups.find()
   
         //If no group found , send 200 status code with a message
         res.status(200).json(groups);

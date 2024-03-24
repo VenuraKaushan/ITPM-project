@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import {
   Table,
   ScrollArea,
@@ -13,6 +13,8 @@ import {
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react';
 import classes from '../../../Styles/TableSort.module.css'
 import { Select } from '@mantine/core';
+import CoordinatorAPI from '../../../API/coordinatorAPI/coordinator.api';
+import { useQuery } from "@tanstack/react-query";
 
 
 interface RowData {
@@ -76,26 +78,39 @@ function sortData(
   );
 }
 
-const data = [
-  {
-    _id : "01",
-    groupNo: "Grp001",
-    title: "Social Media",
-    regNo: "IT21244766",
-  },
-  {
-    _id : "02",
-    groupNo: "Grp002",
-    title: "Social Media",
-    regNo: "IT21244766", 
-  },
-];
+
 
 export function AssignProjectMember() {
+
+   //use react query and fetch Group data
+ const { data, isLoading, isError, refetch } = useQuery({
+  queryKey: ["GroupData"],
+  queryFn: () =>
+    CoordinatorAPI.getGroupDetails().then((res) => res.data),
+    
+});
+
+// const { data, isLoading:projectMemberLoading, isError:projectMemberIsError, refetch:projectMemberRefetch } = useQuery({
+//   queryKey: ["GroupData"],
+//   queryFn: () =>
+//     CoordinatorAPI.getGroupDetails().then((res) => res.data),
+    
+// });
+
+  
+
+
+
   const [search, setSearch] = useState('');
-  const [sortedData, setSortedData] = useState(data);
+  const [sortedData, setSortedData] = useState(data ? data : []);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
+
+  useEffect(() => {
+    if (data) {
+      setSortedData(data);
+    }
+  }, [data]);
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -110,10 +125,9 @@ export function AssignProjectMember() {
     setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
-  const rows = sortedData.map((row) => (
+  const rows = sortedData.map((row : any) => (
     <Table.Tr key={row._id}>
-      <Table.Td>{row._id}</Table.Td>
-      <Table.Td>{row.groupNo}</Table.Td>
+      <Table.Td>{row.groupID}</Table.Td>
       <Table.Td>{row.title}</Table.Td>
       <Table.Td>{row.regNo}</Table.Td>
       <Table.Td>
@@ -126,6 +140,10 @@ export function AssignProjectMember() {
     </Table.Tr>
   ));
 
+  if (isLoading) {
+    return <div>Loading....</div>;
+  }
+
   return (
     <ScrollArea>
       <TextInput
@@ -136,16 +154,10 @@ export function AssignProjectMember() {
         value={search}
         onChange={handleSearchChange}
       />
-      <Table horizontalSpacing="lg" verticalSpacing="lg" miw={900} layout="auto">
+      <Table horizontalSpacing="lg" verticalSpacing="lg" miw={900} layout="auto"  withColumnBorders>
         <Table.Tbody>
           <Table.Tr>
-            <Th
-              sorted={sortBy === '_id'}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting('_id')}
-            >
-              ID
-            </Th>
+           
             <Th
               sorted={sortBy === 'groupNo'}
               reversed={reverseSortDirection}

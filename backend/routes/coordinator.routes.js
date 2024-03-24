@@ -1,6 +1,6 @@
 import express from "express";
 import { registerMember , registerStudent , getStaffMembers , getAllStudentDetails , 
-    updateStaffMember , updateStudentDetails , deleteStaffMember , deleteStudent }  from "../controller/coordinator.controller.js";
+    updateStaffMember , updateStudentDetails , deleteStaffMember , deleteStudent , getGroupDetails }  from "../controller/coordinator.controller.js";
 
 const router = express.Router();
 
@@ -18,6 +18,8 @@ router.put("/student/update/:id",updateStudentDetails);
 router.delete("/member/delete/:id",deleteStaffMember);
 
 router.delete("/student/delete/:id",deleteStudent);
+
+router.get(`/getgroupdetails`,getGroupDetails);
 
 
 
