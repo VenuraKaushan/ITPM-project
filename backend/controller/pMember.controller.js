@@ -1,5 +1,5 @@
 import MarkingRubrics from "../model/pMember.model.js";
-import AddAssestment from "../model/addassestment.model.js";
+import AddAssestment from "../model/assestment.model.js";
 
 export const addRubrics = async (req, res) => {
   try {
@@ -22,9 +22,12 @@ export const addAssestment = async (req, res) => {
     const newAssestment = new AddAssestment({
       assestmentName: req.body.assessmentName,
       doc: req.body.assessmentUpload,
-      date: req.body.deadline,
+      deadline: req.body.deadline,
       specialization:req.body.semester,
       semster:req.body.specialization,
+      quesDoc:'test',
+      ansDoc:'Not a Answer',
+      comment : "NaN"
     });
     const saveAssestment = await newAssestment.save();
 

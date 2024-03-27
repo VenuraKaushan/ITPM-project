@@ -1,4 +1,4 @@
-import { Text, NativeSelect, TextInput, Button, Center } from '@mantine/core';
+import { Text, NativeSelect, TextInput, Button, Center,Box } from '@mantine/core';
 import { useState } from 'react';
 import StudentAPI from '../../../API/studentAPI/student.api';
 import { IconX, IconCheck } from '@tabler/icons-react';
@@ -134,17 +134,17 @@ export const GroupRegistration = () => {
             })
             .catch((error) => {
                 showNotification({
-                    title: 'User credentials are wrong',
-                    message: "check your user credentials again",
+                    title: 'Something went wrong!!',
+                    message: `An error occurred: ${error.response.data.message}`,
                     color: "red",
-                    autoClose: 1500,
+                    autoClose: 5500,
                     icon: <IconX size={16} />
                 })
             });
     };
 
     return (
-        <>
+        <Box>
             <Center style={{ marginTop: "20px" }}>
                 <Text
                     size="lg"
@@ -214,6 +214,6 @@ export const GroupRegistration = () => {
                     </Button>
                 </div>
             </form>
-        </>
+        </Box>
     );
 };
