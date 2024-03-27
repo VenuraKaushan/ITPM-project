@@ -18,7 +18,7 @@ import { ResearchPapers } from './ResearchPapers/ResearchPapers';
 
 
 const user = {
-  name: 'Jane Spoonfighter',
+  name: 'Vinnath Pathirana',
   email: 'janspoon@fighter.dev',
   image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
 };

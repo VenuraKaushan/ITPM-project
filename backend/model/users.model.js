@@ -43,6 +43,10 @@ const usersSchema = new mongoose.Schema(
         },
         batch:{
             type : String,
+        },
+        semester:{
+            type : String,
+            default : "NaN"
         }
     },{ timestamps: true }
 );
