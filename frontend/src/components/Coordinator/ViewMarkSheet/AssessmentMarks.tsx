@@ -22,13 +22,12 @@ import {
   IconAt,
   IconUser,
   IconEdit,
-  IconTrash,
+
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
-import { useDisclosure } from "@mantine/hooks";
+
 import { useForm } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { CoordinatorHeading } from "../CoordinatorHeading";
+
 
 interface RowData {
   _id: string;
@@ -128,7 +127,6 @@ const AssessmentMark = () => {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
 

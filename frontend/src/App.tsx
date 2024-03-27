@@ -19,7 +19,7 @@ function App() {
   const client = new QueryClient();
   return (
     <MantineProvider>
-      <Notifications position="bottom-left" zIndex={2077} />
+      <Notifications position="bottom-right" zIndex={2077} />
       <ModalsProvider>
         <QueryClientProvider client={client}>
           <Router>

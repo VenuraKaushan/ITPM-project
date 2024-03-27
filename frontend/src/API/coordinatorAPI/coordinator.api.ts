@@ -70,7 +70,16 @@ class CoordinatorAPI{
     static getGroupDetails(){
 
         return axios.get(`${BASE_URL}/coordinator/getgroupdetails`,{withCredentials:true});
-        
+    }
+
+    //Get view Mark Sheet Details
+    static getViewMarkSheetDetaiils(){
+        return axios.get(`${BASE_URL}/coordinator/getviewmarksheetdetails`,{withCredentials:true});
+    }
+
+    //Get Research Group Details
+    static getResearchPaperDetails(){
+        return axios.get(`${BASE_URL}/coordinator/getresearchpaperdetails`,{withCredentials:true});
     }
 
 };

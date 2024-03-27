@@ -151,8 +151,6 @@ export const getStaffMembers = async (req, res) => {
 export const getAllStudentDetails = async (req, res) => {
   try {
     const students = await User.find({ role: "STUDENT" })
-
-    //If no students found , send 200 status code with a message
     res.status(200).json(students);
 
   } catch (error) {
@@ -261,45 +259,6 @@ export const deleteStudent = async (req, res) => {
   }
 };
 
-// //Assign Project Member get details function
-// export const getGroupDetails = async(req,res) =>{
-//   try{
-//     const groups = await ResearchGroups.find() 
-//     const users = await User.find({role : "PROJECTMEMBER"})
-
-
-//     //If no group found , send 200 status code with a message
-//     res.status(200).json(groups);
-
-
-
-//   }catch(error){
-//     res.status(500).json({message : "Cannot find Group"})
-//   }
-// }
-
-// export const getGroupDetails = async (req, res) => {
-//   try {
-//     const groups = await ResearchGroups.find();
-//     const users = await User.find({ role: "PROJECTMEMBER" });
-
-//     // If no groups found, send 200 status code with a message
-//     if (!groups || groups.length === 0) {
-//       return res.status(200).json({ message: "No groups found" });
-//     }
-
-//     // Constructing response JSON with both groups and users
-//     const responseData = {
-//       groups: groups,
-//       users: users
-//     };
-
-//     res.status(200).json(responseData);
-//   } catch (error) {
-//     res.status(500).json({ message: "Cannot find Group" });
-//   }
-// };
-
 export const getGroupDetails = async (req, res) => {
   try {
     const groups = await ResearchGroups.find();
@@ -318,6 +277,34 @@ export const getGroupDetails = async (req, res) => {
     res.status(500).json({ message: "Cannot find Group" });
   }
 };
+
+//Get View mark sheet tab group details
+export const getViewMarkSheet = async(req , res) => {
+  try{
+    const getViewMarkSheetDetails = await ResearchGroups.find();
+    res.status(200).json(getViewMarkSheetDetails);
+
+  }catch(error){
+    res.status(500).json({ message : "Cannot find the group details"})
+
+  }
+}
+
+//Get the Research paper group details
+
+export const getResearchPaperDetails = async(req,res)=>{
+  try{
+    const getResearchPaperDetails = await ResearchGroups.find();
+    res.status(200).json(getResearchPaperDetails);
+
+  }catch(error){
+    res.status(500).json({message : "Cannot find the research group details"})
+  }
+}
+
+
+
+
 
 
 

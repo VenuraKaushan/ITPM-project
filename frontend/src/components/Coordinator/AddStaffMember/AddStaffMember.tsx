@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import {
   Table,
   ScrollArea,
@@ -15,6 +15,8 @@ import {
   ActionIcon,
   Box,
   Select,
+  Autocomplete,
+  Loader,
 } from "@mantine/core";
 import {
   IconSelector,
@@ -34,6 +36,7 @@ import { useForm } from "@mantine/form";
 import CoordinatorAPI from "../../../API/coordinatorAPI/coordinator.api";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { useQuery } from "@tanstack/react-query";
+
 
 interface RowData {
   _id: string;
@@ -76,7 +79,9 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
-    keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
+  Object.values(item).some((value) =>
+  value.toString().toLowerCase().includes(query)
+  )
   );
 }
 
@@ -110,8 +115,6 @@ const AddStaffMember = () => {
       CoordinatorAPI.getAllStaffMemberDetails().then((res) => res.data),
   });
 
-  
-
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data ? data : []);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
@@ -121,6 +124,12 @@ const AddStaffMember = () => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
+
+ // customer email
+    const timeoutRef = useRef<number>(-1);
+    const[emailLoader,setEmailloader] = useState(false);
+    const[email,setEmail] = useState('');
+    const[emailData,setEmailData] = useState<string[]>([])
 
   useEffect(() => {
     if (data) {
@@ -145,7 +154,6 @@ const AddStaffMember = () => {
 
   const registerMember = async (values: {
     name: string;
-    email: string;
     phone: string;
     specialization: string;
     role: string;
@@ -156,10 +164,10 @@ const AddStaffMember = () => {
       loading: true,
       title: "Adding Member Record",
       message: "please wait while we add member record..",
-      autoClose: false,
+      autoClose: 1000,
     });
 
-    CoordinatorAPI.memberRegister(values).then((Response) => {
+    CoordinatorAPI.memberRegister({...values,email}).then((Response) => {
       updateNotification({
         id: "Add Worker",
         color: "teal",
@@ -170,24 +178,23 @@ const AddStaffMember = () => {
       });
 
       registerForm.reset();
-      //  open(false);
+      close();
 
       // getting updated details from the DB
       refetch();
     });
   };
 
-
   //Update the Member Details
-  const updateStaffMember = async(values:{
-    _id : string;
+  const updateStaffMember = async (values: {
+    _id: string;
     name: string;
     email: string;
     phone: string;
     specialization: string;
     role: string;
-  }) =>{
-    console.log(values)
+  }) => {
+    console.log(values);
     showNotification({
       id: "update-Member",
       loading: true,
@@ -226,11 +233,7 @@ const AddStaffMember = () => {
   };
 
   // delete Staff Member function
-  const deleteMember = (values: {
-    _id : string;
-    name: string;
-   
-  }) => {
+  const deleteMember = (values: { _id: string; name: string }) => {
     CoordinatorAPI.deleteMember(values)
       .then((res) => {
         showNotification({
@@ -261,9 +264,6 @@ const AddStaffMember = () => {
       });
   };
 
-
-
-
   const rows = sortedData?.map((row: any) => (
     <Table.Tr key={row._id}>
       <Table.Td>{row.name}</Table.Td>
@@ -293,7 +293,7 @@ const AddStaffMember = () => {
             </ActionIcon>
           </Tooltip>
 
-          <Tooltip label="Delete Member" >
+          <Tooltip label="Delete Member">
             <ActionIcon
               color="red"
               onClick={() => {
@@ -318,13 +318,13 @@ const AddStaffMember = () => {
 
     initialValues: {
       name: "",
-      email: "",
       phone: "",
       specialization: "",
       role: "",
     },
     validate: {
-      email: (value) => (/\S+@\S+\.\S+/.test(value) ? null : "Invalid Email"),
+      phone: (value) =>
+        /^\d{10}$/.test(value) ? null : "Invalid Phone Number",
     },
   });
 
@@ -339,6 +339,11 @@ const AddStaffMember = () => {
       phone: "",
       specialization: "",
       role: "",
+    },
+    validate: {
+      email: (value) => (/\S+@\S+\.\S+/.test(value) ? null : "Invalid Email"),
+      phone: (value) =>
+        /^\d{10}$/.test(value) ? null : "Invalid Phone Number",
     },
   });
 
@@ -355,6 +360,26 @@ const AddStaffMember = () => {
   if (isLoading) {
     return <div>Loading....</div>;
   }
+
+
+  const handleEmailChange = (val: string) => {
+    window.clearTimeout(timeoutRef.current);
+    setEmail(val);
+    setEmailData([]);
+
+    if (val.trim().length === 0 || val.includes('@')) {
+      setEmailloader(false);
+    } else {
+      setEmailloader(true);
+      timeoutRef.current = window.setTimeout(() => {
+        setEmailloader(false);
+        setEmailData(['gmail.com', 'outlook.com', 'my.sliit.lk'].map((provider) => `${val}@${provider}`));
+      }, 300);
+    }
+  };
+
+
+
   return (
     <div style={{ position: "absolute", top: "160px" }}>
       {/* Add User Modal */}
@@ -371,14 +396,20 @@ const AddStaffMember = () => {
             placeholder="Staff Member Name"
             {...registerForm.getInputProps("name")}
           />
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
-            rightSection={icon}
+      
+
+        <Autocomplete
             label="Email"
-            placeholder="Your email"
-            {...registerForm.getInputProps("email")}
+            value = {email}
+            data={emailData}
+            onChange={handleEmailChange}
+            rightSection={emailLoader ? <Loader size="1rem" /> : null}
+            placeholder="example@gmail.com"
+            mb={10}
+            
+            
           />
+
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
@@ -429,16 +460,18 @@ const AddStaffMember = () => {
       </Modal>
 
       {/* user edit modal */}
-      
-        <Modal
-          opened={editOpened}
-          onClose={() => {
-            editForm.reset();
-            setEditOpened(false);
-          }}
-          title="Edit Staff Member"
+
+      <Modal
+        opened={editOpened}
+        onClose={() => {
+          editForm.reset();
+          setEditOpened(false);
+        }}
+        title="Edit Staff Member"
+      >
+        <form
+          onSubmit={editForm.onSubmit((values) => updateStaffMember(values))}
         >
-          <form onSubmit={editForm.onSubmit((values) => updateStaffMember(values))}>
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
@@ -463,19 +496,32 @@ const AddStaffMember = () => {
             {...editForm.getInputProps("phone")}
           />
 
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
+          <Select
+            name="role"
             label="Specialization"
-            placeholder="Specialization"
+            placeholder="Select Specialization"
+            required
+            data={[
+              { value: "IT", label: "IT" },
+              { value: "SE", label: "SE" },
+              { value: "IS", label: "IS" },
+              { value: "CS", label: "CS" },
+              { value: "DS", label: "DS" },
+              { value: "CSNE", label: "CSNE" },
+            ]}
             {...editForm.getInputProps("specialization")}
           />
 
-          <TextInput
-            mt="md"
-            rightSectionPointerEvents="none"
+          <Select
+            name="role"
             label="Role"
-            placeholder="role"
+            placeholder="Select role"
+            required
+            data={[
+              { value: "PROJECTMEMBER", label: "Project Member" },
+              { value: "EXAMINER", label: "Examiner" },
+              { value: "SUPERVISOR", label: "Supervisor" },
+            ]}
             {...editForm.getInputProps("role")}
           />
 
@@ -488,9 +534,8 @@ const AddStaffMember = () => {
               Edit Details
             </Button>
           </center>
-          </form>
-        </Modal>
-     
+        </form>
+      </Modal>
 
       {/* Delete Modal */}
       <Modal
@@ -506,7 +551,9 @@ const AddStaffMember = () => {
           <Text size={"sm"} mb={10}>
             Are you sure want to delete this member?
           </Text>
-          <form onSubmit={deleteForm.onSubmit((values) => deleteMember(values))}> 
+          <form
+            onSubmit={deleteForm.onSubmit((values) => deleteMember(values))}
+          >
             <TextInput
               withAsterisk
               label="Member Name"
@@ -526,7 +573,7 @@ const AddStaffMember = () => {
             >
               No I don't delete it
             </Button>
-            <Button color="red" type="submit" style={{marginLeft:'10px'}}>
+            <Button color="red" type="submit" style={{ marginLeft: "10px" }}>
               Delete it
             </Button>
           </form>
