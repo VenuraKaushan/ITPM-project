@@ -3,6 +3,10 @@ import bcryptjs from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import ResearchGroups from "../model/group.model.js"
+import Assessments from "../model/assestment.model.js";
+import path from 'path';
+
+
 
 //student login function
 export const studentLogin = async (req, res) => {
@@ -133,5 +137,55 @@ export const getResearch = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ message: "Failed to get research", err });
+  }
+}
+
+export const getAssessment = async (req, res) => {
+  try {
+    const assessments = await Assessments.find()
+
+    res.status(200).json(assessments);
+
+  } catch (err) {
+    res.status(500).json({ message: "Failed to get Assessments data", err });
+  }
+}
+
+export const uploadAssessmentDoc = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    // console.log(req.body); // Check if body contains any data
+    console.log(req.file);
+
+    return res.status(200).json(req.file);
+
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ message: 'Failed to upload assessment.', error: error.message });
+  }
+};
+
+export const submitAssessment = async (req,res)=>{
+
+  try{
+    const _id = req.params.id;
+
+    const updateFields = {
+      comment: req.body.comment,
+      ansDoc: req.body.submitDoc.path,
+    }
+
+    console.log(updateFields)
+
+    const uploadAssessment = await Assessments.findByIdAndUpdate(_id, updateFields, {
+      new: true,
+    });
+
+    res.status(200).json(uploadAssessment);
+
+  }catch(err){
+    console.log(err.message);
+    res.status(500).json({ message: "Failed to Upload Assessment", err });
+
   }
 }
