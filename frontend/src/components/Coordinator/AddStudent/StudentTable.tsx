@@ -1,4 +1,4 @@
-import { useState , useEffect } from "react";
+import { useState , useEffect ,useRef } from "react";
 import {
   Table,
   ScrollArea,
@@ -14,8 +14,10 @@ import {
   TableTh,
   Tooltip,
   ActionIcon,
+  Autocomplete,
   Select,
   Box,
+  Loader,
 } from "@mantine/core";
 import {
   IconSelector,
@@ -80,8 +82,10 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
-    keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
-  );
+  Object.values(item).some((value) =>
+  value.toString().toLowerCase().includes(query)
+)
+);
 }
 
 function sortData(
@@ -129,6 +133,12 @@ const StudentDetails = () => {
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
 
+   // customer email
+   const timeoutRef = useRef<number>(-1);
+   const[emailLoader,setEmailloader] = useState(false);
+   const[email,setEmail] = useState('');
+   const[emailData,setEmailData] = useState<string[]>([])
+
   useEffect(() => {
     if (data) {
       setSortedData(data);
@@ -153,7 +163,7 @@ const StudentDetails = () => {
 
   const registerStudent = async (values: {
     name: string;
-    email: string;
+    // email: string;
     regNo: string;
     specialization: string;
     batch: string;
@@ -168,7 +178,7 @@ const StudentDetails = () => {
       autoClose: false,
     });
 
-    CoordinatorAPI.studentRegister(values).then((Response) => {
+    CoordinatorAPI.studentRegister({...values,email}).then((Response) => {
       updateNotification({
         id: "Add Student",
         color: "teal",
@@ -179,7 +189,7 @@ const StudentDetails = () => {
       });
 
        registerForm.reset();
-      //  open(false);
+      close();
 
       // getting updated details from the DB
        refetch();
@@ -335,19 +345,11 @@ const StudentDetails = () => {
 
     initialValues: {
       name: "",
-      email: "",
       regNo: "",
       specialization :  "",
       batch : "",
       semester : "",      
-    },validate: {
-      email: (value) =>
-        /\S+@\S+\.\S+/.test(
-          value
-        )
-          ? null
-          : "Invalid Email",
-    },
+    }
   });
 
   //declare edit form
@@ -379,6 +381,22 @@ const StudentDetails = () => {
     return <div>Loading....</div>;
   }
 
+  const handleEmailChange = (val: string) => {
+    window.clearTimeout(timeoutRef.current);
+    setEmail(val);
+    setEmailData([]);
+
+    if (val.trim().length === 0 || val.includes('@')) {
+      setEmailloader(false);
+    } else {
+      setEmailloader(true);
+      timeoutRef.current = window.setTimeout(() => {
+        setEmailloader(false);
+        setEmailData(['gmail.com', 'outlook.com', 'my.sliit.lk'].map((provider) => `${val}@${provider}`));
+      }, 300);
+    }
+  };
+
   return (
     <div style={{ position : 'absolute' , top:'160px'}}>
       {/* Add User Modal */}
@@ -393,14 +411,25 @@ const StudentDetails = () => {
             placeholder="Student Name"
             {...registerForm.getInputProps("name")}
           />
-          <TextInput
+          {/* <TextInput
             mt="md"
             rightSectionPointerEvents="none"
             rightSection={icon}
             label="Email"
             placeholder="Your email"
             {...registerForm.getInputProps("email")}
+          /> */}
+
+          <Autocomplete
+            label="Email"
+            value = {email}
+            data={emailData}
+            onChange={handleEmailChange}
+            rightSection={emailLoader ? <Loader size="1rem" /> : null}
+            placeholder="example@gmail.com"
+            mb={10}
           />
+          
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"

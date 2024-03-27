@@ -66,6 +66,22 @@ class CoordinatorAPI{
         return axios.delete(`${BASE_URL}/coordinator/student/delete/${values._id}`,{withCredentials:true});
     };
 
+    //get all group details to assign project member
+    static getGroupDetails(){
+
+        return axios.get(`${BASE_URL}/coordinator/getgroupdetails`,{withCredentials:true});
+    }
+
+    //Get view Mark Sheet Details
+    static getViewMarkSheetDetaiils(){
+        return axios.get(`${BASE_URL}/coordinator/getviewmarksheetdetails`,{withCredentials:true});
+    }
+
+    //Get Research Group Details
+    static getResearchPaperDetails(){
+        return axios.get(`${BASE_URL}/coordinator/getresearchpaperdetails`,{withCredentials:true});
+    }
+
 };
 
 export default CoordinatorAPI;
