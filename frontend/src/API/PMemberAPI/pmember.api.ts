@@ -10,6 +10,17 @@ class PMemberAPI{
         return axios.post(`${BASE_URL}/pm/add/rubrics`,values,{withCredentials:true});
     }
 
+    static addAssestment (values : {
+        assessmentName : string,
+        assessmentUpload : string,
+        deadline : string,
+        semester : string,
+        specialization : string
+    }) {
+        
+        return axios.post(`${BASE_URL}/pm/add/assestment`,values,{withCredentials:true});
+    }
+
   
 };
 
