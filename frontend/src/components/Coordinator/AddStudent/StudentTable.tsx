@@ -8,10 +8,8 @@ import {
   Center,
   TextInput,
   rem,
-  keys,
   Button,
   Modal,
-  TableTh,
   Tooltip,
   ActionIcon,
   Autocomplete,
@@ -189,6 +187,7 @@ const StudentDetails = () => {
       });
 
        registerForm.reset();
+       setEmail("");
       close();
 
       // getting updated details from the DB
@@ -212,7 +211,7 @@ const StudentDetails = () => {
       loading: true,
       title: "Updating Student record",
       message: "Please wait while we update record..",
-      autoClose: false,
+      autoClose: 2000,
     });
     CoordinatorAPI.updateStudentDetails(values)
       .then((response) => {
@@ -349,7 +348,17 @@ const StudentDetails = () => {
       specialization :  "",
       batch : "",
       semester : "",      
+    },
+    validate:{
+      name: (value) =>
+      value.length < 2 ? "Name must have at least 2 letters" : null,
+      regNo: (value) =>
+      !/^IT\d{8}$/.test(value)
+        ? "RegNo must start with 'IT' followed by 8 digits"
+        : null,
+          
     }
+    
   });
 
   //declare edit form
@@ -365,6 +374,20 @@ const StudentDetails = () => {
       batch: "",
       semester: "",
     },
+    validate:{
+      name: (value) =>
+      value.length < 2 ? "Name must have at least 2 letters" : null,
+      email: (value) =>
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+          value
+        )
+          ? null
+          : "Invalid email",
+          regNo: (value) =>
+      !/^IT\d{8}$/.test(value)
+        ? "RegNo must start with 'IT' followed by 8 digits"
+        : null,
+    }
   });
 
   //Declare delete form
@@ -566,6 +589,7 @@ const StudentDetails = () => {
               placeholder="Your email"
               {...editForm.getInputProps("email")}
             />
+            
             <TextInput
               mt="md"
               rightSectionPointerEvents="none"
