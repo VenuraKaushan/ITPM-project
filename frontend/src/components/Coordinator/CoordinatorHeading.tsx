@@ -17,11 +17,11 @@ import { AssignProjectMember } from './AssignProjectMember/AssignProjectMember';
 import { ResearchPapers } from './ResearchPapers/ResearchPapers';
 
 
-const user = {
-  name: 'Vinnath Pathirana',
-  email: 'janspoon@fighter.dev',
-  image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
-};
+// const user = {
+//   name: 'Vinnath Pathirana',
+//   email: 'janspoon@fighter.dev',
+//   image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
+// };
 
 const tabs = [
   'Add User',
