@@ -18,8 +18,10 @@ export const staffLogin = async (req, res) => {
       
         //  compare database password and user entered password and role
         if (bcryptjs.compareSync(password, data.password) && 
-        (data.role === "COORDINATOR") || (data.role === "PM") ||  
-        (data.role === "EXAMINERS")) {
+        (data.role === "COORDINATOR") || 
+        (data.role === "PM") ||  
+        (data.role === "EXAMINERS")||
+        data.role === "PROJECTMEMBER") {
           console.log("work")
 
           // create access Token

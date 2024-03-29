@@ -8,7 +8,7 @@ import {
     Modal,
     TextInput,
     Button,
-    NativeSelect,
+    Textarea,
     Group,
     rem
 } from '@mantine/core';
@@ -22,6 +22,10 @@ import { useForm } from '@mantine/form';
 export function PublishResearch() {
     const [opened, { open, close }] = useDisclosure(false);
 
+    //get logged user session data
+    const user = JSON.parse(localStorage.getItem("user-student-session") || "{}");
+
+    console.log(user)
     // Declare publish research form
     const publishReseach = useForm({
         validateInputOnChange: true,
@@ -47,7 +51,7 @@ export function PublishResearch() {
         refetch,
     } = useQuery({
         queryKey: ["researchData"],
-        queryFn: () => StudentAPI.getResearch().then((res) => res.data),
+        queryFn: () => StudentAPI.getResearch(user).then((res) => res.data),
     });
 
 
@@ -95,12 +99,12 @@ export function PublishResearch() {
                 </Text>
             </Center>
             <Modal opened={opened} onClose={close} title="Publish Research" size="70%">
-                <TextInput fw={500}
+                <Textarea fw={500}
                     {...publishReseach.getInputProps("groupID")}
                     disabled
 
                 >
-                </TextInput>
+                </Textarea>
 
                 <Text fw={500} style={{ marginTop: "40px" }}>
                     Group Members

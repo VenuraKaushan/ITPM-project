@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   ScrollArea,
@@ -15,6 +15,7 @@ import {
   Tooltip,
   ActionIcon,
   Box,
+  FileInput,
 } from "@mantine/core";
 import {
   IconSelector,
@@ -32,8 +33,8 @@ import classes from "../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { FileInput } from "@mantine/core";
 import PMemberAPI from "../../API/PMemberAPI/pmember.api";
+import axios from "axios";
 
 interface RowData {
   id: string;
@@ -135,6 +136,7 @@ const PMAddAssestment = () => {
   const IconFileTypePdff = (
     <IconFileTypePdf style={{ width: rem(16), height: rem(16) }} />
   );
+  const [file, setFile] = useState("");
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -152,42 +154,73 @@ const PMAddAssestment = () => {
   };
 
   /*Add Assestment*/
-  const [formData, setFormData] = useState({
-    assessmentName: "",
-    assessmentUpload: "",
-    deadline: "",
-    specialization: "",
-    semester: "",
-  });
+ const submitAssessmentForm = useForm({
+  validateInputOnChange: true,
+  initialValues: {
+      assessmentName: "",
+      deadline: "",
+      submitDoc: "",
+      semester : "",
+      specialization:""
+  },
+});
 
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleFileChange = (file: any) => {
+    console.log(file);
+    setFile(file);
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (file) {
+      handleUpload();
+    }
+  }, [file]);
+
+  //handle file upload
+  const handleUpload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // Make HTTP request to backend API to upload file
+      const response = await axios.post(
+        "http://localhost:3001/pmapi/question/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Call submitAssessment with response data after successful upload
+      handleSubmit({
+        ...submitAssessmentForm.values,
+        submitDoc: response.data,
+      });
+    } catch (err) {
+      console.error("Error uploading file:", err);
+    }
+  };
+
+  const handleSubmit = async (values: {
+    assessmentName: string;
+    submitDoc: string;
+    deadline: string;
+    specialization: string;
+    semester: string;
+  }) => {
 
     try {
-      const res = await PMemberAPI.addAssestment(formData);
-      // Optionally, you can show a success notification or perform other actions upon successful addition
-      console.log("Assestment added successfully!");
-      setFormData({
-        assessmentName: "",
-        assessmentUpload: "",
-        deadline: "",
-        specialization: "",
-        semester: "",
-      });
+      const res = await PMemberAPI.addAssestment(values);
+
       setOpened(false); // Close modal after successful submission
     } catch (error) {
       // Handle error
       console.error("Error adding assessment:", error);
     }
   };
+
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.id}>
       <Table.Td>{row.assessmentName}</Table.Td>
@@ -203,7 +236,7 @@ const PMAddAssestment = () => {
                 editForm.setValues({
                   id: row.id,
                   assessmentName: row.assessmentName,
-                  assessmentUpload: row.assessmentUpload,
+                  submitDoc: row.assessmentUpload,
                   deadline: row.deadline,
                   specialization: row.specialization,
                   semester: row.semester,
@@ -243,7 +276,7 @@ const PMAddAssestment = () => {
     initialValues: {
       id: "",
       assessmentName: "",
-      assessmentUpload: "",
+      submitDoc: "",
       deadline: "",
       semester: "",
       specialization: "",
@@ -257,7 +290,7 @@ const PMAddAssestment = () => {
     initialValues: {
       id: "",
       assessmentName: "",
-      assessmentUpload: "",
+      submitDoc: "",
       deadline: "",
       semester: "",
       specialization: "",
@@ -282,30 +315,30 @@ const PMAddAssestment = () => {
         title="Add Assessment"
       >
         {/* Add assessment Modal */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={submitAssessmentForm.onSubmit((values) => handleSubmit(values))}>
           <TextInput
             mt="md"
             label="Assessment Name"
             placeholder="Assessment Name"
             name="assessmentName"
-            value={formData.assessmentName}
-            onChange={handleChange}
+            {...submitAssessmentForm.getInputProps("assessmentName")}
+
           />
-          {/* <FileInput
+          <FileInput
             placeholder="Pick file"
             label="Add Assessment"
             withAsterisk
-            name="assessmentUpload"
-            onChange={handleChange}
-          /> */}
+            name="submitDoc"
+            onChange={handleFileChange}
+          />
           <TextInput
             mt="md"
             label="Deadline"
             placeholder="Deadline"
             type="date"
             name="deadline"
-            value={formData.deadline}
-            onChange={handleChange}
+            {...submitAssessmentForm.getInputProps("deadline")}
+
           />
           <Select
             required
@@ -313,16 +346,16 @@ const PMAddAssestment = () => {
             placeholder="Choose..."
             data={["IT", "SE", "DS", "CSNE"]}
             style={{ maxWidth: "200px" }}
-            value={formData.specialization}
-            onChange={(e) => setFormData({ ...formData, specialization: e!! })}
+            {...submitAssessmentForm.getInputProps("specialization")}
+
           />
           <TextInput
             mt="md"
             label="Semester"
             placeholder="Semester"
             name="semester"
-            value={formData.semester}
-            onChange={handleChange}
+            {...submitAssessmentForm.getInputProps("semester")}
+
           />
           <Button
             mt="lg"
