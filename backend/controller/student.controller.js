@@ -127,11 +127,15 @@ export const regResearchGroup = async (req, res) => {
   }
 };
 
-export const getResearch = async (req, res) => {
+//get research by leader
+export const getResearchByLeader = async (req, res) => {
 
+  const loggedUser = req.body;
+
+  console.log(loggedUser.regNo);
   try {
 
-    const research = await ResearchGroups.find()
+    const research = await ResearchGroups.find({'leader.registrationNumber': loggedUser.regNo})
 
     res.status(200).json(research)
 
