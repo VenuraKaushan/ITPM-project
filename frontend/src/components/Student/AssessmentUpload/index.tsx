@@ -26,7 +26,6 @@ export const Assessment = () => {
     const [opened, { open, close }] = useDisclosure(false);
     const icon = <IconFileCv style={{ width: rem(18), height: rem(18) }} stroke={1.5} />;
     const [file, setFile] = useState("");
-    const [fileRes, setFileRes] = useState('');
 
 
     const handleFileChange = (file: any) => {
