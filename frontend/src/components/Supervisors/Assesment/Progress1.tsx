@@ -56,7 +56,7 @@ import {
                     size="lg"
                     fw={700}
                 >
-                    View Marks
+                    Download Document
                 </Text>
             </Center>
             <ScrollArea>
