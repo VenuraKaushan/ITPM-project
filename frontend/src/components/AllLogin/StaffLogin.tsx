@@ -32,21 +32,23 @@ const StaffLogin = () => {
         localStorage.setItem("user-staff-session", JSON.stringify(response.data));
 
         console.log(response.data.role)
-        
+
         if (response.data.role === "EXAMINERS") {
           navigate("/examiner/dashboard");
         }
-        else if(response.data.role === "PROJECTMEMBER")
-        {
+        else if (response.data.role === "PROJECTMEMBER") {
           navigate("/pMember/dashboard");
         }
-        else if(response.data.role === "COORDINATOR")
-        {
+        else if (response.data.role === "COORDINATOR") {
           navigate("/coordinator/dashboard");
+        }
+        else if (response.data.role === "SUPERVISOR") {
+          navigate("/supervisors/dashboard");
+
         }
 
 
-        
+
       })
       .catch((error) => {
         showNotification({
