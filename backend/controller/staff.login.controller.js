@@ -21,7 +21,8 @@ export const staffLogin = async (req, res) => {
         (data.role === "COORDINATOR") || 
         (data.role === "PM") ||  
         (data.role === "EXAMINERS")||
-        data.role === "PROJECTMEMBER") {
+        (data.role === "PROJECTMEMBER")||
+        (data.role === "PROJECTMEMBER")) {
          
 
           // create access Token
