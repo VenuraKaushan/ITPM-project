@@ -23,6 +23,8 @@ const MarkingRubrics = () => {
     setTableData(newData);
   };
 
+  //Marks Validation
+  
   const handleInputCMarks = (index:any, event:any) => {
     const { name, value } = event.target;
     
