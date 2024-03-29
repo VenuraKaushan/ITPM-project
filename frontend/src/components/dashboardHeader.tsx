@@ -26,18 +26,12 @@ import classes from '../Styles/HeaderTabs.module.css';
 import logo from "../assets/testlogo.png"
 
 
-// const user = {
-//     name: 'Jane Spoonfighter',
-//     email: 'janspoon@fighter.dev',
-//     image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
-// };
-
-
 export const DashboardHeader = () => {
     const theme = useMantineTheme();
     const [opened, { toggle }] = useDisclosure(false);
     const [userMenuOpened, setUserMenuOpened] = useState(false);
 
+    //check whether user is student or staff member and give details to header 
     const studentUserData = JSON.parse(localStorage.getItem("user-student-session") || "{}");
     const staffUserData = JSON.parse(localStorage.getItem("user-staff-session") || "{}");
 
@@ -48,9 +42,6 @@ export const DashboardHeader = () => {
 
     const isStudent = !!studentUserData.regNo;
     const isStaff = !!staffUserData.regNo;
-
-    console.log("isStudent:", isStudent);
-    console.log("isStaff:", isStaff);
 
     if (isStudent) {
         user = studentUserData;
