@@ -132,11 +132,12 @@ export const Assessment = () => {
 
         }
     }
+    
 
     const rows = data.map((element: any) => (
         <Table.Tr key={element._id}>
             <Table.Td>{element.assestmentName}</Table.Td>
-            <Table.Td>{element.deadline}</Table.Td>
+            <Table.Td>{new Date(element.deadline).toLocaleDateString("en-CA")}</Table.Td>
             <Table.Td>{element.quesDoc}</Table.Td>
             <Table.Td>
                 <Center>
@@ -148,7 +149,7 @@ export const Assessment = () => {
                             submitAssessmentForm.setValues({
                                 _id: element._id,
                                 assessmentName: element.assestmentName,
-                                deadline: element.deadline,
+                                deadline: new Date(element.deadline).toLocaleDateString("en-CA"),
                             })
                         }}
 

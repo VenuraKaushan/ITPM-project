@@ -1,10 +1,13 @@
-import { Text, NativeSelect, TextInput, Button, Center,Box } from '@mantine/core';
+import { Text, NativeSelect, TextInput, Button, Center, Box } from '@mantine/core';
 import { useState } from 'react';
 import StudentAPI from '../../../API/studentAPI/student.api';
 import { IconX, IconCheck } from '@tabler/icons-react';
 import { showNotification, updateNotification } from '@mantine/notifications';
 
 export const GroupRegistration = () => {
+    const [registrationNumberErrors, setRegistrationNumberErrors] = useState(['', '', '']);
+    const [leaderRegistrationNumberError, setLeaderRegistrationNumberError] = useState('');
+
     const [formData, setFormData] = useState({
         batch: '',
         memberDetails: [] as {
@@ -143,6 +146,38 @@ export const GroupRegistration = () => {
             });
     };
 
+    // Function to handle registration number validation
+    const handleRegistrationNumberChange = (event: any, index: any) => {
+        const value = event.target.value;
+
+        // Check if registration number starts with 'IT' and has a total of 10 characters
+        if (!value.startsWith('IT') || value.length !== 10) {
+            setRegistrationNumberErrors((prevErrors) => {
+                const newErrors = [...prevErrors];
+                newErrors[index] = 'Must start with "IT" and 8 digits';
+                return newErrors;
+            });
+        } else {
+            setRegistrationNumberErrors((prevErrors) => {
+                const newErrors = [...prevErrors];
+                newErrors[index] = '';
+                return newErrors;
+            });
+        }
+    };
+
+    // Function to handle leader registration number validation
+    const handleLeaderRegistrationNumberChange = (event: any) => {
+        const value = event.target.value;
+
+        // Check if registration number starts with 'IT' and has a total of 8 characters
+        if (!value.startsWith('IT') || value.length !== 8) {
+            setLeaderRegistrationNumberError('Must start with "IT" and 8 digits');
+        } else {
+            setLeaderRegistrationNumberError('');
+        }
+    };
+
     return (
         <Box>
             <Center style={{ marginTop: "20px" }}>
@@ -172,7 +207,14 @@ export const GroupRegistration = () => {
                         {[1, 2, 3].map((index) => (
                             <div key={index}>
                                 <TextInput name={`memberName${index}`} label="Member name" placeholder="Member name" required />
-                                <TextInput name={`registrationNumber${index}`} label="Registration Number" placeholder="ITxxxxxx" required />
+                                <TextInput
+                                    name={`registrationNumber${index}`}
+                                    label="Registration Number"
+                                    placeholder="ITxxxxxx"
+                                    required
+                                    onChange={(event) => handleRegistrationNumberChange(event, index)}
+                                    error={registrationNumberErrors[index]}
+                                />
                                 <TextInput name={`contactNumber${index}`} label="Contact Number" placeholder="+94" required />
                                 <TextInput name={`email${index}`} label="Email Address" placeholder="abc@domain.domain" type="email" required />
                                 <TextInput name={`specialization${index}`} label="Specialization" placeholder="IT" required />
@@ -186,7 +228,14 @@ export const GroupRegistration = () => {
                     </Text>
                     <div style={{ display: "flex", flexDirection: "row", gap: 30, position: "relative", top: 140 }}>
                         <TextInput name="leaderName" label="Leader name" placeholder="Leader name" required />
-                        <TextInput name="leaderRegistrationNumber" label="Registration Number" placeholder="ITxxxxxx" required />
+                        <TextInput
+                            name="leaderRegistrationNumber"
+                            label="Registration Number"
+                            placeholder="ITxxxxxx"
+                            required
+                            onChange={handleLeaderRegistrationNumberChange}
+                            error={leaderRegistrationNumberError}
+                        />
                         <TextInput name="leaderContactNumber" label="Contact Number" placeholder="+94" required />
                         <TextInput name="leaderEmail" label="Email Address" placeholder="abc@domain.domain" type="email" required />
                         <TextInput name="leaderSpecialization" label="Specialization" placeholder="IT" required />
