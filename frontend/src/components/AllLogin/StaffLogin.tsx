@@ -40,6 +40,11 @@ const StaffLogin = () => {
         {
           navigate("/pMember/dashboard");
         }
+        else if(response.data.role === "COORDINATOR")
+        {
+          navigate("/coordinator/dashboard");
+        }
+
 
         
       })

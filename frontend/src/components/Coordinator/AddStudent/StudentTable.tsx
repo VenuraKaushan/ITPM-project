@@ -642,7 +642,7 @@ const StudentDetails = () => {
                 gradient={{ from: "gray", to: "blue", deg: 0 }}
 
               >
-                Edit Details
+                Update Details
               </Button>
             </center>
           </form>
