@@ -6,6 +6,10 @@ import StaffRoutes from './routes/staff.routes.js'
 import StudentRoutes from './routes/student.routes.js'
 import CoordinatorRoutes from './routes/coordinator.routes.js'
 import PmemberRoutes from "./routes/pMember.routes.js"
+import multer from 'multer';
+import fs from 'fs';
+import { promisify } from 'util';
+const writeFileAsync = promisify(fs.writeFile);
 
 //initialized express
 const app = express();
@@ -28,6 +32,17 @@ app.use((req,res,next)=>{
     next();
 });
 
+// Multer storage configuration
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    }
+  });
+  const upload = multer({ storage });
+
 // root end point
 app.get("/",(req,res)=>{
     res.send("Welcome to PMMS!"); 
@@ -42,6 +57,10 @@ app.use('/student',StudentRoutes);
 app.use('/coordinator',CoordinatorRoutes);
 
 app.use('/pm',PmemberRoutes);
+
+app.use('/api', upload.single('file'),StudentRoutes)
+
+app.use('/pmapi', upload.single('file'),PmemberRoutes)
 
 app.listen(PORT,()=>{
     console.log(`🚀💀 Server is started on port ${PORT}!`);

@@ -13,30 +13,146 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconFileCv } from '@tabler/icons-react';
+import { useQuery } from "@tanstack/react-query";
+import StudentAPI from '../../../API/studentAPI/student.api';
+import { useForm } from '@mantine/form';
+import { showNotification, updateNotification } from '@mantine/notifications';
+import { IconX, IconCheck } from '@tabler/icons-react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-
-
-const elements = [
-    { assessmentName: "Proposal 1", Deadline: "30/03/2024 - 12.00AM", },
-    { assessmentName: "Proposal 2", Deadline: "15/04/2024 - 12.00AM", },
-    { assessmentName: "Proposal 3", Deadline: "30/04/2024 - 12.00AM", },
-
-];
 
 export const Assessment = () => {
     const [opened, { open, close }] = useDisclosure(false);
     const icon = <IconFileCv style={{ width: rem(18), height: rem(18) }} stroke={1.5} />;
+    const [file, setFile] = useState("");
 
-    const rows = elements.map((element) => (
-        <Table.Tr key={element.assessmentName}>
-            <Table.Td>{element.assessmentName}</Table.Td>
-            <Table.Td>{element.Deadline}</Table.Td>
+
+    const handleFileChange = (file: any) => {
+        setFile(file);
+    };
+
+    useEffect(() => {
+        if (file) {
+            handleUpload();
+        }
+    }, [file]);
+
+    // Declare submit assessment form
+    const submitAssessmentForm = useForm({
+        validateInputOnChange: true,
+        initialValues: {
+            _id: '',
+            assessmentName: "",
+            deadline: "",
+            submitDoc: "",
+            comment: "",
+        },
+    });
+
+    // Use react query and fetch research data
+    const {
+        data = [],
+        isLoading,
+        isError,
+        refetch,
+    } = useQuery({
+        queryKey: ["assessmentData"],
+        queryFn: () => StudentAPI.getAllAssessment().then((res) => res.data),
+    });
+
+
+    //submit assessment function
+    const submitAssessment = async (values: {
+        _id: String,
+        submitDoc: string,
+        comment: String
+    }) => {
+        showNotification({
+            id: "Submit-Assessment",
+            color: "teal",
+            title: "Submitting Assessment",
+            message: "Please wait while we submit your Assessment..",
+            icon: <IconCheck size={16} />,
+            autoClose: 5000,
+        });
+
+        StudentAPI.submitAssessment(values)
+            .then((res) => {
+                updateNotification({
+                    id: "Submit-Assessment",
+                    color: "teal",
+                    icon: <IconCheck />,
+                    title: "Assessment submitted successfully",
+                    message: "Assessment submitted successfully.",
+                    // icon: <IconCheck />,
+                    autoClose: 5000,
+                });
+
+                submitAssessmentForm.reset();
+                close();
+
+                refetch();
+
+            })
+            .catch((error) => {
+                updateNotification({
+                    id: "Submit-Assessment",
+                    color: "red",
+                    title: "Something went wrong!!",
+                    icon: <IconX />,
+                    message: `An error occurred: ${error.response.data.message}`,
+                    // icon: <IconAlertTriangle />,
+                    autoClose: 5000,
+                });
+            });
+
+    }
+
+    //handle file upload
+    const handleUpload = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Make HTTP request to backend API to upload file
+            const response = await axios.post('http://localhost:3001/api/upload/assessment/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            // Call submitAssessment with response data after successful upload
+            submitAssessment({
+                ...submitAssessmentForm.values,
+                submitDoc: response.data,
+            });
+
+        } catch (err) {
+            console.error('Error uploading file:', err);
+
+        }
+    }
+    
+
+    const rows = data.map((element: any) => (
+        <Table.Tr key={element._id}>
+            <Table.Td>{element.assestmentName}</Table.Td>
+            <Table.Td>{new Date(element.deadline).toLocaleDateString("en-CA")}</Table.Td>
+            <Table.Td>{element.quesDoc}</Table.Td>
             <Table.Td>
                 <Center>
                     <Button
                         variant="gradient"
                         gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
-                        onClick={open}
+                        onClick={() => {
+                            open()
+                            submitAssessmentForm.setValues({
+                                _id: element._id,
+                                assessmentName: element.assestmentName,
+                                deadline: new Date(element.deadline).toLocaleDateString("en-CA"),
+                            })
+                        }}
+
                     >
                         View assessment
                     </Button>
@@ -58,64 +174,73 @@ export const Assessment = () => {
                 </Text>
             </Center>
 
+
             <Modal opened={opened} onClose={close} title="Submit Assessment" size="55%">
+                <form onSubmit={submitAssessmentForm.onSubmit((values) => submitAssessment(values))}>
 
-                <div style={{ display: "flex", gap: 30, marginBottom: "40px" }}>
-                    <TextInput
-                        rightSectionPointerEvents="none"
-                        label="Assessment Name"
-                        placeholder="Proposal 1"
-                        disabled
-                    />
-
-                </div>
-
-                <div style={{ display: "flex", gap: 30 }}>
-                    <TextInput
-                        rightSectionPointerEvents="none"
-                        label="Deadline "
-                        placeholder="30/03/2024 - 12.00AM"
-                        disabled
-                    />
-
-                </div>
-
-                <div>
-                    <Center>
-                        <FileInput
-                            rightSection={icon}
-                            placeholder="Your Assessment"
+                    <div style={{ display: "flex", gap: 30, marginBottom: "40px" }}>
+                        <TextInput
                             rightSectionPointerEvents="none"
-                            mt="50"
-                            styles={{ input: { height: '100px', width: '600px' } }}
+                            label="Assessment Name"
+                            disabled
+                            {...submitAssessmentForm.getInputProps("assessmentName")}
+
                         />
-                    </Center>
 
-                    <TextInput
-                        mt={31}
-                        rightSectionPointerEvents="none"
-                        label="Comment"
-                        styles={{ input: { width: '200px' } }}
-                    />
-                </div>
+                    </div>
+
+                    <div style={{ display: "flex", gap: 30 }}>
+                        <TextInput
+                            rightSectionPointerEvents="none"
+                            disabled
+                            {...submitAssessmentForm.getInputProps("deadline")}
+
+                        />
+
+                    </div>
+
+                    <div>
+                        <TextInput
+                            mt={31}
+                            rightSectionPointerEvents="none"
+                            label="Comment"
+                            styles={{ input: { width: '200px' } }}
+                            {...submitAssessmentForm.getInputProps("comment")}
+
+                        />
+                        <Center>
+                            <FileInput
+                                rightSection={icon}
+                                placeholder="Your Assessment"
+                                rightSectionPointerEvents="none"
+                                mt="30"
+                                styles={{ input: { height: '100px', width: '600px' } }}
+                                onChange={handleFileChange}
 
 
-                <div style={{ marginLeft: "500px", display: "flex", gap: 10, }}>
-                    <Button
-                        variant="filled" color="red" radius="xl"
+                            />
+                        </Center>
 
-                    >
-                        Remove
-                    </Button>
 
-                    <Button
-                        variant="filled" color="rgba(0, 0, 0, 1)" radius="xl"
+                    </div>
 
-                    >
-                        Submit
-                    </Button>
-                </div>
 
+                    <div style={{ marginLeft: "500px", display: "flex", gap: 10,marginTop:"20px" }}>
+                        <Button
+                            variant="filled" color="red" radius="xl"
+                            onClick={() => submitAssessmentForm.reset()}
+                        >
+                            Remove
+                        </Button>
+
+                        <Button
+                            variant="filled" color="rgba(0, 0, 0, 1)" radius="xl"
+                            type='submit'
+                        >
+                            Submit
+                        </Button>
+                    </div>
+                </form>
 
             </Modal>
             <ScrollArea>
@@ -130,6 +255,7 @@ export const Assessment = () => {
                         <Table.Tr>
                             <Table.Th>Assessment Name</Table.Th>
                             <Table.Th>Deadline</Table.Th>
+                            <Table.Th>Document</Table.Th>
                             <Table.Th>Action</Table.Th>
                         </Table.Tr>
                     </Table.Thead>

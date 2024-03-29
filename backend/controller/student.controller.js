@@ -3,60 +3,64 @@ import bcryptjs from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import ResearchGroups from "../model/group.model.js"
+import Assessments from "../model/assestment.model.js";
+import path from 'path';
+
+
 
 //student login function
-export const studentLogin = async (req,res) =>{
-    const { email, password } = req.body;
-    console.log(email, password);
-  
-    User.find({ email: email })
-      .then((data) => {
-        if (data.length > 0) {
-          data = data[0];
-        
-          //  compare database password and user entered password and role
-          if (bcryptjs.compareSync(password, data.password) && (data.role === "STUDENT")) {
-            console.log("work")
-  
-            // create access Token
-            const accessToken = jwt.sign(
-              { _id: data._id, role: data.role },
-              process.env.SECRET_KEY,
-              { expiresIn: 24 * 60 * 60 }
-            ); //access Token will expires in 1 day
-  
-            //   set access Token as a http only cookie
-            res.cookie("accessToken", accessToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: false });//this cookie expires in 1 day
-  
-            //   create user details
-            const userDetails = {
-              _id: data._id,
-              name: data.name,
-              email: data.email,
-              role: data.role,
-              specialization : data.specialization,
-              regNo : data.regNo
-            };
-  
-            //   sends the user details
-            res.status(200).json(userDetails);
-  
-          } else {
-            throw new Error("Password is wrong");
-          }
+export const studentLogin = async (req, res) => {
+  const { email, password } = req.body;
+  console.log(email, password);
+
+  User.find({ email: email })
+    .then((data) => {
+      if (data.length > 0) {
+        data = data[0];
+
+        //  compare database password and user entered password and role
+        if (bcryptjs.compareSync(password, data.password) && (data.role === "STUDENT")) {
+          console.log("work")
+
+          // create access Token
+          const accessToken = jwt.sign(
+            { _id: data._id, role: data.role },
+            process.env.SECRET_KEY,
+            { expiresIn: 24 * 60 * 60 }
+          ); //access Token will expires in 1 day
+
+          //   set access Token as a http only cookie
+          res.cookie("accessToken", accessToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: false });//this cookie expires in 1 day
+
+          //   create user details
+          const userDetails = {
+            _id: data._id,
+            name: data.name,
+            email: data.email,
+            role: data.role,
+            specialization: data.specialization,
+            regNo: data.regNo
+          };
+
+          //   sends the user details
+          res.status(200).json(userDetails);
+
         } else {
-          throw new Error("Does not exist this user");
+          throw new Error("Password is wrong");
         }
-      })
-      .catch((error) => {
-        console.log(error.message)
-        res.status(404).json({ error: error.message });
-      });
+      } else {
+        throw new Error("Does not exist this user");
+      }
+    })
+    .catch((error) => {
+      console.log(error.message)
+      res.status(404).json({ error: error.message });
+    });
 };
 
 
 //generate group Id
-const generateGroupID= async () => {
+const generateGroupID = async () => {
   //get last group object, if there is a group, then return that group object, otherwise return empty array
   const lastGroupDetails = await ResearchGroups.find().sort({ _id: -1 }).limit(1);
 
@@ -79,40 +83,113 @@ const generateGroupID= async () => {
 };
 
 
-export const regResearchGroup =async (req,res)=>{
-
+export const regResearchGroup = async (req, res) => {
   const customGroupId = await generateGroupID();
 
-  try{
-    console.log(req.body.batch)
+  try {
+    console.log(req.body.batch);
+
+    // Check if leader email already exists in the database
+    const existingLeader = await ResearchGroups.findOne({ 'leader.registrationNumber': req.body.leaderDetails.registrationNumber });
+    if (existingLeader) {
+      console.log("leader have")
+      return res.status(400).json({ message: 'Leader already belongs to a research group' });
+    }
+
+    // Check if any member email already exists in the database
+    for (const member of req.body.memberDetails) {
+      const existingMember = await ResearchGroups.findOne({ 'members.registrationNumber': member.registrationNumber });
+      if (existingMember) {
+        console.log("member have")
+
+        return res.status(400).json({ message: 'Member already belongs to a research group' });
+      }
+    }
+
     const newGroup = new ResearchGroups({
-      groupID : customGroupId,
-      leader : req.body.leaderDetails,
-      members : req.body.memberDetails,
-      title : req.body.projectDetails.title,
+      groupID: customGroupId,
+      leader: req.body.leaderDetails,
+      members: req.body.memberDetails,
+      title: req.body.projectDetails.title,
       area: req.body.projectDetails.researchArea,
       category: req.body.projectDetails.projectCategory,
       supervisorName: req.body.projectDetails.supervisorName,
       coSupervisorName: req.body.projectDetails.coSupervisorName,
-      batch: req.body.batch
-    })
+      batch: req.body.batch,
+    });
 
     const saveGroup = await newGroup.save();
 
     res.status(201).json(saveGroup);
-  }catch(err){
-    res.status(500).json({message: "Failed to add group",err});
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: 'Failed to add group', err });
   }
 };
 
-export const getResearch = async (req,res)=>{
+//get research by leader
+export const getResearchByLeader = async (req, res) => {
 
-  try{
-    const research = await ResearchGroups.find()
+  const loggedUser = req.body;
+
+  console.log(loggedUser.regNo);
+  try {
+
+    const research = await ResearchGroups.find({'leader.registrationNumber': loggedUser.regNo})
 
     res.status(200).json(research)
 
+  } catch (err) {
+    res.status(500).json({ message: "Failed to get research", err });
+  }
+}
+
+export const getAssessment = async (req, res) => {
+  try {
+    const assessments = await Assessments.find()
+
+    res.status(200).json(assessments);
+
+  } catch (err) {
+    res.status(500).json({ message: "Failed to get Assessments data", err });
+  }
+}
+
+export const uploadAssessmentDoc = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    // console.log(req.body); // Check if body contains any data
+    console.log(req.file);
+
+    return res.status(200).json(req.file);
+
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ message: 'Failed to upload assessment.', error: error.message });
+  }
+};
+
+export const submitAssessment = async (req,res)=>{
+
+  try{
+    const _id = req.params.id;
+
+    const updateFields = {
+      comment: req.body.comment,
+      ansDoc: req.body.submitDoc.path,
+    }
+
+    console.log(updateFields)
+
+    const uploadAssessment = await Assessments.findByIdAndUpdate(_id, updateFields, {
+      new: true,
+    });
+
+    res.status(200).json(uploadAssessment);
+
   }catch(err){
-    res.status(500).json({message: "Failed to get research",err});
+    console.log(err.message);
+    res.status(500).json({ message: "Failed to Upload Assessment", err });
+
   }
 }

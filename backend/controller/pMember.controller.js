@@ -1,5 +1,5 @@
 import MarkingRubrics from "../model/pMember.model.js";
-import AddAssestment from "../model/addassestment.model.js";
+import Assessments from "../model/assestment.model.js";
 
 export const addRubrics = async (req, res) => {
   try {
@@ -16,16 +16,40 @@ export const addRubrics = async (req, res) => {
   }
 };
 
+
+//add question to db
+export const uploadQuestiontDoc = async (req, res) => {
+  console.log("ajshf")
+
+  try {
+    console.log(req.body); // Check if body contains any data
+    console.log(req.file);
+
+    return res.status(200).json(req.file);
+
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ message: 'Failed to upload assessment.', error: error.message });
+  }
+};
+
+
 export const addAssestment = async (req, res) => {
 
   try {
-    const newAssestment = new AddAssestment({
+    const newAssestment = new Assessments({
       assestmentName: req.body.assessmentName,
       doc: req.body.assessmentUpload,
-      date: req.body.deadline,
+      deadline: req.body.deadline,
       specialization:req.body.semester,
       semster:req.body.specialization,
+      quesDoc: req.body.submitDoc.path,
+      ansDoc:'Not a Answer',
+      comment : "NaN"
     });
+
+    console.log(newAssestment);
+    
     const saveAssestment = await newAssestment.save();
 
     res.status(201).json(saveAssestment);
@@ -35,5 +59,4 @@ export const addAssestment = async (req, res) => {
   }
   
 };
-
 

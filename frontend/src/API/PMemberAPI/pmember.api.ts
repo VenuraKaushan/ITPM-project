@@ -12,7 +12,7 @@ class PMemberAPI{
 
     static addAssestment (values : {
         assessmentName : string,
-        assessmentUpload : string,
+        submitDoc : string,
         deadline : string,
         semester : string,
         specialization : string
