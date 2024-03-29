@@ -25,6 +25,7 @@ import {
 import classes from '../Styles/HeaderTabs.module.css';
 import logo from "../assets/testlogo.png"
 
+
 const user = {
     name: 'Jane Spoonfighter',
     email: 'janspoon@fighter.dev',
@@ -36,6 +37,8 @@ export const DashboardHeader = () => {
     const theme = useMantineTheme();
     const [opened, { toggle }] = useDisclosure(false);
     const [userMenuOpened, setUserMenuOpened] = useState(false);
+
+    const user = JSON.parse(localStorage.getItem("user-student-session") || ("user-staff-session"));
 
     return (
         <div className={classes.header}>
