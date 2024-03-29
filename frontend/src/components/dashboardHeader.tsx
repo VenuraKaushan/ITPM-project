@@ -46,8 +46,8 @@ export const DashboardHeader = () => {
 
     let user;
 
-    const isStudent = !studentUserData.userId;
-    const isStaff = !staffUserData.userId;
+    const isStudent = !!studentUserData.regNo;
+    const isStaff = !!staffUserData.regNo;
 
     console.log("isStudent:", isStudent);
     console.log("isStaff:", isStaff);
