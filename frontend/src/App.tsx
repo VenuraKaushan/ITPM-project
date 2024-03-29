@@ -14,7 +14,7 @@ import { ExaminerHeader } from "./components/Examiner/examinerHeader.tsx";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from "@mantine/notifications";
-import MarkingRubrics from "./components/ProjectMember/MarkingRubrics.tsx";
+
 
 
 function App() {
@@ -38,7 +38,7 @@ function App() {
               <Route path="/pMember/dashboard" element={<PMemberHeader />} />
 
               <Route path="/examiner/dashboard" element={<ExaminerHeader />} />
-              <Route path="/pMember/MarkingRubrics" element={<MarkingRubrics />} />
+              
 
             </Routes>
           </Router>
