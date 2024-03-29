@@ -7,7 +7,8 @@ import { DashboardHeader } from '../dashboardHeader';
 import { AddMark } from './AddMark/AddMark';
 import { StudentDetails } from './StudentDetails/StudentDetails';
 import { FeedBack } from './FeedBack/Feedback';
-import { Assesment } from './Assesment/Assesment';
+import { Document } from '../../pages/DocumentDownloard';
+
 const tabs = [
     'Add Mark',
     'Student Details',
@@ -29,7 +30,7 @@ export function SupervisorsHeader() {
 
             <Container>
                 <Tabs
-                    defaultValue="Marking"
+                    defaultValue="Add Mark"
                     variant="outline"
                     visibleFrom="sm"
                     classNames={{
@@ -49,12 +50,12 @@ export function SupervisorsHeader() {
                         <StudentDetails />
                     </Tabs.Panel>
 
-                    <Tabs.Panel value="FeedBack">
+                    <Tabs.Panel value="Feedback">
                         <FeedBack />
                     </Tabs.Panel>
 
                     <Tabs.Panel value="Assesment">
-                        <Assesment />
+                        <Document />
                     </Tabs.Panel>
 
                 </Tabs>

@@ -17,9 +17,20 @@ import { IconFileCv } from '@tabler/icons-react';
 
 
 const elements = [
-    { assessmentName: "Proposal 1", Deadline: "30/03/2024 - 12.00AM", },
-    { assessmentName: "Proposal 2", Deadline: "15/04/2024 - 12.00AM", },
-    { assessmentName: "Proposal 3", Deadline: "30/04/2024 - 12.00AM", },
+    { studentnumber: "It21233876", studentname: "shehan", Proposal:" 50", Progress1:"60", Progress2:"55", FinalPresentation:"60", },
+    { studentnumber: "IT21225687", studentname: "vinnath", Proposal:" 43", Progress1:"65", Progress2:"23", FinalPresentation:"62", },
+    { studentnumber: "IT21657456", studentname: "sahan", Proposal:" 78", Progress1:"50", Progress2:"46", FinalPresentation:"73", },
+
+
+
+];
+
+
+const elements2 = [
+    { studentnumber: "It21233876", studentname: "shehan" },
+    { studentnumber: "It21233576", studentname: "vinnath" },
+    { studentnumber: "It21238876", studentname: "sahan" },
+
 
 ];
 
@@ -28,9 +39,13 @@ export const FeedBack = () => {
     const icon = <IconFileCv style={{ width: rem(18), height: rem(18) }} stroke={1.5} />;
 
     const rows = elements.map((element) => (
-        <Table.Tr key={element.assessmentName}>
-            <Table.Td>{element.assessmentName}</Table.Td>
-            <Table.Td>{element.Deadline}</Table.Td>
+        <Table.Tr key={element.studentnumber}>
+            <Table.Td>{element.studentnumber}</Table.Td>
+            <Table.Td>{element.studentname}</Table.Td>
+            <Table.Td>{element.Proposal}</Table.Td>
+            <Table.Td>{element.Progress1}</Table.Td>
+            <Table.Td>{element.Progress2}</Table.Td>
+            <Table.Td>{element.FinalPresentation}</Table.Td>
             <Table.Td>
                 <Center>
                     <Button
@@ -38,7 +53,7 @@ export const FeedBack = () => {
                         gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
                         onClick={open}
                     >
-                        View assessment
+                        Edit
                     </Button>
                 </Center>
             </Table.Td>
@@ -47,78 +62,107 @@ export const FeedBack = () => {
         </Table.Tr>
     ));
 
+
+
+
+    const modalRows = elements2.map((element) => (
+        <Table.Tr key={element.studentnumber}>
+            <Table.Td>{element.studentnumber}</Table.Td>
+            <Table.Td>{element.studentname}</Table.Td>
+            <Table.Td>
+                <TextInput>
+
+                </TextInput>
+            </Table.Td>
+
+            <Table.Td>
+                <TextInput
+                    disabled
+                >
+
+                </TextInput>
+            </Table.Td>
+
+            <Table.Td>
+                <TextInput
+                    disabled
+                >
+
+                </TextInput>
+            </Table.Td>
+
+            <Table.Td>
+                <TextInput
+                    disabled
+                >
+
+                </TextInput>
+            </Table.Td>
+        </Table.Tr>
+    ));
+
     return (
+
+
         <Container>
             <Center style={{ marginTop: "20px" }}>
                 <Text
                     size="lg"
                     fw={700}
                 >
-                    Assessments need to be submitted
+                    View Marks
                 </Text>
             </Center>
-
-            <Modal opened={opened} onClose={close} title="Submit Assessment" size="55%">
-
-                <div style={{ display: "flex", gap: 30, marginBottom: "40px" }}>
-                    <TextInput
-                        rightSectionPointerEvents="none"
-                        label="Assessment Name"
-                        placeholder="Proposal 1"
-                        disabled
-                    />
-
-                </div>
-
-                <div style={{ display: "flex", gap: 30 }}>
-                    <TextInput
-                        rightSectionPointerEvents="none"
-                        label="Deadline "
-                        placeholder="30/03/2024 - 12.00AM"
-                        disabled
-                    />
-
-                </div>
-
-                <div>
-                    <Center>
-                        <FileInput
-                            rightSection={icon}
-                            placeholder="Your Assessment"
-                            rightSectionPointerEvents="none"
-                            mt="50"
-                            styles={{ input: { height: '100px', width: '600px' } }}
-                        />
-                    </Center>
-
-                    <TextInput
-                        mt={31}
-                        rightSectionPointerEvents="none"
-                        label="Comment"
-                        styles={{ input: { width: '200px' } }}
-                    />
-                </div>
-
-
-                <div style={{ marginLeft: "500px", display: "flex", gap: 10, }}>
-                    <Button
-                        variant="filled" color="red" radius="xl"
-
-                    >
-                        Remove
-                    </Button>
-
-                    <Button
-                        variant="filled" color="rgba(0, 0, 0, 1)" radius="xl"
-
-                    >
-                        Submit
-                    </Button>
-                </div>
-
-
-            </Modal>
             <ScrollArea>
+
+
+                <Modal opened={opened} onClose={close} title="Edit" size="65%">
+
+                    <div style={{ display: "flex", gap: 30, marginBottom: "40px" }}>
+                        <Text fw={500}>
+                            VD Room - Y4_RSR_GRP-1
+                        </Text>
+
+                    </div>
+
+                    <Table
+                        striped withColumnBorders
+                        horizontalSpacing="ls"
+                        verticalSpacing="xs"
+                        style={{ tableLayout: "auto", width: "100%", marginTop: "20px" }}
+                    >
+                        <Table.Thead>
+                            <Table.Tr>
+                                <Table.Th>Student Number</Table.Th>
+                                <Table.Th>Student Name</Table.Th>
+                                <Table.Th>Proposal</Table.Th>
+                                <Table.Th>Progress 1</Table.Th>
+                                <Table.Th>Progress 2</Table.Th>
+                                <Table.Th>Final Presentation</Table.Th>
+                            </Table.Tr>
+                        </Table.Thead>
+                        <Table.Tbody>{modalRows}</Table.Tbody>
+                    </Table>
+
+                    <TextInput
+                        mt={30}
+                        label="Add Comment"
+                        styles={{ input: { height: '50px', width: '400px' } }}
+                    >
+
+                    </TextInput>
+
+                    <Button
+                        ml={730}
+                        mt={50}
+                        variant="filled"
+                        color="red"
+                        radius="xl"
+                    >
+                        Submit Marks
+                    </Button>
+
+                </Modal>
 
                 <Table
                     striped withColumnBorders
@@ -128,8 +172,12 @@ export const FeedBack = () => {
                 >
                     <Table.Thead>
                         <Table.Tr>
-                            <Table.Th>Assessment Name</Table.Th>
-                            <Table.Th>Deadline</Table.Th>
+                            <Table.Th>Student Number</Table.Th>
+                            <Table.Th>Student Name</Table.Th>
+                            <Table.Th>Proposal</Table.Th>
+                            <Table.Th>Progress 1</Table.Th>
+                            <Table.Th>Progress 2</Table.Th>
+                            <Table.Th>Final Presentation</Table.Th>
                             <Table.Th>Action</Table.Th>
                         </Table.Tr>
                     </Table.Thead>

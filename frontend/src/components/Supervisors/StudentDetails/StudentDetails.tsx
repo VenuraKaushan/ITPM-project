@@ -18,8 +18,8 @@ import { IconFileCv } from '@tabler/icons-react';
 
 const elements = [
   { studentnumber: "It21233876", studentname: "shehan", Proposal:" 50", Progress1:"60", Progress2:"55", FinalPresentation:"60", },
-  { studentnumber: "It21233576", studentname: "vinnath", Proposal:" 50", Progress1:"60", Progress2:"55", FinalPresentation:"60", },
-  { studentnumber: "It21238876", studentname: "sahan", Proposal:" 50", Progress1:"60", Progress2:"55", FinalPresentation:"60", },
+  { studentnumber: "IT21225687", studentname: "vinnath", Proposal:" 43", Progress1:"65", Progress2:"23", FinalPresentation:"62", },
+  { studentnumber: "IT21657456", studentname: "sahan", Proposal:" 78", Progress1:"50", Progress2:"46", FinalPresentation:"73", },
 
 
 
