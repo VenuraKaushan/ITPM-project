@@ -38,7 +38,7 @@ export const DashboardHeader = () => {
     const [opened, { toggle }] = useDisclosure(false);
     const [userMenuOpened, setUserMenuOpened] = useState(false);
 
-    const user = JSON.parse(localStorage.getItem("user-student-session") || ("user-staff-session"));
+    const user = JSON.parse(localStorage.getItem("user-student-session") || ("user-staff-session") || "{}");
 
     return (
         <div className={classes.header}>
