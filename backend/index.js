@@ -60,6 +60,7 @@ app.use('/pm',PmemberRoutes);
 
 app.use('/api', upload.single('file'),StudentRoutes)
 
+app.use('/pmapi', upload.single('file'),PmemberRoutes)
 
 app.listen(PORT,()=>{
     console.log(`🚀💀 Server is started on port ${PORT}!`);
