@@ -25,17 +25,34 @@ import {
 import classes from '../Styles/HeaderTabs.module.css';
 import logo from "../assets/testlogo.png"
 
-const user = {
-    name: 'Vinnath ',
-    email: 'janspoon@fighter.dev',
-    image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
-};
-
 
 export const DashboardHeader = () => {
     const theme = useMantineTheme();
     const [opened, { toggle }] = useDisclosure(false);
     const [userMenuOpened, setUserMenuOpened] = useState(false);
+
+    //check whether user is student or staff member and give details to header 
+    const studentUserData = JSON.parse(localStorage.getItem("user-student-session") || "{}");
+    const staffUserData = JSON.parse(localStorage.getItem("user-staff-session") || "{}");
+
+    console.log("Student User Data:", studentUserData);
+    console.log("Staff User Data:", staffUserData);
+
+    let user;
+
+    const isStudent = !!studentUserData.regNo;
+    const isStaff = !!staffUserData.email;
+
+    if (isStudent) {
+        user = studentUserData;
+    } else if (isStaff) {
+        user = staffUserData;
+    }
+
+    console.log("User:", user);
+
+
+
 
     return (
         <div className={classes.header}>
@@ -56,7 +73,7 @@ export const DashboardHeader = () => {
                     >
                         <Menu.Target>
                             <UnstyledButton
-                             style={{marginRight:"-100px"}}
+                                style={{ marginRight: "-100px" }}
                                 className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
                             >
                                 <Group gap={7}>
