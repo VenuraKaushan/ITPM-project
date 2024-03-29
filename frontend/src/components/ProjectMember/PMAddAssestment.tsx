@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   ScrollArea,
@@ -15,6 +15,7 @@ import {
   Tooltip,
   ActionIcon,
   Box,
+  FileInput,
 } from "@mantine/core";
 import {
   IconSelector,
@@ -32,8 +33,8 @@ import classes from "../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { FileInput } from "@mantine/core";
 import PMemberAPI from "../../API/PMemberAPI/pmember.api";
+import axios from "axios";
 
 interface RowData {
   id: string;
@@ -134,7 +135,11 @@ const PMAddAssestment = () => {
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
   const IconFileTypePdff = (
     <IconFileTypePdf style={{ width: rem(16), height: rem(16) }} />
+    
   );
+  const [file, setFile] = useState("");
+
+  const [fileRes, setFileRes] = useState("");
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -167,6 +172,40 @@ const PMAddAssestment = () => {
       [name]: value,
     }));
   };
+
+  const handleFileChange = (file: any) => {
+    setFile(file);
+  };
+
+  useEffect(() => {
+    if (file) {
+      handleUpload();
+    }
+  }, [file]);
+
+      //handle file upload
+      const handleUpload = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Make HTTP request to backend API to upload file
+            const response = await axios.post('http://localhost:3001/api/upload/assessment/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            // Call submitAssessment with response data after successful upload
+            // submitAssessment({
+            //     ...submitAssessmentForm.values,
+            //     submitDoc: response.data,
+            // });
+
+        } catch (err) {
+            console.error('Error uploading file:', err);
+
+        }
+    }
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -291,13 +330,13 @@ const PMAddAssestment = () => {
             value={formData.assessmentName}
             onChange={handleChange}
           />
-          {/* <FileInput
+          <FileInput
             placeholder="Pick file"
             label="Add Assessment"
             withAsterisk
             name="assessmentUpload"
-            onChange={handleChange}
-          /> */}
+            onChange={handleFileChange}
+          />
           <TextInput
             mt="md"
             label="Deadline"
@@ -561,3 +600,11 @@ const PMAddAssestment = () => {
 };
 
 export default PMAddAssestment;
+function handleUpload() {
+  throw new Error("Function not implemented.");
+}
+
+function setFile(file: any) {
+  throw new Error("Function not implemented.");
+}
+
