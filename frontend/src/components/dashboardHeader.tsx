@@ -26,31 +26,43 @@ import classes from '../Styles/HeaderTabs.module.css';
 import logo from "../assets/testlogo.png"
 
 
-const user = {
-    name: 'Jane Spoonfighter',
-    email: 'janspoon@fighter.dev',
-    image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
-};
+// const user = {
+//     name: 'Jane Spoonfighter',
+//     email: 'janspoon@fighter.dev',
+//     image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
+// };
 
 
 export const DashboardHeader = () => {
     const theme = useMantineTheme();
     const [opened, { toggle }] = useDisclosure(false);
     const [userMenuOpened, setUserMenuOpened] = useState(false);
-    let user;
 
     const studentUserData = JSON.parse(localStorage.getItem("user-student-session") || "{}");
     const staffUserData = JSON.parse(localStorage.getItem("user-staff-session") || "{}");
 
-    const isStudent = !!studentUserData.userId;
+    console.log("Student User Data:", studentUserData);
+    console.log("Staff User Data:", staffUserData);
 
-    const isStaff = !!staffUserData.userId;
+    let user;
+
+    const isStudent = !studentUserData.userId;
+    const isStaff = !staffUserData.userId;
+
+    console.log("isStudent:", isStudent);
+    console.log("isStaff:", isStaff);
 
     if (isStudent) {
         user = studentUserData;
     } else if (isStaff) {
         user = staffUserData;
     }
+
+    console.log("User:", user);
+
+
+
+
     return (
         <div className={classes.header}>
 
@@ -70,7 +82,7 @@ export const DashboardHeader = () => {
                     >
                         <Menu.Target>
                             <UnstyledButton
-                             style={{marginRight:"-100px"}}
+                                style={{ marginRight: "-100px" }}
                                 className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
                             >
                                 <Group gap={7}>
