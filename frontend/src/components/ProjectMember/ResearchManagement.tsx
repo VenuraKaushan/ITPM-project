@@ -1,6 +1,9 @@
 import React from "react";
 import "../../Styles/ResearchTable.css";
 import { Button } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
+
+
 const ResearchManagement = () => {
   const data = [
     {
@@ -53,6 +56,12 @@ const ResearchManagement = () => {
     console.log("Selected examiner:", event.target.value);
   };
 
+  // const navigate = useNavigate();
+
+  // const handleButtonClick = () => {
+  //   navigate("/MarkingRubricsSection");
+  // };
+
   return (
     <div className="table-container" style={{marginTop:'25px'}}>
       <table className="custom-table">
@@ -90,7 +99,7 @@ const ResearchManagement = () => {
               </td>
               <td>
                 {/* Add actions buttons here */}
-                <Button variant="filled" color="green" radius="xl">
+                <Button variant="filled" color="green" radius="xl"  >
                   Presentation Marking Rubrics
                 </Button>
               </td>

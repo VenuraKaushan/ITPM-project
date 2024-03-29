@@ -4,6 +4,7 @@ import { Button } from "@mantine/core";
 import { Select } from "@mantine/core";
 import PMemberAPI from "../../API/PMemberAPI/pmember.api";
 
+
 const MarkingRubrics = () => {
   const [tableData, setTableData] = useState([
     { id: 1, criteria: "", subCriteria: "", description: "", marks: "" },
