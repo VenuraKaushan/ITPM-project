@@ -23,6 +23,20 @@ const MarkingRubrics = () => {
     setTableData(newData);
   };
 
+  const handleInputCMarks = (index:any, event:any) => {
+    const { name, value } = event.target;
+    
+    // Check if the entered value is a valid number
+    const newValue = Number(value);
+    
+    // Check if the entered value is less than or equal to 100
+    if (!isNaN(newValue) && newValue <= 100) {
+      const newData = [...tableData];
+      newData[index][name] = newValue;
+      setTableData(newData);
+    }
+  };
+
   const handleAddRow = () => {
     setTableData([
       ...tableData,
@@ -121,7 +135,7 @@ const MarkingRubrics = () => {
                       type="number"
                       name="marks"
                       value={row.marks}
-                      onChange={(e) => handleInputChange(index, e)}
+                      onChange={(e) => handleInputCMarks(index, e)}
                       className="input-field"
                       placeholder="Marks"
                     />
