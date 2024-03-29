@@ -41,7 +41,7 @@ export const DashboardHeader = () => {
     let user;
 
     const isStudent = !!studentUserData.regNo;
-    const isStaff = !!staffUserData.regNo;
+    const isStaff = !!staffUserData.email;
 
     if (isStudent) {
         user = studentUserData;
