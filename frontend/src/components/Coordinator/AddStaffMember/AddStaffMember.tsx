@@ -178,6 +178,7 @@ const AddStaffMember = () => {
       });
 
       registerForm.reset();
+      setEmail("");
       close();
 
       // getting updated details from the DB
@@ -341,6 +342,8 @@ const AddStaffMember = () => {
       role: "",
     },
     validate: {
+      name: (value) =>
+      value.length < 2 ? "Name must have at least 2 letters" : null,
       email: (value) => (/\S+@\S+\.\S+/.test(value) ? null : "Invalid Email"),
       phone: (value) =>
         /^\d{10}$/.test(value) ? null : "Invalid Phone Number",

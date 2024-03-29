@@ -22,13 +22,11 @@ import {
   IconAt,
   IconUser,
   IconEdit,
-  IconTrash,
+  IconMessage,
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
-import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { CoordinatorHeading } from "../CoordinatorHeading";
+
 
 interface RowData {
   _id: string;
@@ -186,6 +184,16 @@ const ReportsMarks = () => {
               color="blue"
             >
               <IconEdit />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label="View">
+            <ActionIcon
+              onClick={() => {
+               
+              }}
+              color="#89ec9c"
+            >
+              <IconMessage />
             </ActionIcon>
           </Tooltip>
 

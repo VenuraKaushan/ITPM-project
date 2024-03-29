@@ -22,7 +22,7 @@ export const staffLogin = async (req, res) => {
         (data.role === "PM") ||  
         (data.role === "EXAMINERS")||
         data.role === "PROJECTMEMBER") {
-          console.log("work")
+         
 
           // create access Token
           const accessToken = jwt.sign(
