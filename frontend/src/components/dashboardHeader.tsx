@@ -37,9 +37,20 @@ export const DashboardHeader = () => {
     const theme = useMantineTheme();
     const [opened, { toggle }] = useDisclosure(false);
     const [userMenuOpened, setUserMenuOpened] = useState(false);
+    let user;
 
-    const user = JSON.parse(localStorage.getItem("user-student-session") || ("user-staff-session") || "{}");
+    const studentUserData = JSON.parse(localStorage.getItem("user-student-session") || "{}");
+    const staffUserData = JSON.parse(localStorage.getItem("user-staff-session") || "{}");
 
+    const isStudent = !!studentUserData.userId;
+
+    const isStaff = !!staffUserData.userId;
+
+    if (isStudent) {
+        user = studentUserData;
+    } else if (isStaff) {
+        user = staffUserData;
+    }
     return (
         <div className={classes.header}>
 
