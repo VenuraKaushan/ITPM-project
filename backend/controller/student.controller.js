@@ -58,6 +58,11 @@ export const studentLogin = async (req, res) => {
     });
 };
 
+//logout 
+export const studentLogout = (req, res) => {
+  res.cookie("accessToken", "", { maxAge: 1 });
+  res.status(200).json({});
+};
 
 //generate group Id
 const generateGroupID = async () => {
