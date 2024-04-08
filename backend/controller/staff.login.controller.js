@@ -60,3 +60,9 @@ export const staffLogin = async (req, res) => {
     });
 };
 
+export const Stafflogout = (req, res) => {
+  console.log("kabsf")
+  res.cookie("accessToken", "", { maxAge: 1 });
+  res.status(200).json({});
+};
+

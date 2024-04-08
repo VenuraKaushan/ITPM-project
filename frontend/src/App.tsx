@@ -14,8 +14,8 @@ import { ExaminerHeader } from "./components/Examiner/examinerHeader.tsx";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from "@mantine/notifications";
-
-
+import StudentLogout from "./components/AllLogin/StudentLogout.tsx";
+import StaffLogout from "./components/AllLogin/staffLogout.tsx";
 
 function App() {
   const client = new QueryClient();
@@ -38,7 +38,9 @@ function App() {
               <Route path="/pMember/dashboard" element={<PMemberHeader />} />
 
               <Route path="/examiner/dashboard" element={<ExaminerHeader />} />
-              
+              <Route path="/student/logout" element={<StudentLogout />} />
+              <Route path="/staff/logout" element={<StaffLogout />} />
+
 
               <Route path="/supervisors/dashboard" element={<SupervisorsHeader />} />
 
