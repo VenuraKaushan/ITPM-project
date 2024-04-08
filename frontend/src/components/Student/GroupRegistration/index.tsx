@@ -171,7 +171,7 @@ export const GroupRegistration = () => {
         const value = event.target.value;
 
         // Check if registration number starts with 'IT' and has a total of 8 characters
-        if (!value.startsWith('IT') || value.length !== 8) {
+        if (!value.startsWith('IT') || value.length !== 10) {
             setLeaderRegistrationNumberError('Must start with "IT" and 8 digits');
         } else {
             setLeaderRegistrationNumberError('');
