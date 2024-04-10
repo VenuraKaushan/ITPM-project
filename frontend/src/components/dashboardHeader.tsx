@@ -51,8 +51,7 @@ export const DashboardHeader = () => {
 
     console.log("User:", user);
 
-
-
+    const logoutUrl = isStudent ? "/student/logout" : "/staff/logout";
 
     return (
         <div className={classes.header}>
@@ -108,6 +107,8 @@ export const DashboardHeader = () => {
                                 leftSection={
                                     <IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                                 }
+                                component="a"
+                                href={logoutUrl}
                             >
                                 Logout
                             </Menu.Item>
