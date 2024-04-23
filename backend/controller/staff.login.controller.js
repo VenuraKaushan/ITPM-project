@@ -24,7 +24,7 @@ export const staffLogin = async (req, res) => {
         (data.role === "PM") ||  
         (data.role === "EXAMINER")||
         (data.role === "PROJECTMEMBER")||
-        (data.role === "PROJECTMEMBER")) {
+        (data.role === "SUPERVISOR")) {
          
           console.log("weda")
 

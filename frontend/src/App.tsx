@@ -9,7 +9,7 @@ import { CoodinatorPage } from "./pages/CoodinatorPage";
 import { GroupRegistration } from "./components/Student/GroupRegistration/index.tsx";
 import PMemberHeader from "./components/ProjectMember/PMemberHeader";
 import { ViewMarkSheetPage } from "./pages/CoodinatorPage/viewMarkSheetPage.tsx";
-
+import { SupervisorsHeader } from "./components/Supervisors/supervisorsHeader.tsx";
 import { ExaminerHeader } from "./components/Examiner/examinerHeader.tsx";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ModalsProvider } from '@mantine/modals';
@@ -41,6 +41,8 @@ function App() {
               <Route path="/student/logout" element={<StudentLogout />} />
               <Route path="/staff/logout" element={<StaffLogout />} />
 
+
+              <Route path="/supervisors/dashboard" element={<SupervisorsHeader />} />
 
             </Routes>
           </Router>

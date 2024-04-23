@@ -1,0 +1,24 @@
+create backend and frontend folders
+npm init -y     (backend)
+create .env file
+go to package.json and set "type": "module",
+npm i dotenv cors
+create .babel   (babel node js site and download packages )
+
+install 
+npm i @babel/core @babel/node @babel/preset-env
+npm i nodeman
+npm i express
+npm i dotenv
+npm i mongoose
+npm install --save-dev nodemon babel-node
+
+npx create-react-app . --template typescript
+
+
+https://www.freecodecamp.org/news/setup-babel-in-nodejs/
+
+
+
+
+
