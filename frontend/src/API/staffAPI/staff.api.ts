@@ -10,6 +10,10 @@ class StaffAPI{
         return axios.post(`${BASE_URL}/staff/login`,values,{withCredentials:true});
     }
 
+    //staff logout
+    static logout(){
+        return axios.get(`${BASE_URL}/staff/logout`,{withCredentials:true});
+    }
   
 };
 

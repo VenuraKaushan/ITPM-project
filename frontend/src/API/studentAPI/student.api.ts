@@ -8,6 +8,12 @@ class StudentAPI {
         console.log(values)
         return axios.post(`${BASE_URL}/student/login`, values, { withCredentials: true });
     }
+
+    //student logout
+    static logout(){
+        return axios.get(`${BASE_URL}/student/logout`,{withCredentials:true});
+    }
+    //student research group reg
     static groupReg(formData: any) {
         console.log(formData)
         return axios.post(`${BASE_URL}/student/group/registration`, formData, { withCredentials: true });
