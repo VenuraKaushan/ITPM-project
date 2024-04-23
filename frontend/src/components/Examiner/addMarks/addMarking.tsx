@@ -17,17 +17,9 @@ import {
     IconSearch,
 } from '@tabler/icons-react';
 import { useQuery } from "@tanstack/react-query";
-import StudentAPI from '../../../API/studentAPI/student.api';
 import { useForm } from '@mantine/form';
+import ExaminerAPI from '../../../API/examinerAPI';
 
-const elements2 = [
-    { StudentNumber: "IT21211928", StudentName: "Venura" },
-    { StudentNumber: "IT21334244", StudentName: "Vinnath" },
-    { StudentNumber: "IT23431112", StudentName: "Sahan" },
-    { StudentNumber: "IT23431352", StudentName: "Shehan" },
-
-
-];
 export const ManageMarks = () => {
 
     const [opened, { open, close }] = useDisclosure(false);
@@ -37,10 +29,10 @@ export const ManageMarks = () => {
     const addMarkForm = useForm({
         validateInputOnChange: true,
         initialValues: {
-            _id:"",
+            _id: "",
             groupID: "",
             leaderName: "",
-            leaderID:"",
+            leaderID: "",
             member1Name: "",
             member1ID: "",
             member2Name: "",
@@ -55,26 +47,26 @@ export const ManageMarks = () => {
         _id: addMarkForm.values._id,
         groupID: addMarkForm.values.groupID,
         leader: {
-          name: addMarkForm.values.leaderName,
-          id: addMarkForm.values.leaderID
+            name: addMarkForm.values.leaderName,
+            id: addMarkForm.values.leaderID
         },
         members: [
-          {
-            name: addMarkForm.values.member1Name,
-            id: addMarkForm.values.member1ID
-          },
-          {
-            name: addMarkForm.values.member2Name,
-            id: addMarkForm.values.member2ID
-          },
-          {
-            name: addMarkForm.values.member3Name,
-            id: addMarkForm.values.member3ID
-          }
+            {
+                name: addMarkForm.values.member1Name,
+                id: addMarkForm.values.member1ID
+            },
+            {
+                name: addMarkForm.values.member2Name,
+                id: addMarkForm.values.member2ID
+            },
+            {
+                name: addMarkForm.values.member3Name,
+                id: addMarkForm.values.member3ID
+            }
         ],
         comment: addMarkForm.values.comment
-      };
-      
+    };
+
 
     // Use react query and fetch research data
     const {
@@ -84,11 +76,8 @@ export const ManageMarks = () => {
         refetch,
     } = useQuery({
         queryKey: ["researchData"],
-        queryFn: () => StudentAPI.getResearch().then((res) => res.data),
+        queryFn: () => ExaminerAPI.getResearchGroupByExaminer().then((res) => res.data),
     });
-
-
-    console.log(data);
 
     const rows = data.map((element: any) => (
         <Table.Tr key={element._id}>
@@ -101,7 +90,7 @@ export const ManageMarks = () => {
                         gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
                         onClick={() => {
                             addMarkForm.setValues({
-                                _id : element._id,
+                                _id: element._id,
                                 groupID: element.groupID,
                                 leaderName: element.leader[0].name,
                                 leaderID: element.leader[0].registrationNumber,
@@ -129,56 +118,110 @@ export const ManageMarks = () => {
     ));
     console.log(addMarkForm.values);
 
-    const modalRows = Object.keys(formData).map((element:any) => (
-        <Table.Tr key={element._id}>
-            <Table.Td>{element.StudentNumber}</Table.Td>
-            <Table.Td>{element.StudentName}</Table.Td>
-            <Table.Td>
-                <TextInput>
+    const modalRows = (
+        <>
+            <Table.Tr>
+            <Table.Td>{addMarkForm.values.leaderID}</Table.Td>
+                <Table.Td>{addMarkForm.values.leaderName}</Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <Button variant="filled" color="red" radius="xl">
+                        Submit Marks
+                    </Button>
+                </Table.Td>
+            </Table.Tr>
 
-                </TextInput>
-            </Table.Td>
+            <Table.Tr>
+                <Table.Td>{addMarkForm.values.member1ID}</Table.Td>
+                <Table.Td>{addMarkForm.values.member1Name}</Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <Button variant="filled" color="red" radius="xl">
+                        Submit Marks
+                    </Button>
+                </Table.Td>
+            </Table.Tr>
 
-            <Table.Td>
-                <TextInput
-                >
+            <Table.Tr>
+                <Table.Td>{addMarkForm.values.member2ID}</Table.Td>
+                <Table.Td>{addMarkForm.values.member2Name}</Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <Button variant="filled" color="red" radius="xl">
+                        Submit Marks
+                    </Button>
+                </Table.Td>
+            </Table.Tr>
 
-                </TextInput>
-            </Table.Td>
+            <Table.Tr>
+            <Table.Td>{addMarkForm.values.member3ID}</Table.Td>
+                <Table.Td>{addMarkForm.values.member3Name}</Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <TextInput />
+                </Table.Td>
+                <Table.Td>
+                    <Button variant="filled" color="red" radius="xl">
+                        Submit Marks
+                    </Button>
+                </Table.Td>
+            </Table.Tr>
+        </>
+    );
 
-            <Table.Td>
-                <TextInput
-                >
-
-                </TextInput>
-            </Table.Td>
-
-            <Table.Td>
-                <TextInput
-                >
-
-                </TextInput>
-            </Table.Td>
-
-            <Table.Td>
-                <TextInput>
-
-                </TextInput>
-            </Table.Td>
-
-            <Table.Td>
-                <Button
-                    variant="filled"
-                    color="red"
-                    radius="xl"
-                >
-                    Submit Marks
-                </Button>
-
-            </Table.Td>
-
-        </Table.Tr>
-    ));
 
     return (
         <Container>

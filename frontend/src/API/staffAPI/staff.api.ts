@@ -6,7 +6,6 @@ class StaffAPI{
 
     //staff member login api
     static staffLogin (values : {email : string, password : string}) {
-        console.log(values)
         return axios.post(`${BASE_URL}/staff/login`,values,{withCredentials:true});
     }
 

@@ -6,6 +6,7 @@ import StaffRoutes from './routes/staff.routes.js'
 import StudentRoutes from './routes/student.routes.js'
 import CoordinatorRoutes from './routes/coordinator.routes.js'
 import PmemberRoutes from "./routes/pMember.routes.js"
+import ExaminerRoutes from "./routes/examiner.routes.js"
 import multer from 'multer';
 import fs from 'fs';
 import { promisify } from 'util';
@@ -57,6 +58,8 @@ app.use('/student',StudentRoutes);
 app.use('/coordinator',CoordinatorRoutes);
 
 app.use('/pm',PmemberRoutes);
+
+app.use('/examiner',ExaminerRoutes);
 
 app.use('/api', upload.single('file'),StudentRoutes)
 

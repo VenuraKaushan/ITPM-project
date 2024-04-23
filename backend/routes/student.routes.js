@@ -6,7 +6,8 @@ import {
     getAssessment,
     uploadAssessmentDoc,
     submitAssessment,
-    studentLogout
+    studentLogout,
+    getSupervisors
  } from "../controller/student.controller.js";
 import { validateUSers } from "../middlewares/authMiddleware.js";
 
@@ -22,5 +23,6 @@ router.post("/get/research/",getResearchByLeader);
 router.get("/get/assessment",getAssessment);
 router.post("/upload/assessment",uploadAssessmentDoc);//route for upload assessment to the multer
 router.put("/upload/assessment/:id",submitAssessment)
+router.get("/get/supervisors",getSupervisors);
 
 export default router;
