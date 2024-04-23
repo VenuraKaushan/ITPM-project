@@ -9,21 +9,24 @@ import "dotenv/config";
 
 export const staffLogin = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  console.log(email);
+  console.log(password);
 
   User.find({ email: email })
     .then((data) => {
       if (data.length > 0) {
         data = data[0];
-      
+        console.log(data.role)
+
         //  compare database password and user entered password and role
         if (bcryptjs.compareSync(password, data.password) && 
         (data.role === "COORDINATOR") || 
         (data.role === "PM") ||  
-        (data.role === "EXAMINERS")||
+        (data.role === "EXAMINER")||
         (data.role === "PROJECTMEMBER")||
         (data.role === "PROJECTMEMBER")) {
          
+          console.log("weda")
 
           // create access Token
           const accessToken = jwt.sign(
@@ -61,7 +64,6 @@ export const staffLogin = async (req, res) => {
 };
 
 export const Stafflogout = (req, res) => {
-  console.log("kabsf")
   res.cookie("accessToken", "", { maxAge: 1 });
   res.status(200).json({});
 };

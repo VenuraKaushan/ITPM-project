@@ -37,6 +37,10 @@ class StudentAPI {
 
     }
 
+    static getSupervisors() {
+        return axios.get(`${BASE_URL}/student/get/supervisors`, { withCredentials: true });
+    }
+
 }
 
 export default StudentAPI;

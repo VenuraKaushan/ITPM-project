@@ -3,6 +3,7 @@ import { useState } from 'react';
 import StudentAPI from '../../../API/studentAPI/student.api';
 import { IconX, IconCheck } from '@tabler/icons-react';
 import { showNotification, updateNotification } from '@mantine/notifications';
+import { useQuery } from "@tanstack/react-query";
 
 export const GroupRegistration = () => {
     const [registrationNumberErrors, setRegistrationNumberErrors] = useState(['', '', '']);
@@ -33,6 +34,22 @@ export const GroupRegistration = () => {
         },
     });
 
+    // Use react query and fetch supervisors data
+    const {
+        data = [],
+        isLoading,
+        isError,
+        refetch,
+    } = useQuery({
+        queryKey: ["supervisorsData"],
+        queryFn: () => StudentAPI.getSupervisors().then((res) => res.data),
+    });
+
+   // Extract names from supervisors data
+   const supervisorNames = data.map((supervisor: { name: any; }) => supervisor.name);
+
+   console.log(supervisorNames);
+   
     const handleSubmit = (event: any) => {
         event.preventDefault();
 
@@ -133,6 +150,7 @@ export const GroupRegistration = () => {
                         coSupervisorName: "",
                     },
                 });
+                refetch();
 
             })
             .catch((error) => {
@@ -249,8 +267,8 @@ export const GroupRegistration = () => {
                         <TextInput name="title" label="Title" placeholder="Title" required />
                         <TextInput name="researchArea" label="Research Area" placeholder="ML" required />
                         <TextInput name="projectCategory" label="Project Category" placeholder="Fashion" required />
-                        <NativeSelect name="supervisorName" w="180px" label="Supervisor Name" data={['ABCD', 'EFGH']} required />
-                        <NativeSelect name="coSupervisorName" w="180px" label="Co-Supervisor Name" data={['XYZ', 'NMO']} required />
+                        <NativeSelect name="supervisorName" w="180px" label="Supervisor Name" data={supervisorNames} required />
+                        <NativeSelect name="coSupervisorName" w="180px" label="Co-Supervisor Name" data={supervisorNames} required />
                     </div>
 
                     {/* Submit Button */}
