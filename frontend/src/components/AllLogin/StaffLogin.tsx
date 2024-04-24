@@ -33,7 +33,7 @@ const StaffLogin = () => {
 
         console.log(response.data.role)
 
-        if (response.data.role === "EXAMINERS") {
+        if (response.data.role === "EXAMINER") {
           navigate("/examiner/dashboard");
         }
         else if (response.data.role === "PROJECTMEMBER") {
@@ -46,6 +46,7 @@ const StaffLogin = () => {
           navigate("/supervisors/dashboard");
 
         }
+  
 
 
 

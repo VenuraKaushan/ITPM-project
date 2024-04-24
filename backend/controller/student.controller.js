@@ -198,3 +198,14 @@ export const submitAssessment = async (req,res)=>{
 
   }
 }
+
+export const getSupervisors = async (req, res) => {
+  try {
+    const supervisors = await User.find({ role: "SUPERVISOR" })
+
+    res.status(200).json(supervisors);
+
+  } catch (err) {
+    res.status(500).json({ message: "Failed to get supervisors data", err });
+  }
+}

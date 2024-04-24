@@ -50,7 +50,7 @@ export const Assessment = () => {
         },
     });
 
-    // Use react query and fetch research data
+    // Use react query and fetch assessment data
     const {
         data = [],
         isLoading,
