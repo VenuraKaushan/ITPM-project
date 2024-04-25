@@ -7,7 +7,7 @@ import PMemberAPI from "../../API/PMemberAPI/pmember.api";
 
 const MarkingRubrics = () => {
   const [tableData, setTableData] = useState([
-    { id: 1, criteria: "", subCriteria: "", description: "", marks: "" },
+    { id: 1, criteria: "", description: "", marks: "" },
   ]);
   const [idCounter, setIdCounter] = useState(2);
   const [selectedValue, setSelectedValue] = useState([{}]);
@@ -45,7 +45,6 @@ const MarkingRubrics = () => {
       {
         id: idCounter,
         criteria: "",
-        subCriteria: "",
         description: "",
         marks: "",
       },
@@ -93,7 +92,6 @@ const MarkingRubrics = () => {
             <thead>
               <tr>
                 <th>Criteria</th>
-                <th>Sub Criteria</th>
                 <th>Description</th>
                 <th>Marks</th>
                 <th>Action</th>
@@ -110,16 +108,6 @@ const MarkingRubrics = () => {
                       onChange={(e) => handleInputChange(index, e)}
                       className="input-field"
                       placeholder="Criteria"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="subCriteria"
-                      value={row.subCriteria}
-                      onChange={(e) => handleInputChange(index, e)}
-                      className="input-field"
-                      placeholder="Sub Criteria"
                     />
                   </td>
                   <td>
