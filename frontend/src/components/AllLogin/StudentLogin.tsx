@@ -30,7 +30,6 @@ export function StudentLogin() {
 
         // save user details in the local storage
         localStorage.setItem("user-student-session", JSON.stringify(response.data));
-        console.log(response.data.role)
 
         if (response.data.role === "STUDENT") {
           navigate("/student/dashboard");

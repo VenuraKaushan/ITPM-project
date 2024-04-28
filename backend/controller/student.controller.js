@@ -11,42 +11,74 @@ import path from 'path';
 //student login function
 export const studentLogin = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  console.log(email);
+  console.log(password);
 
   User.find({ email: email })
     .then((data) => {
       if (data.length > 0) {
         data = data[0];
 
-        //  compare database password and user entered password and role
-        if (bcryptjs.compareSync(password, data.password) && (data.role === "STUDENT")) {
-          console.log("work")
+        if (data.isPasswordChanged == false) {
+          if (password == data.password) {
+            // create access Token
+            const accessToken = jwt.sign(
+              { _id: data._id, role: data.role },
+              process.env.SECRET_KEY,
+              { expiresIn: 24 * 60 * 60 }
+            ); //access Token will expires in 1 day
 
-          // create access Token
-          const accessToken = jwt.sign(
-            { _id: data._id, role: data.role },
-            process.env.SECRET_KEY,
-            { expiresIn: 24 * 60 * 60 }
-          ); //access Token will expires in 1 day
+            //   set access Token as a http only cookie
+            res.cookie("accessToken", accessToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: false });//this cookie expires in 1 day
 
-          //   set access Token as a http only cookie
-          res.cookie("accessToken", accessToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: false });//this cookie expires in 1 day
+            //   create user details
+            const userDetails = {
+              _id: data._id,
+              name: data.name,
+              email: data.email,
+              role: data.role,
+              specialization: data.specialization,
+              regNo: data.regNo,
+              isPasswordChanged: data.isPasswordChanged
+            };
 
-          //   create user details
-          const userDetails = {
-            _id: data._id,
-            name: data.name,
-            email: data.email,
-            role: data.role,
-            specialization: data.specialization,
-            regNo: data.regNo
-          };
+            //   sends the user details
+            res.status(200).json(userDetails);
 
-          //   sends the user details
-          res.status(200).json(userDetails);
 
-        } else {
-          throw new Error("Password is wrong");
+          }
+        }
+        else {
+          //  compare database password and user entered password and role
+          if (bcryptjs.compareSync(password, data.password) && (data.role === "STUDENT")) {
+            console.log("work")
+
+            // create access Token
+            const accessToken = jwt.sign(
+              { _id: data._id, role: data.role },
+              process.env.SECRET_KEY,
+              { expiresIn: 24 * 60 * 60 }
+            ); //access Token will expires in 1 day
+
+            //   set access Token as a http only cookie
+            res.cookie("accessToken", accessToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: false });//this cookie expires in 1 day
+
+            //   create user details
+            const userDetails = {
+              _id: data._id,
+              name: data.name,
+              email: data.email,
+              role: data.role,
+              specialization: data.specialization,
+              regNo: data.regNo
+            };
+
+            //   sends the user details
+            res.status(200).json(userDetails);
+
+          } else {
+            throw new Error("Password is wrong");
+          }
         }
       } else {
         throw new Error("Does not exist this user");
@@ -140,7 +172,7 @@ export const getResearchByLeader = async (req, res) => {
   console.log(loggedUser.regNo);
   try {
 
-    const research = await ResearchGroups.find({'leader.registrationNumber': loggedUser.regNo})
+    const research = await ResearchGroups.find({ 'leader.registrationNumber': loggedUser.regNo })
 
     res.status(200).json(research)
 
@@ -174,9 +206,9 @@ export const uploadAssessmentDoc = async (req, res) => {
   }
 };
 
-export const submitAssessment = async (req,res)=>{
+export const submitAssessment = async (req, res) => {
 
-  try{
+  try {
     const _id = req.params.id;
 
     const updateFields = {
@@ -192,7 +224,7 @@ export const submitAssessment = async (req,res)=>{
 
     res.status(200).json(uploadAssessment);
 
-  }catch(err){
+  } catch (err) {
     console.log(err.message);
     res.status(500).json({ message: "Failed to Upload Assessment", err });
 
@@ -207,5 +239,29 @@ export const getSupervisors = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ message: "Failed to get supervisors data", err });
+  }
+}
+
+export const changePassword = async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(req.body.newPassword, salt);
+
+    const newPassword = {
+      password: hashedPassword,
+      isPasswordChanged: true,
+    };
+
+    const newPass = await User.findByIdAndUpdate(_id, newPassword, {
+      new: true,
+    });
+
+    res.status(200).json(newPass);
+
+  } catch (err) {
+    res.status(500).json({ message: "Failed to Change Password", err });
+
   }
 }
