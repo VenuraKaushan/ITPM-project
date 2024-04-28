@@ -3,7 +3,9 @@ import ResearchGroups from "../model/group.model.js";
 import bcryptjs from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-
+import { generatePassword } from "../utils/passowrdGenerator.js";
+import { sendGeneratedPassowrdToStaff } from "../mails/staff.mail.js";
+import { sendGeneratedPassowrdToStudent } from "../mails/student.mail.js";
 
 //generate Staff Member Custom ID
 const generateMemberId = async () => {
@@ -48,18 +50,14 @@ export const registerMember = async (req, res) => {
       console.log("User Exist");
       return res.status(409).json({ message: "Member already exists" });
     }
+    const autoPassword = generatePassword();
 
     //generating the custom user ID
     const customId = await generateMemberId();
 
-    console.log(customId);
-
     //hashing the password
-    //   const salt = await bcryptjs.genSalt(10);
-    //   const hashedPassword = await bcrypt.hash(re.body.password, salt);
-
-
-    //   console.log(hashedPassword);
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(autoPassword, salt);
 
     const newMember = new User({
       id: customId,
@@ -68,11 +66,14 @@ export const registerMember = async (req, res) => {
       phone: req.body.phone,
       specialization: req.body.specialization,
       role: req.body.role,
+      password: hashedPassword,
     });
 
-    console.log(newMember);
-
     const savedMember = await newMember.save();
+
+    //send auto generate password to the user
+    sendGeneratedPassowrdToStaff(newMember.name, newMember.email, hashedPassword)
+
     res.status(201).json(savedMember);
 
   } catch (error) {
@@ -84,7 +85,6 @@ export const registerMember = async (req, res) => {
 //Register Student Function
 export const registerStudent = async (req, res) => {
   try {
-    console.log(req.body);
     const existingStudent = await User.findOne({ email: req.body.email });
 
     if (existingStudent) {
@@ -92,17 +92,14 @@ export const registerStudent = async (req, res) => {
       return res.status(409).json({ message: "Student already exists" });
     }
 
+    const autoPassword = generatePassword();
+
     //generating the custom user ID
     const customId = await generateMemberId();
 
-    console.log(customId);
-
     //hashing the password
-    //   const salt = await bcryptjs.genSalt(10);
-    //   const hashedPassword = await bcrypt.hash(re.body.password, salt);
-
-
-    //   console.log(hashedPassword);
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(autoPassword, salt);
 
     const newMember = new User({
       id: customId,
@@ -113,11 +110,16 @@ export const registerStudent = async (req, res) => {
       batch: req.body.batch,
       semester: req.body.semester,
       role: "STUDENT",
+      password: hashedPassword,
     });
 
     console.log(newMember);
 
     const savedStudent = await newMember.save();
+
+    //send auto generate password to the user
+    sendGeneratedPassowrdToStudent(newMember.name, newMember.email, hashedPassword)
+
     res.status(201).json(savedStudent);
 
   } catch (error) {
@@ -279,26 +281,26 @@ export const getGroupDetails = async (req, res) => {
 };
 
 //Get View mark sheet tab group details
-export const getViewMarkSheet = async(req , res) => {
-  try{
+export const getViewMarkSheet = async (req, res) => {
+  try {
     const getViewMarkSheetDetails = await ResearchGroups.find();
     res.status(200).json(getViewMarkSheetDetails);
 
-  }catch(error){
-    res.status(500).json({ message : "Cannot find the group details"})
+  } catch (error) {
+    res.status(500).json({ message: "Cannot find the group details" })
 
   }
 }
 
 //Get the Research paper group details
 
-export const getResearchPaperDetails = async(req,res)=>{
-  try{
+export const getResearchPaperDetails = async (req, res) => {
+  try {
     const getResearchPaperDetails = await ResearchGroups.find();
     res.status(200).json(getResearchPaperDetails);
 
-  }catch(error){
-    res.status(500).json({message : "Cannot find the research group details"})
+  } catch (error) {
+    res.status(500).json({ message: "Cannot find the research group details" })
   }
 }
 
