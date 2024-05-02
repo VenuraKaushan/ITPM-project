@@ -26,7 +26,6 @@ export const staffLogin = async (req, res) => {
         (data.role === "PROJECTMEMBER")||
         (data.role === "SUPERVISOR")) {
          
-          console.log("weda")
 
           // create access Token
           const accessToken = jwt.sign(
@@ -45,6 +44,8 @@ export const staffLogin = async (req, res) => {
             email: data.email,
             role: data.role,
             specialization : data.specialization,
+            isPasswordChanged: data.isPasswordChanged
+
           };
 
           //   sends the user details asd
