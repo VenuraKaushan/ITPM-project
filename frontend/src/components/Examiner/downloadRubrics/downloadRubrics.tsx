@@ -16,8 +16,6 @@ import {
     IconSearch,
     IconFileBarcode
 } from '@tabler/icons-react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import { RubricsPDF } from '../../PDFRender/examiner.rubrics';
 import { useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
 
