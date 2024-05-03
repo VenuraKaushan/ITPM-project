@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import {
   Table,
   ScrollArea,
@@ -11,7 +11,8 @@ import {
   keys,
   Button,
   Modal,
-  TableTh,
+  Select,
+  FileInput,
   Tooltip,
   ActionIcon,
   Box,
@@ -26,11 +27,16 @@ import {
   IconFileTypePdf,
   IconTrash,
   IconEdit,
+  IconCheck,
+  IconX,
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
+import { useQuery } from "@tanstack/react-query";
 import { showNotification } from '@mantine/notifications';
+import axios from "axios";
+import CoordinatorAPI from "../../../API/coordinatorAPI/coordinator.api";
 
 interface RowData {
   id : string;
@@ -99,31 +105,18 @@ function sortData(
   );
 }
 
-const data = [
-  {
-    id : "A001",
-    assessmentName: "ITPM",
-    assessmentUpload: "PDF",
-    deadline: "12/02/2024 : 00.00",
-    specialization: "IT",
-    semester: "1st",
-    
-
-  },
-  {
-    id : "A002",
-    assessmentName: "ITPM",
-    assessmentUpload: "PDF",
-    deadline: "12/02/2024 : 00.00",
-    specialization: "IT",
-    semester: "1st",
-    
-  },
-];
 
 const AddAssessment = () => {
+  const { data, isLoading, isError, refetch } = useQuery({
+      queryKey: ["assessmentData"],
+      queryFn: () => CoordinatorAPI.getAssessment().then((res) => res.data),
+  });
+
+
+
+
   const [search, setSearch] = useState("");
-  const [sortedData, setSortedData] = useState(data);
+  const [sortedData, setSortedData] = useState(data ? data : []);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
@@ -132,6 +125,13 @@ const AddAssessment = () => {
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
   const IconFileTypePdff = <IconFileTypePdf style={{ width: rem(16), height: rem(16) }} />;
+  const [file, setFile] = useState("");
+
+  useEffect(() => {
+    if (data) {
+      setSortedData(data);
+    }
+  }, [data]);
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -139,6 +139,8 @@ const AddAssessment = () => {
     setSortBy(field);
     setSortedData(sortData(data, { sortBy: field, reversed, search }));
   };
+
+
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
@@ -148,13 +150,126 @@ const AddAssessment = () => {
     );
   };
 
-  const rows = sortedData.map((row) => (
+   /*Add Assestment*/
+   const submitAssessmentForm = useForm({
+    validateInputOnChange: true,
+    initialValues: {
+        assessmentName: "",
+        deadline: "",
+        submitDoc: "",
+        semester : "",
+        specialization:""
+    },
+  });
+
+ 
+  
+    const handleFileChange = (file: any) => {
+      console.log(file);
+      setFile(file);
+    };
+  
+    useEffect(() => {
+      if (file) {
+        handleUpload();
+      }
+    }, [file]);
+  
+    //handle file upload
+    const handleUpload = async () => {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+  
+        // Make HTTP request to backend API to upload file
+        const response = await axios.post(
+          "http://localhost:3001/pmapi/question/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+  
+        // Call submitAssessment with response data after successful upload
+        handleSubmit({
+          ...submitAssessmentForm.values,
+          submitDoc: response.data,
+        });
+      } catch (err) {
+        console.error("Error uploading file:", err);
+      }
+    };
+  
+    const handleSubmit = async (values: {
+      assessmentName: string;
+      submitDoc: string;
+      deadline: string;
+      specialization: string;
+      semester: string;
+    }) => {
+  
+      try {
+        const res = await CoordinatorAPI.addAssestment(values);
+  
+        submitAssessmentForm.reset();
+        close(); // Close modal after successful submission
+
+
+       refetch();
+      } catch (error) {
+        // Handle error
+        console.error("Error adding assessment:", error);
+      }
+    };
+
+    // delete Staff Member function
+  const deleteAssestment = (values: {
+    _id: string;
+    assessmentName: string;
+
+  }) => {
+    CoordinatorAPI.deleteAssestment(values)
+      .then((res) => {
+        showNotification({
+          title: `${values._id} was deleted`,
+          message: "Member was deleted successfully",
+          autoClose: 1500,
+          icon: <IconCheck />,
+          color: "teal",
+        });
+
+        // after successing the deletion refetch the data from the database
+        refetch();
+
+        // clear all the fields
+        deleteForm.reset();
+
+        // then close the delete modal
+        setDeleteOpen(false);
+      })
+      .catch((err) => {
+        showNotification({
+          title: `${values.assessmentName} was not deleted`,
+          message: "Student was not deleted",
+          autoClose: 1500,
+          icon: <IconX />,
+          color: "red",
+        });
+      });
+  };
+
+   
+
+  const rows = sortedData.map((row:any) => (
     <Table.Tr key={row.id}>
-      <Table.Td>{row.assessmentName}</Table.Td>
-      <Table.Td>{row.assessmentUpload}</Table.Td>
-      <Table.Td>{row.deadline}</Table.Td>
+      <Table.Td>{row.assestmentName}</Table.Td>
+      <Table.Td>{row.quesDoc}</Table.Td>
+      <Table.Td>{new Date(row.deadline).toLocaleDateString("en-CA")}</Table.Td>
       <Table.Td>{row.specialization}</Table.Td>
-      <Table.Td>{row.semester}</Table.Td>
+      <Table.Td>{row.semster}</Table.Td>
+      
       <Table.Td>
         <center>
         <Tooltip label="Edit">
@@ -185,7 +300,7 @@ const AddAssessment = () => {
           color="red"
           onClick={() => {
             deleteForm.setValues({
-              id : row.id,
+              _id : row._id,
               assessmentName: row.assessmentName,
             });
             setDeleteOpen(true);
@@ -216,6 +331,7 @@ const AddAssessment = () => {
     },
   });
 
+
   //declare edit form
   const editForm = useForm({
     validateInputOnChange:true,
@@ -235,67 +351,79 @@ const AddAssessment = () => {
     validateInputOnChange:true,
 
     initialValues:{
-      id : "",
+      _id : "",
       assessmentName : "",
     },
    });
+
+   if (isLoading) {
+    return <div>Loading....</div>;
+  }
 
 
 
   return (
     <div style={{ position : 'absolute' , top:'160px'}}>
       {/* Add assessment Modal */}
-      <form>
+     
       <Modal opened={opened} onClose={close} title="Add Assessment">
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          rightSection={IconUserr}
-          label="Assessment Name"
-          placeholder="Assessment Name"
-        />
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          rightSection={IconFileTypePdff}
-          label="Assessment Upload"
-          placeholder=""
-         
-        />
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Deadline"
-          placeholder="Deadline"
-        />
+      <form onSubmit={submitAssessmentForm.onSubmit((values) => handleSubmit(values))}>
+      <TextInput
+            mt="md"
+            label="Assessment Name"
+            placeholder="Assessment Name"
+            name="assessmentName"
+            {...submitAssessmentForm.getInputProps("assessmentName")}
+           
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Specialization"
-          placeholder="Specialization"
-        />
+          />
+          <FileInput
+            placeholder="Pick file"
+            label="Add Assessment"
+            withAsterisk
+            name="submitDoc"
+            onChange={handleFileChange}
+          />
+          <TextInput
+            mt="md"
+            label="Deadline"
+            placeholder="Deadline"
+            type="date"
+            name="deadline"
+            {...submitAssessmentForm.getInputProps("deadline")}
+            
 
-        <TextInput
-          mt="md"
-          rightSectionPointerEvents="none"
-          label="Semester"
-          placeholder="Semester"
-        />
+          />
+          <Select
+            required
+            label="Select Specialization"
+            placeholder="Choose..."
+            data={["IT", "SE", "DS", "CSNE"]}
+            style={{ maxWidth: "200px" }}
+            {...submitAssessmentForm.getInputProps("specialization")}
+            
 
-        
+          />
+          <TextInput
+            mt="md"
+            label="Semester"
+            placeholder="Semester"
+            name="semester"
+            {...submitAssessmentForm.getInputProps("semester")}
+            
 
-        <center  style={{paddingTop:'10px'}}>
+          />
           <Button
+            mt="lg"
             variant="gradient"
             gradient={{ from: "gray", to: "blue", deg: 0 }}
-           
+            type="submit"
           >
             Add Assessment
           </Button>
-        </center>
+          </form>
       </Modal>
-      </form>
+     
 
 
        {/* Delete Assessment Modal */}
@@ -306,22 +434,23 @@ const AddAssessment = () => {
           deleteForm.reset();
           setDeleteOpen(false);
         }}
-        title="Delete Student"
+        title="Delete Assessment"
       >
         <Box>
           <Text size={"sm"} mb={10}>
             Are you sure want to delete this assessment?
           </Text>
-          <form onSubmit={deleteForm.onSubmit((values) =>{
+          <form onSubmit={deleteForm.onSubmit((values) => deleteAssestment(values))}>
             
-          })}
-          >
+          
+          
             <TextInput
                withAsterisk
-               label="Member ID"
+               label="Assessment Name"
                required
                disabled
                mb={10}
+               {...deleteForm.getInputProps("_id")}
              />
 
               <Button
@@ -478,7 +607,7 @@ const AddAssessment = () => {
                   reversed={reverseSortDirection}
                   onSort={() => setSorting("specialization")}
                 >
-                  specialization
+                  Specialization
                 </Th>
                 <Th
                   sorted={sortBy === "semester"}
