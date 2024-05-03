@@ -21,6 +21,22 @@ class PMemberAPI{
         return axios.post(`${BASE_URL}/pm/add/assestment`,values,{withCredentials:true});
     }
 
+    static editAssestment(values: {
+        _id: string; 
+        assessmentName: string;
+        submitDoc: string;
+        deadline: string;
+        semester: string;
+        specialization: string;
+    }) {
+        console.log(values)
+        return axios.put(`${BASE_URL}/pm/edit/assestment`, values, { withCredentials: true });
+    }
+
+    static getAllAssessment() {
+        return axios.get(`${BASE_URL}/pm/get/assessment`, { withCredentials: true });
+    }
+
   
 };
 
