@@ -243,7 +243,7 @@ export const ManageMarks = () => {
                 //   onChange={handleSearchChange}
                 />
 
-                <Button
+                {/* <Button
                     variant="gradient"
                     gradient={{ from: 'red', to: 'violet', deg: 90 }}
                     style={{
@@ -254,7 +254,7 @@ export const ManageMarks = () => {
                     }}
                 >
                     Download Rubrics
-                </Button>
+                </Button> */}
             </Center>
 
             <Modal opened={opened} onClose={close} title="Add Marks" size="80%">

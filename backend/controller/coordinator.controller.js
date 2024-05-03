@@ -1,9 +1,12 @@
 import User from "../model/users.model.js";
+import Assessments from "../model/assestment.model.js";
 import ResearchGroups from "../model/group.model.js";
 import bcryptjs from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-
+import { generatePassword } from "../utils/passowrdGenerator.js";
+import { sendGeneratedPassowrdToStaff } from "../mails/staff.mail.js";
+import { sendGeneratedPassowrdToStudent } from "../mails/student.mail.js";
 
 //generate Staff Member Custom ID
 const generateMemberId = async () => {
@@ -48,18 +51,14 @@ export const registerMember = async (req, res) => {
       console.log("User Exist");
       return res.status(409).json({ message: "Member already exists" });
     }
+    const autoPassword = generatePassword();
 
     //generating the custom user ID
     const customId = await generateMemberId();
 
-    console.log(customId);
-
     //hashing the password
-    //   const salt = await bcryptjs.genSalt(10);
-    //   const hashedPassword = await bcrypt.hash(re.body.password, salt);
-
-
-    //   console.log(hashedPassword);
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(autoPassword, salt);
 
     const newMember = new User({
       id: customId,
@@ -68,11 +67,14 @@ export const registerMember = async (req, res) => {
       phone: req.body.phone,
       specialization: req.body.specialization,
       role: req.body.role,
+      password: hashedPassword,
     });
 
-    console.log(newMember);
-
     const savedMember = await newMember.save();
+
+    //send auto generate password to the user
+    sendGeneratedPassowrdToStaff(newMember.name, newMember.email, hashedPassword)
+
     res.status(201).json(savedMember);
 
   } catch (error) {
@@ -84,7 +86,6 @@ export const registerMember = async (req, res) => {
 //Register Student Function
 export const registerStudent = async (req, res) => {
   try {
-    console.log(req.body);
     const existingStudent = await User.findOne({ email: req.body.email });
 
     if (existingStudent) {
@@ -92,17 +93,14 @@ export const registerStudent = async (req, res) => {
       return res.status(409).json({ message: "Student already exists" });
     }
 
+    const autoPassword = generatePassword();
+
     //generating the custom user ID
     const customId = await generateMemberId();
 
-    console.log(customId);
-
     //hashing the password
-    //   const salt = await bcryptjs.genSalt(10);
-    //   const hashedPassword = await bcrypt.hash(re.body.password, salt);
-
-
-    //   console.log(hashedPassword);
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(autoPassword, salt);
 
     const newMember = new User({
       id: customId,
@@ -113,11 +111,16 @@ export const registerStudent = async (req, res) => {
       batch: req.body.batch,
       semester: req.body.semester,
       role: "STUDENT",
+      password: hashedPassword,
     });
 
     console.log(newMember);
 
     const savedStudent = await newMember.save();
+
+    //send auto generate password to the user
+    sendGeneratedPassowrdToStudent(newMember.name, newMember.email, hashedPassword)
+
     res.status(201).json(savedStudent);
 
   } catch (error) {
@@ -279,28 +282,125 @@ export const getGroupDetails = async (req, res) => {
 };
 
 //Get View mark sheet tab group details
-export const getViewMarkSheet = async(req , res) => {
-  try{
+export const getViewMarkSheet = async (req, res) => {
+  try {
     const getViewMarkSheetDetails = await ResearchGroups.find();
     res.status(200).json(getViewMarkSheetDetails);
 
-  }catch(error){
-    res.status(500).json({ message : "Cannot find the group details"})
+  } catch (error) {
+    res.status(500).json({ message: "Cannot find the group details" })
 
   }
 }
 
 //Get the Research paper group details
 
-export const getResearchPaperDetails = async(req,res)=>{
-  try{
+export const getResearchPaperDetails = async (req, res) => {
+  try {
     const getResearchPaperDetails = await ResearchGroups.find();
     res.status(200).json(getResearchPaperDetails);
 
-  }catch(error){
-    res.status(500).json({message : "Cannot find the research group details"})
+  } catch (error) {
+    res.status(500).json({ message: "Cannot find the research group details" })
   }
 }
+
+//Add Assessment in Project Coordinator
+export const addAssestment = async (req, res) => {
+
+  try {
+    const newAssestment = new Assessments({
+      assestmentName: req.body.assessmentName,
+      doc: req.body.assessmentUpload,
+      deadline: req.body.deadline,
+      specialization:req.body.specialization,
+      semster:req.body.semester,
+      quesDoc: req.body.submitDoc.path,
+      ansDoc:'Not a Answer',
+      comment : "NaN"
+    });
+
+    console.log(newAssestment);
+    
+    const saveAssestment = await newAssestment.save();
+
+    res.status(201).json(saveAssestment);
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).json({message: "Failed to add Assestment",error});
+  }
+  
+};
+
+//Get the assessment details
+export const getAssestment = async (req, res) => {
+  try {
+   console.log("Check controller")
+    const assesstment = await Assessments.find()
+
+    res.status(200).json(assesstment);
+
+  } catch (err) {
+    console.log(err.message)
+    res.status(500).json({ message: "Failed to get Assessments data", err });
+  }
+}
+
+//Delete Assessment 
+export const deleteAssestment = async (req, res) => {
+  const _id = req.params.id;
+  const assessmentName = req.params.assessmentName;
+
+  try {
+
+    console.log("controller delete")
+    const deletedAssestment = await Assessments.findByIdAndDelete(_id);
+
+    if (!deletedAssestment) {
+      // If the worker is not found, send a 404 status code with a message
+      return res.status(404).json({ message: "Assessments not found" });
+    }
+
+    res.status(200).json({ message: "Assessments deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete Assessments", error });
+  }
+};
+  
+//edit the Assessments details
+export const updateAssestmentDetails = async (req, res) => {
+
+  const _id = req.params.id;
+
+  const updateFields = {
+    assestmentName: req.body.assessmentName,
+      doc: req.body.assessmentUpload,
+      deadline: req.body.deadline,
+      specialization:req.body.specialization,
+      semster:req.body.semester,
+      quesDoc: req.body.submitDoc.path,
+      ansDoc:'Not a Answer',
+      comment : "NaN"
+  }
+
+  try {
+    const updateAssestmentDetails = await Assessments.findByIdAndUpdate(_id, updateFields, {
+      new: true,
+    });
+
+    if (!updateAssestmentDetails) {
+      //If the Assestment is not found, send a 404 status code with a message
+      return res.status(404).json({ message: " Assestment Not Found" });
+    }
+
+    res.status(200).json(updateAssestmentDetails); //Send the updated Assestment as the response
+
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update Assestment", error });
+
+  }
+
+};
 
 
 

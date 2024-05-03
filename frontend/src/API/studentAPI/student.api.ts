@@ -41,6 +41,16 @@ class StudentAPI {
         return axios.get(`${BASE_URL}/student/get/supervisors`, { withCredentials: true });
     }
 
+    static setNewPassword = (values:{
+        _id: String,
+        currentPassword: String,
+        newPassword : String,
+        confirmPassword: String
+    }) =>{
+        return axios.put(`${BASE_URL}/student/changePassword/${values._id}`,values,{ withCredentials: true});
+
+    }
+
 }
 
 export default StudentAPI;

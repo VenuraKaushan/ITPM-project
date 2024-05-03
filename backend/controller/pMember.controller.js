@@ -1,4 +1,4 @@
-import MarkingRubrics from "../model/pMember.model.js";
+import MarkingRubrics from "../model/rubrics.model.js";
 import Assessments from "../model/assestment.model.js";
 
 export const addRubrics = async (req, res) => {
