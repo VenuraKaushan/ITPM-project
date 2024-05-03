@@ -82,6 +82,32 @@ class CoordinatorAPI{
         return axios.get(`${BASE_URL}/coordinator/getresearchpaperdetails`,{withCredentials:true});
     }
 
+    //Add Research Paper
+    static addAssestment (values : {
+        assessmentName : string,
+        submitDoc : string,
+        deadline : string,
+        semester : string,
+        specialization : string
+    }) {
+        
+        return axios.post(`${BASE_URL}/coordinator/add/assestment`,values,{withCredentials:true});
+    }
+
+    static getAssessment() {
+        return axios.get(`${BASE_URL}/coordinator/get/assessment`,{ withCredentials: true });
+    }
+
+    //delete Assessments
+    static deleteAssestment = (values : {_id : string}) =>{
+        console.log("api")
+        return axios.delete(`${BASE_URL}/coordinator/assessment/delete/${values._id}`,{withCredentials:true});
+    };
+
+    //Update Assessments details
+    
+
+
 };
 
 export default CoordinatorAPI;

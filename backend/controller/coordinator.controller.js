@@ -1,4 +1,5 @@
 import User from "../model/users.model.js";
+import Assessments from "../model/assestment.model.js";
 import ResearchGroups from "../model/group.model.js";
 import bcryptjs from 'bcryptjs';
 import jwt from "jsonwebtoken";
@@ -303,6 +304,103 @@ export const getResearchPaperDetails = async (req, res) => {
     res.status(500).json({ message: "Cannot find the research group details" })
   }
 }
+
+//Add Assessment in Project Coordinator
+export const addAssestment = async (req, res) => {
+
+  try {
+    const newAssestment = new Assessments({
+      assestmentName: req.body.assessmentName,
+      doc: req.body.assessmentUpload,
+      deadline: req.body.deadline,
+      specialization:req.body.specialization,
+      semster:req.body.semester,
+      quesDoc: req.body.submitDoc.path,
+      ansDoc:'Not a Answer',
+      comment : "NaN"
+    });
+
+    console.log(newAssestment);
+    
+    const saveAssestment = await newAssestment.save();
+
+    res.status(201).json(saveAssestment);
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).json({message: "Failed to add Assestment",error});
+  }
+  
+};
+
+//Get the assessment details
+export const getAssestment = async (req, res) => {
+  try {
+   console.log("Check controller")
+    const assesstment = await Assessments.find()
+
+    res.status(200).json(assesstment);
+
+  } catch (err) {
+    console.log(err.message)
+    res.status(500).json({ message: "Failed to get Assessments data", err });
+  }
+}
+
+//Delete Assessment 
+export const deleteAssestment = async (req, res) => {
+  const _id = req.params.id;
+  const assessmentName = req.params.assessmentName;
+
+  try {
+
+    console.log("controller delete")
+    const deletedAssestment = await Assessments.findByIdAndDelete(_id);
+
+    if (!deletedAssestment) {
+      // If the worker is not found, send a 404 status code with a message
+      return res.status(404).json({ message: "Assessments not found" });
+    }
+
+    res.status(200).json({ message: "Assessments deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete Assessments", error });
+  }
+};
+  
+//edit the Assessments details
+export const updateAssestmentDetails = async (req, res) => {
+
+  const _id = req.params.id;
+
+  const updateFields = {
+    assestmentName: req.body.assessmentName,
+      doc: req.body.assessmentUpload,
+      deadline: req.body.deadline,
+      specialization:req.body.specialization,
+      semster:req.body.semester,
+      quesDoc: req.body.submitDoc.path,
+      ansDoc:'Not a Answer',
+      comment : "NaN"
+  }
+
+  try {
+    const updateAssestmentDetails = await Assessments.findByIdAndUpdate(_id, updateFields, {
+      new: true,
+    });
+
+    if (!updateAssestmentDetails) {
+      //If the Assestment is not found, send a 404 status code with a message
+      return res.status(404).json({ message: " Assestment Not Found" });
+    }
+
+    res.status(200).json(updateAssestmentDetails); //Send the updated Assestment as the response
+
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update Assestment", error });
+
+  }
+
+};
 
 
 
