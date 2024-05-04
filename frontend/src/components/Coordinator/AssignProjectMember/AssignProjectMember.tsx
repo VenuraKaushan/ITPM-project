@@ -24,8 +24,10 @@ export function AssignProjectMember() {
       CoordinatorAPI.getGroupDetails().then((res) => res.data),
 
   });
-
+  console.log(data);
   const rows = data.map((item: any ,index:number) => (
+
+    
     <Table.Tr key={`${item.groupID}-${index}`}>
       <Table.Td>{item.groupID}</Table.Td>
       <Table.Td>{item.title}</Table.Td>
@@ -55,6 +57,7 @@ export function AssignProjectMember() {
                 .map((member: { name: string }) => member.name) 
             : []
           }
+          
         />
       </Table.Td>
     </Table.Tr>

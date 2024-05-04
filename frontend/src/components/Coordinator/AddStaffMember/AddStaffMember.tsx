@@ -644,7 +644,7 @@ const AddStaffMember = () => {
                   reversed={reverseSortDirection}
                   onSort={() => setSorting("phone")}
                 >
-                  Phone NO
+                  Phone Number
                 </Th>
                 <Th
                   sorted={sortBy === "specialization"}
