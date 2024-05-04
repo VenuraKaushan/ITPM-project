@@ -719,21 +719,21 @@ const StudentDetails = () => {
                     reversed={reverseSortDirection}
                     onSort={() => setSorting("specialization")}
                   >
-                    specialization
+                    Specialization
                   </Th>
                   <Th
                     sorted={sortBy === "batch"}
                     reversed={reverseSortDirection}
                     onSort={() => setSorting("batch")}
                   >
-                    batch
+                    Batch
                   </Th>
                   <Th
                     sorted={sortBy === "semester"}
                     reversed={reverseSortDirection}
                     onSort={() => setSorting("semester")}
                   >
-                    semester
+                    Semester
                   </Th>
                   <Th
                     sorted={sortBy === "semester"}

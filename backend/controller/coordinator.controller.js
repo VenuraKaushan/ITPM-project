@@ -335,7 +335,7 @@ export const addAssestment = async (req, res) => {
 //Get the assessment details
 export const getAssestment = async (req, res) => {
   try {
-   console.log("Check controller")
+   
     const assesstment = await Assessments.find()
 
     res.status(200).json(assesstment);
