@@ -142,7 +142,7 @@ export function PublishResearch() {
                 </div>
 
                 <Text fw={500} style={{ marginTop: "30px" }}>
-                    Supervisors 
+                    Supervisors
                 </Text>
                 <div style={{ display: "flex", gap: 30 }}>
                     <TextInput
@@ -189,7 +189,8 @@ export function PublishResearch() {
                     />
 
                     <Text fw={500} style={{ marginTop: "30px" }}>
-                        Link for  verify the Scopus indexing                    </Text>
+                        Link for  verify the Scopus indexing
+                    </Text>
 
                     <TextInput
                         style={{ marginTop: "25px" }}
