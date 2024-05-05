@@ -105,7 +105,19 @@ class CoordinatorAPI{
     };
 
     //Update Assessments details
-    
+    static updateAssestmentDetails = (values:{
+        _id : string,
+        assessmentName : string,
+        submitDoc : string,
+        deadline : string,
+        semester : string,
+        specialization : string
+    }) =>{
+        return axios.put(`${BASE_URL}/coordinator/assessment/update/${values._id}`, values,
+       
+        {withCredentials:true})
+       
+    };
 
 
 };
