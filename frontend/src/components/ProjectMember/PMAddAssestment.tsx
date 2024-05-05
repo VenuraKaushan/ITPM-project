@@ -27,6 +27,9 @@ import {
   IconFileTypePdf,
   IconTrash,
   IconEdit,
+  IconCheck,
+  IconX,
+  
 } from "@tabler/icons-react";
 import { Select } from "@mantine/core";
 import classes from "../../Styles/TableSort.module.css";
@@ -147,6 +150,20 @@ const PMAddAssestment = () => {
     },
   });
 
+  //declare edit form
+  const editForm = useForm({
+    validateInputOnChange: true,
+
+    initialValues: {
+      _id: "",
+      assessmentName: "",
+      submitDoc: "",
+      deadline: "",
+      semester: "",
+      specialization: "",
+    },
+  });
+
   const handleFileChange = (file: any) => {
     console.log(file);
     setFile(file);
@@ -204,25 +221,57 @@ const PMAddAssestment = () => {
     }
   };
 
-  const handleEdit = async (
-    _id: string,
-    updatedValues: {
-      assessmentName: string;
-      submitDoc: string;
-      deadline: string;
-      specialization: string;
-      semester: string;
-    }
-  ) => {
+  const handleEdit = async (values: {
+    _id: string;
+    assessmentName: string;
+    submitDoc: string;
+    deadline: string;
+    specialization: string;
+    semester: string;
+  }) => {
     try {
       // Make API call to update the assessment using the assessment ID
-      const res = await PMemberAPI.editAssestment(_id,updatedValues);
+      const res = await PMemberAPI.editAssestment(values);
       console.log("Assessment updated successfully:", res);
+      setEditOpened(false)
       refetch();
     } catch (error) {
       // Handle error
       console.error("Error updating assessment:", error);
     }
+  };
+
+  const deleteAssestment = (values: {
+    _id: string;
+  }) => {
+    PMemberAPI.deleteAssestment(values)
+      .then((res) => {
+        showNotification({
+          title: `${values._id} was deleted`,
+          message: "Member was deleted successfully",
+          autoClose: 1500,
+          icon: <IconCheck />,
+          color: "teal",
+        });
+
+        // after successing the deletion refetch the data from the database
+        refetch();
+
+        // clear all the fields
+        deleteForm.reset();
+
+        // then close the delete modal
+        setDeleteOpen(false);
+      })
+      .catch((err) => {
+        showNotification({
+          title: `Assessment was not deleted`,
+          message: "Student was not deleted",
+          autoClose: 1500,
+          icon: <IconX />,
+          color: "red",
+        });
+      });
   };
 
   // Use react query and fetch Assestment data
@@ -251,7 +300,7 @@ const PMAddAssestment = () => {
               onClick={() => {
                 editForm.setValues({
                   _id: row._id,
-                  assessmentName: row.assessmentName,
+                  assessmentName: row.assestmentName,
                   submitDoc: row.quesDoc,
                   deadline: row.deadline,
                   specialization: row.semster,
@@ -271,8 +320,7 @@ const PMAddAssestment = () => {
               color="red"
               onClick={() => {
                 deleteForm.setValues({
-                  id: row.id,
-                  assessmentName: row.assessmentName,
+                  _id: row._id,
                 });
                 setDeleteOpen(true);
               }}
@@ -284,6 +332,8 @@ const PMAddAssestment = () => {
       </Table.Td>
     </Table.Tr>
   ));
+
+  console.log(editForm.values);
 
   //from Structure
   const form = useForm({
@@ -299,27 +349,12 @@ const PMAddAssestment = () => {
     },
   });
 
-  //declare edit form
-  const editForm = useForm({
-    validateInputOnChange: true,
-
-    initialValues: {
-      _id: "",
-      assessmentName: "",
-      submitDoc: "",
-      deadline: "",
-      semester: "",
-      specialization: "",
-    },
-  });
-
   //Declare delete form
   const deleteForm = useForm({
     validateInputOnChange: true,
 
     initialValues: {
-      id: "",
-      assessmentName: "",
+      _id: "",
     },
   });
 
@@ -343,13 +378,7 @@ const PMAddAssestment = () => {
             name="assessmentName"
             {...submitAssessmentForm.getInputProps("assessmentName")}
           />
-          <FileInput
-            placeholder="Pick file"
-            label="Add Assessment"
-            withAsterisk
-            name="submitDoc"
-            onChange={handleFileChange}
-          />
+
           <TextInput
             mt="md"
             label="Deadline"
@@ -372,6 +401,14 @@ const PMAddAssestment = () => {
             placeholder="Semester"
             name="semester"
             {...submitAssessmentForm.getInputProps("semester")}
+          />
+
+          <FileInput
+            placeholder="Pick file"
+            label="Add Assessment"
+            withAsterisk
+            name="submitDoc"
+            onChange={handleFileChange}
           />
           <Button
             mt="lg"
@@ -398,7 +435,7 @@ const PMAddAssestment = () => {
           <Text size={"sm"} mb={10}>
             Are you sure want to delete this assessment?
           </Text>
-          <form onSubmit={deleteForm.onSubmit((values) => {})}>
+          <form onSubmit={deleteForm.onSubmit((values) => deleteAssestment(values))}>
             <Button
               color="gray"
               variant="outline"
@@ -416,15 +453,15 @@ const PMAddAssestment = () => {
         </Box>
       </Modal>
 
-      <form onSubmit={editForm.onSubmit((values) => handleEdit(values))}>
-        <Modal
-          opened={editOpened}
-          onClose={() => {
-            editForm.reset();
-            setEditOpened(false);
-          }}
-          title="Edit Assessment"
-        >
+      <Modal
+        opened={editOpened}
+        onClose={() => {
+          editForm.reset();
+          setEditOpened(false);
+        }}
+        title="Edit Assessment"
+      >
+        <form onSubmit={editForm.onSubmit((values) => handleEdit(values))}>
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
@@ -433,12 +470,7 @@ const PMAddAssestment = () => {
             placeholder="Assessment Name"
             {...editForm.getInputProps("assessmentName")}
           />
-          <FileInput
-            placeholder="Pick file"
-            label="Edit Assestment"
-            withAsterisk
-            onChange={handleFileChange}
-          />
+
           <TextInput
             mt="md"
             label="Deadline"
@@ -469,12 +501,13 @@ const PMAddAssestment = () => {
             <Button
               variant="gradient"
               gradient={{ from: "gray", to: "blue", deg: 0 }}
+              type="submit"
             >
               Edit Assessment
             </Button>
           </center>
-        </Modal>
-      </form>
+        </form>
+      </Modal>
 
       <div style={{ marginLeft: "-900px", marginRight: "50px" }}>
         <ScrollArea>

@@ -98,3 +98,24 @@ export const getAssessment = async (req, res) => {
     res.status(500).json({ message: "Failed to get Assessments data", err });
   }
 }
+
+//Delete Assessment 
+export const deleteAssestment = async (req, res) => {
+  const _id = req.params.id;
+  const assessmentName = req.params.assessmentName;
+
+  try {
+
+    console.log("controller delete")
+    const deletedAssestment = await Assessments.findByIdAndDelete(_id);
+
+    if (!deletedAssestment) {
+      // If the worker is not found, send a 404 status code with a message
+      return res.status(404).json({ message: "Assessments not found" });
+    }
+
+    res.status(200).json({ message: "Assessments deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete Assessments", error });
+  }
+};
