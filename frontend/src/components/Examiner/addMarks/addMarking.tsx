@@ -82,7 +82,52 @@ export const ManageMarks = () => {
 
     const submitMarks = (marks: any) => {
 
-        console.log(marks)
+        const groupID = marks._id;
+
+        const proposalMarks = [
+            { registrationNumber: marks.leaderID, marks: marks.lProposal },
+            { registrationNumber: marks.member1ID, marks: marks.m1Proposal },
+            { registrationNumber: marks.member2ID, marks: marks.m2Proposal },
+            { registrationNumber: marks.member3ID, marks: marks.m3Proposal }
+        ];
+
+        const progress1Marks = [
+            { registrationNumber: marks.leaderID, marks: marks.lProgress1 },
+            { registrationNumber: marks.member1ID, marks: marks.m1Progress1 },
+            { registrationNumber: marks.member2ID, marks: marks.m2Progress1 },
+            { registrationNumber: marks.member3ID, marks: marks.m3Progress1 }
+        ];
+
+        const progress2Marks = [
+            { registrationNumber: marks.leaderID, marks: marks.lProgress2 },
+            { registrationNumber: marks.member1ID, marks: marks.m1Progress2 },
+            { registrationNumber: marks.member2ID, marks: marks.m2Progress2 },
+            { registrationNumber: marks.member3ID, marks: marks.m3Progress2 }
+        ];
+
+        const finalPresentationMarks = [
+            { registrationNumber: marks.leaderID, marks: marks.lFinalPresentation },
+            { registrationNumber: marks.member1ID, marks: marks.m1FinalPresentation },
+            { registrationNumber: marks.member2ID, marks: marks.m2FinalPresentation },
+            { registrationNumber: marks.member3ID, marks: marks.m3FinalPresentation }
+        ];
+
+        const comments = [
+            { registrationNumber: marks.leaderID, comment: marks.leadercomment },
+            { registrationNumber: marks.member1ID, comment: marks.m1comment },
+            { registrationNumber: marks.member2ID, comment: marks.m2comment },
+            { registrationNumber: marks.member3ID, comment: marks.m3comment }
+        ];
+
+        const data = {
+            proposalMarks,
+            progress1Marks,
+            progress2Marks,
+            finalPresentationMarks,
+            comments,
+            groupID
+        };
+
         showNotification({
             id: "Submit-Marks",
             color: "teal",
@@ -91,7 +136,7 @@ export const ManageMarks = () => {
             icon: <IconCheck size={16} />,
             autoClose: 5000,
         });
-        ExaminerAPI.submitMarks(marks)
+        ExaminerAPI.submitMarks(data)
             .then((res) => {
                 updateNotification({
                     id: "Submit-Marks",
@@ -102,6 +147,8 @@ export const ManageMarks = () => {
                     autoClose: 5000,
                 });
 
+                addMarkForm.reset();
+                close();
             })
             .catch((error) => {
                 updateNotification({
@@ -184,7 +231,7 @@ export const ManageMarks = () => {
                         {...addMarkForm.getInputProps("leadercomment")}
                     />
                 </Table.Td>
-                <Table.Td>
+                {/* <Table.Td>
                     <Button
                         variant="filled"
                         color="red"
@@ -192,7 +239,7 @@ export const ManageMarks = () => {
                         onClick={() => submitMarks(addMarkForm.values)} >
                         Submit Marks
                     </Button>
-                </Table.Td>
+                </Table.Td> */}
             </Table.Tr>
 
             <Table.Tr>
@@ -222,11 +269,6 @@ export const ManageMarks = () => {
                     <TextInput
                         {...addMarkForm.getInputProps("m1comment")}
                     />
-                </Table.Td>
-                <Table.Td>
-                    <Button variant="filled" color="red" radius="xl">
-                        Submit Marks
-                    </Button>
                 </Table.Td>
             </Table.Tr>
 
@@ -258,11 +300,7 @@ export const ManageMarks = () => {
                         {...addMarkForm.getInputProps("m2comment")}
                     />
                 </Table.Td>
-                <Table.Td>
-                    <Button variant="filled" color="red" radius="xl">
-                        Submit Marks
-                    </Button>
-                </Table.Td>
+
             </Table.Tr>
 
             <Table.Tr>
@@ -293,11 +331,6 @@ export const ManageMarks = () => {
                         {...addMarkForm.getInputProps("m3comment")}
                     />
                 </Table.Td>
-                <Table.Td>
-                    <Button variant="filled" color="red" radius="xl">
-                        Submit Marks
-                    </Button>
-                </Table.Td>
             </Table.Tr>
         </>
     );
@@ -323,18 +356,6 @@ export const ManageMarks = () => {
                 //   onChange={handleSearchChange}
                 />
 
-                {/* <Button
-                    variant="gradient"
-                    gradient={{ from: 'red', to: 'violet', deg: 90 }}
-                    style={{
-                        width: "160px",
-                        display: "inline-block",
-                        marginLeft: "50px",
-
-                    }}
-                >
-                    Download Rubrics
-                </Button> */}
             </Center>
 
             <Modal opened={opened} onClose={close} title="Add Marks" size="80%">
@@ -364,11 +385,19 @@ export const ManageMarks = () => {
                             <Table.Th>Progress 2</Table.Th>
                             <Table.Th>Final Presentation</Table.Th>
                             <Table.Th>Add Comment</Table.Th>
-                            <Table.Th>Action</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>{modalRows}</Table.Tbody>
                 </Table>
+                <Button
+                    ml={940}
+                    variant="filled"
+                    color="red"
+                    radius="xl"
+                    onClick={() => submitMarks(addMarkForm.values)}
+                >
+                    Submit Marks
+                </Button>
             </Modal>
             <ScrollArea>
 
