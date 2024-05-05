@@ -10,7 +10,6 @@ const AssessmentSchema = new mongoose.Schema(
     quesDoc: {
       type: String,
       default : '',
-      required: true,
     },
 
     ansDoc: {
