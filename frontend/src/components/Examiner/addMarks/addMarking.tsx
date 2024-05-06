@@ -20,6 +20,7 @@ import { useForm } from '@mantine/form';
 import ExaminerAPI from '../../../API/examinerAPI';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import { IconX, IconCheck } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 
 export const ManageMarks = () => {
 
@@ -80,6 +81,35 @@ export const ManageMarks = () => {
         queryFn: () => ExaminerAPI.getResearchGroupByExaminer().then((res) => res.data),
     });
 
+    useEffect(() => {
+        // Check if data has been loaded and if there is data to fetch marks for
+        if (!isLoading && data.length > 0 && addMarkForm.values._id !== "") {
+            // Fetch marks data when the component mounts
+            const fetchData = async () => {
+                const marksData = await fetchMarks(addMarkForm.values);
+                if (marksData !== null) {
+                    open(); // Open the modal after marks data is fetched
+                }
+            };
+            fetchData();
+        }
+    }, [isLoading, data, addMarkForm.values, open]);
+
+
+    const fetchMarks = async (values:any) => {
+        try {
+            const response = await ExaminerAPI.getMarksByGroupID(values._id);
+            const marksData = response.data; 
+
+            console.log(marksData)
+            return marksData;
+        } catch (error) {
+            console.error('Error fetching marks:', error);
+            return null;
+        }
+    };
+
+    
     const submitMarks = (marks: any) => {
 
         const groupID = marks._id;
@@ -164,40 +194,39 @@ export const ManageMarks = () => {
 
     const rows = data.map((element: any) => (
         <Table.Tr key={element._id}>
-            <Table.Td>{element.groupID}</Table.Td>
-            <Table.Td>{element.title}</Table.Td>
-            <Table.Td>
-                <Center>
-                    <Button
-                        variant="gradient"
-                        gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
-                        onClick={() => {
-                            addMarkForm.setValues({
-                                _id: element._id,
-                                groupID: element.groupID,
-                                leaderName: element.leader[0].name,
-                                leaderID: element.leader[0].registrationNumber,
+    <Table.Td>{element.groupID}</Table.Td>
+    <Table.Td>{element.title}</Table.Td>
+    <Table.Td>
+        <Center>
+            <Button
+                variant="gradient"
+                gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
+                onClick={async () => {
+                    addMarkForm.setValues({
+                        _id: element._id,
+                        groupID: element.groupID,
+                        leaderName: element.leader[0].name,
+                        leaderID: element.leader[0].registrationNumber,
+                        member1Name: element.members[0].name,
+                        member1ID: element.members[0].registrationNumber,
+                        member2Name: element.members[1].name,
+                        member2ID: element.members[1].registrationNumber,
+                        member3Name: element.members[2].name,
+                        member3ID: element.members[2].registrationNumber,
+                    });
 
-                                member1Name: element.members[0].name,
-                                member1ID: element.members[0].registrationNumber,
+                    const marksData = await fetchMarks(addMarkForm.values);
+                    if (marksData == null) {
+                        open();
+                    }
+                }}
+            >
+                Add Marks
+            </Button>
+        </Center>
+    </Table.Td>
+</Table.Tr>
 
-                                member2Name: element.members[1].name,
-                                member2ID: element.members[1].registrationNumber,
-
-                                member3Name: element.members[2].name,
-                                member3ID: element.members[2].registrationNumber,
-                            })
-                            open();
-
-                        }}
-                    >
-                        Add Marks
-                    </Button>
-                </Center>
-            </Table.Td>
-
-
-        </Table.Tr>
     ));
     console.log(addMarkForm.values);
 

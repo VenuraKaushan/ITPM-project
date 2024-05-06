@@ -12,7 +12,6 @@ const MarksSchema = new mongoose.Schema(
             registrationNumber:{
                 type: String,
                 required: true,
-                unique : true,
 
             },
             marks:{
@@ -26,7 +25,6 @@ const MarksSchema = new mongoose.Schema(
             registrationNumber:{
                 type: String,
                 required: true,
-                unique : true,
 
             },
             marks:{
@@ -40,7 +38,6 @@ const MarksSchema = new mongoose.Schema(
             registrationNumber:{
                 type: String,
                 required: true,
-                unique : true,
 
             },
             marks:{
@@ -54,7 +51,6 @@ const MarksSchema = new mongoose.Schema(
             registrationNumber:{
                 type: String,
                 required: true,
-                unique : true,
 
             },
             marks:{
@@ -68,7 +64,6 @@ const MarksSchema = new mongoose.Schema(
             registrationNumber:{
                 type: String,
                 required: true,
-                unique : true,
 
             },
             comment:{
