@@ -1,4 +1,3 @@
-
 import { useState , useEffect  } from "react";
 import {
   Table,
@@ -91,8 +90,10 @@ export function ViewMarkSheet() {
 const { data, isLoading, isError, refetch } = useQuery({
   queryKey: ["ViewMarkSheet"],
   queryFn: () =>
-    CoordinatorAPI.getViewMarkSheetDetaiils().then((res) => res.data),
+    CoordinatorAPI.getAssessmentMarks().then((res) => res.data),
 });
+
+console.log(data);
 
 
   const [search, setSearch] = useState('');

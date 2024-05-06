@@ -1,7 +1,8 @@
 import express from "express";
 import { registerMember , registerStudent , getStaffMembers , getAllStudentDetails , 
     updateStaffMember , updateStudentDetails , deleteStaffMember , deleteStudent , 
-    getGroupDetails,getViewMarkSheet,getResearchPaperDetails,addAssestment,getAssestment , deleteAssestment,updateAssestmentDetails
+    getGroupDetails,getViewMarkSheet,getResearchPaperDetails,addAssestment,getAssestment , deleteAssestment,updateAssestmentDetails,
+    getAssessmentMarks
  }  from "../controller/coordinator.controller.js";
 
 const router = express.Router();
@@ -34,6 +35,10 @@ router.get("/get/assessment",getAssestment);
 router.delete("/assessment/delete/:id",deleteAssestment);
 
 router.put("/assessment/update/:id",updateAssestmentDetails);
+
+router.get('/get/assessmentMark',getAssessmentMarks);
+
+
 
 
 

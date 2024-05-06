@@ -119,6 +119,13 @@ class CoordinatorAPI{
        
     };
 
+    //Get assessmentMark
+    static getAssessmentMarks() {
+        return axios.get(`${BASE_URL}/coordinator/get/assessmentMark`,{ withCredentials: true });
+    }
+
+    
+
 
 };
 
