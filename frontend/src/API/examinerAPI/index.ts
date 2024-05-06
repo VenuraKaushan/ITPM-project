@@ -21,6 +21,12 @@ class ExaminerAPI {
         return axios.get(`${BASE_URL}/examiner/get/allRubrics`, { withCredentials: true });
     }
 
+    static submitMarks (data:any){
+        console.log(data)
+        return axios.post(`${BASE_URL}/examiner/submit/marks`, data,{ withCredentials: true });
+
+    }
+
 }
 
 export default ExaminerAPI;

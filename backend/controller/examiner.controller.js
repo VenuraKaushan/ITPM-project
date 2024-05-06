@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 import Assessments from "../model/assestment.model.js";
 import MarkingRubrics from "../model/rubrics.model.js";
+import Marks from "../model/marks.model.js";
 
 export const getResearchGroupByExaminer = async (req, res) => {
     try {
@@ -52,5 +53,31 @@ export const getRubrics = async(req,res)=>{
 
     } catch (err) {
         res.status(500).json({ message: "Failed to get Marking rubrics", err });
+    }
+}
+
+export const submitMarks = async(req,res)=>{
+    
+    try{
+
+        const marks = new Marks({
+            groupID: req.body.groupID,
+            proposalMarks: req.body.proposalMarks,
+            progress1Marks: req.body.progress1Marks,
+            progress2Marks: req.body.progress2Marks,
+            finalPresentationMarks: req.body.finalPresentationMarks,
+            comments: req.body.comments
+        })
+
+        console.log(marks)
+        const saveMarks = await marks.save();
+
+        res.status(201).json(saveMarks);
+
+
+    }catch(err){
+        console.log(err.message)
+
+        res.status(500).json({ message: "Failed to add Marks", err });
     }
 }

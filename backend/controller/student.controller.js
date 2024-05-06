@@ -124,12 +124,10 @@ export const regResearchGroup = async (req, res) => {
   const customGroupId = await generateGroupID();
 
   try {
-    console.log(req.body.batch);
 
     // Check if leader email already exists in the database
     const existingLeader = await ResearchGroups.findOne({ 'leader.registrationNumber': req.body.leaderDetails.registrationNumber });
     if (existingLeader) {
-      console.log("leader have")
       return res.status(400).json({ message: 'Leader already belongs to a research group' });
     }
 
@@ -137,8 +135,6 @@ export const regResearchGroup = async (req, res) => {
     for (const member of req.body.memberDetails) {
       const existingMember = await ResearchGroups.findOne({ 'members.registrationNumber': member.registrationNumber });
       if (existingMember) {
-        console.log("member have")
-
         return res.status(400).json({ message: 'Member already belongs to a research group' });
       }
     }

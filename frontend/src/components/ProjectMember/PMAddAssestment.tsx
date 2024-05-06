@@ -27,6 +27,9 @@ import {
   IconFileTypePdf,
   IconTrash,
   IconEdit,
+  IconCheck,
+  IconX,
+  
 } from "@tabler/icons-react";
 import { Select } from "@mantine/core";
 import classes from "../../Styles/TableSort.module.css";
@@ -34,6 +37,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import PMemberAPI from "../../API/PMemberAPI/pmember.api";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 interface RowData {
@@ -103,28 +107,9 @@ function sortData(
   );
 }
 
-const data = [
-  {
-    id: "A001",
-    assessmentName: "ITPM",
-    assessmentUpload: "PDF",
-    deadline: "12/02/2024 : 00.00",
-    specialization: "IT",
-    semester: "1st",
-  },
-  {
-    id: "A002",
-    assessmentName: "ITPM",
-    assessmentUpload: "PDF",
-    deadline: "12/02/2024 : 00.00",
-    specialization: "IT",
-    semester: "1st",
-  },
-];
-
 const PMAddAssestment = () => {
   const [search, setSearch] = useState("");
-  const [sortedData, setSortedData] = useState(data);
+  // const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   // const [opened, { open, close }] = useDisclosure(false);
@@ -138,32 +123,46 @@ const PMAddAssestment = () => {
   );
   const [file, setFile] = useState("");
 
-  const setSorting = (field: keyof RowData) => {
-    const reversed = field === sortBy ? !reverseSortDirection : false;
-    setReverseSortDirection(reversed);
-    setSortBy(field);
-    setSortedData(sortData(data, { sortBy: field, reversed, search }));
-  };
+  // const setSorting = (field: keyof RowData) => {
+  //   const reversed = field === sortBy ? !reverseSortDirection : false;
+  //   setReverseSortDirection(reversed);
+  //   setSortBy(field);
+  //   setSortedData(sortData(data, { sortBy: field, reversed, search }));
+  // };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setSearch(value);
-    setSortedData(
-      sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
-    );
-  };
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value } = event.currentTarget;
+  //   setSearch(value);
+  //   setSortedData(
+  //     sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
+  //   );
+  // };
 
   /*Add Assestment*/
- const submitAssessmentForm = useForm({
-  validateInputOnChange: true,
-  initialValues: {
+  const submitAssessmentForm = useForm({
+    validateInputOnChange: true,
+    initialValues: {
       assessmentName: "",
       deadline: "",
       submitDoc: "",
-      semester : "",
-      specialization:""
-  },
-});
+      semester: "",
+      specialization: "",
+    },
+  });
+
+  //declare edit form
+  const editForm = useForm({
+    validateInputOnChange: true,
+
+    initialValues: {
+      _id: "",
+      assessmentName: "",
+      submitDoc: "",
+      deadline: "",
+      semester: "",
+      specialization: "",
+    },
+  });
 
   const handleFileChange = (file: any) => {
     console.log(file);
@@ -210,36 +209,102 @@ const PMAddAssestment = () => {
     specialization: string;
     semester: string;
   }) => {
-
     try {
       const res = await PMemberAPI.addAssestment(values);
 
       setOpened(false); // Close modal after successful submission
+      refetch();
+      submitAssessmentForm.reset();
     } catch (error) {
       // Handle error
       console.error("Error adding assessment:", error);
     }
   };
 
-  const rows = sortedData.map((row) => (
-    <Table.Tr key={row.id}>
-      <Table.Td>{row.assessmentName}</Table.Td>
-      <Table.Td>{row.assessmentUpload}</Table.Td>
+  const handleEdit = async (values: {
+    _id: string;
+    assessmentName: string;
+    submitDoc: string;
+    deadline: string;
+    specialization: string;
+    semester: string;
+  }) => {
+    try {
+      // Make API call to update the assessment using the assessment ID
+      const res = await PMemberAPI.editAssestment(values);
+      console.log("Assessment updated successfully:", res);
+      setEditOpened(false)
+      refetch();
+    } catch (error) {
+      // Handle error
+      console.error("Error updating assessment:", error);
+    }
+  };
+
+  const deleteAssestment = (values: {
+    _id: string;
+  }) => {
+    PMemberAPI.deleteAssestment(values)
+      .then((res) => {
+        showNotification({
+          title: `${values._id} was deleted`,
+          message: "Member was deleted successfully",
+          autoClose: 1500,
+          icon: <IconCheck />,
+          color: "teal",
+        });
+
+        // after successing the deletion refetch the data from the database
+        refetch();
+
+        // clear all the fields
+        deleteForm.reset();
+
+        // then close the delete modal
+        setDeleteOpen(false);
+      })
+      .catch((err) => {
+        showNotification({
+          title: `Assessment was not deleted`,
+          message: "Student was not deleted",
+          autoClose: 1500,
+          icon: <IconX />,
+          color: "red",
+        });
+      });
+  };
+
+  // Use react query and fetch Assestment data
+  const {
+    data = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["assestmentData"],
+    queryFn: () => PMemberAPI.getAllAssessment().then((res) => res.data),
+  });
+  console.log(data);
+
+  const rows = data.map((row: any) => (
+    <Table.Tr key={row._id}>
+      <Table.Td>{row.assestmentName}</Table.Td>
+      <Table.Td>{row.quesDoc}</Table.Td>
       <Table.Td>{row.deadline}</Table.Td>
+      <Table.Td>{row.semster}</Table.Td>
       <Table.Td>{row.specialization}</Table.Td>
-      <Table.Td>{row.semester}</Table.Td>
       <Table.Td>
         <center>
           <Tooltip label="Edit">
             <ActionIcon
               onClick={() => {
                 editForm.setValues({
-                  id: row.id,
-                  assessmentName: row.assessmentName,
-                  submitDoc: row.assessmentUpload,
+                  _id: row._id,
+                  assessmentName: row.assestmentName,
+                  submitDoc: row.quesDoc,
                   deadline: row.deadline,
-                  specialization: row.specialization,
-                  semester: row.semester,
+                  specialization: row.semster,
+                  semester: row.specialization,
                 });
                 setEditOpened(true);
               }}
@@ -255,8 +320,7 @@ const PMAddAssestment = () => {
               color="red"
               onClick={() => {
                 deleteForm.setValues({
-                  id: row.id,
-                  assessmentName: row.assessmentName,
+                  _id: row._id,
                 });
                 setDeleteOpen(true);
               }}
@@ -269,22 +333,10 @@ const PMAddAssestment = () => {
     </Table.Tr>
   ));
 
+  console.log(editForm.values);
+
   //from Structure
   const form = useForm({
-    validateInputOnChange: true,
-
-    initialValues: {
-      id: "",
-      assessmentName: "",
-      submitDoc: "",
-      deadline: "",
-      semester: "",
-      specialization: "",
-    },
-  });
-
-  //declare edit form
-  const editForm = useForm({
     validateInputOnChange: true,
 
     initialValues: {
@@ -302,8 +354,7 @@ const PMAddAssestment = () => {
     validateInputOnChange: true,
 
     initialValues: {
-      id: "",
-      assessmentName: "",
+      _id: "",
     },
   });
 
@@ -315,22 +366,19 @@ const PMAddAssestment = () => {
         title="Add Assessment"
       >
         {/* Add assessment Modal */}
-        <form onSubmit={submitAssessmentForm.onSubmit((values) => handleSubmit(values))}>
+        <form
+          onSubmit={submitAssessmentForm.onSubmit((values) =>
+            handleSubmit(values)
+          )}
+        >
           <TextInput
             mt="md"
             label="Assessment Name"
             placeholder="Assessment Name"
             name="assessmentName"
             {...submitAssessmentForm.getInputProps("assessmentName")}
+          />
 
-          />
-          <FileInput
-            placeholder="Pick file"
-            label="Add Assessment"
-            withAsterisk
-            name="submitDoc"
-            onChange={handleFileChange}
-          />
           <TextInput
             mt="md"
             label="Deadline"
@@ -338,7 +386,6 @@ const PMAddAssestment = () => {
             type="date"
             name="deadline"
             {...submitAssessmentForm.getInputProps("deadline")}
-
           />
           <Select
             required
@@ -347,7 +394,6 @@ const PMAddAssestment = () => {
             data={["IT", "SE", "DS", "CSNE"]}
             style={{ maxWidth: "200px" }}
             {...submitAssessmentForm.getInputProps("specialization")}
-
           />
           <TextInput
             mt="md"
@@ -355,7 +401,14 @@ const PMAddAssestment = () => {
             placeholder="Semester"
             name="semester"
             {...submitAssessmentForm.getInputProps("semester")}
+          />
 
+          <FileInput
+            placeholder="Pick file"
+            label="Add Assessment"
+            withAsterisk
+            name="submitDoc"
+            onChange={handleFileChange}
           />
           <Button
             mt="lg"
@@ -376,21 +429,13 @@ const PMAddAssestment = () => {
           deleteForm.reset();
           setDeleteOpen(false);
         }}
-        title="Delete Student"
+        title="Delete Assignment"
       >
         <Box>
           <Text size={"sm"} mb={10}>
             Are you sure want to delete this assessment?
           </Text>
-          <form onSubmit={deleteForm.onSubmit((values) => {})}>
-            <TextInput
-              withAsterisk
-              label="Member ID"
-              required
-              disabled
-              mb={10}
-            />
-
+          <form onSubmit={deleteForm.onSubmit((values) => deleteAssestment(values))}>
             <Button
               color="gray"
               variant="outline"
@@ -408,50 +453,32 @@ const PMAddAssestment = () => {
         </Box>
       </Modal>
 
-      <form>
-        <Modal
-          opened={editOpened}
-          onClose={() => {
-            editForm.reset();
-            setEditOpened(false);
-          }}
-          title="Edit Assessment"
-        >
+      <Modal
+        opened={editOpened}
+        onClose={() => {
+          editForm.reset();
+          setEditOpened(false);
+        }}
+        title="Edit Assessment"
+      >
+        <form onSubmit={editForm.onSubmit((values) => handleEdit(values))}>
           <TextInput
             mt="md"
             rightSectionPointerEvents="none"
             rightSection={IconUserr}
             label="Assessment Name"
             placeholder="Assessment Name"
+            {...editForm.getInputProps("assessmentName")}
           />
-          <FileInput
-            placeholder="Pick file"
-            label="Add Assestment"
-            withAsterisk
+
+          <TextInput
+            mt="md"
+            label="Deadline"
+            placeholder="Deadline"
+            type="date"
+            name="deadline"
+            {...editForm.getInputProps("deadline")}
           />
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              htmlFor="date"
-              style={{
-                display: "block",
-                fontWeight: "bold",
-                marginBottom: "5px",
-              }}
-            >
-              Deadline
-            </label>
-            <input
-              type="date"
-              id="date"
-              style={{
-                width: "100%",
-                padding: "8px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                boxSizing: "border-box",
-              }}
-            />
-          </div>
 
           <Select
             required
@@ -459,6 +486,7 @@ const PMAddAssestment = () => {
             placeholder="Choose..."
             data={["IT", "SE", "DS", "CSNE"]}
             style={{ maxWidth: "200px" }}
+            {...editForm.getInputProps("specialization")}
           />
 
           <TextInput
@@ -466,18 +494,20 @@ const PMAddAssestment = () => {
             rightSectionPointerEvents="none"
             label="Semester"
             placeholder="Semester"
+            {...editForm.getInputProps("semester")}
           />
 
           <center style={{ paddingTop: "10px" }}>
             <Button
               variant="gradient"
               gradient={{ from: "gray", to: "blue", deg: 0 }}
+              type="submit"
             >
               Edit Assessment
             </Button>
           </center>
-        </Modal>
-      </form>
+        </form>
+      </Modal>
 
       <div style={{ marginLeft: "-900px", marginRight: "50px" }}>
         <ScrollArea>
@@ -496,7 +526,7 @@ const PMAddAssestment = () => {
                 />
               }
               value={search}
-              onChange={handleSearchChange}
+              // onChange={handleSearchChange}
             />
             <Button
               onClick={() => setOpened(true)}
@@ -532,60 +562,48 @@ const PMAddAssestment = () => {
                 <Th
                   sorted={sortBy === "assessmentName"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("assessmentName")}
+                  onSort={() => {}}
                 >
                   Assessment Name
                 </Th>
                 <Th
                   sorted={sortBy === "assessmentUpload"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("assessmentUpload")}
+                  onSort={() => {}}
                 >
                   Assessment Upload
                 </Th>
                 <Th
                   sorted={sortBy === "deadline"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("deadline")}
+                  onSort={() => {}}
                 >
                   Deadline
                 </Th>
                 <Th
                   sorted={sortBy === "specialization"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("specialization")}
+                  onSort={() => {}}
                 >
                   specialization
                 </Th>
                 <Th
                   sorted={sortBy === "semester"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("semester")}
+                  onSort={() => {}}
                 >
                   Semester
                 </Th>
                 <Th
                   sorted={sortBy === "semester"}
                   reversed={reverseSortDirection}
-                  onSort={() => setSorting("semester")}
+                  onSort={() => {}}
                 >
                   Action
                 </Th>
               </Table.Tr>
             </Table.Tbody>
-            <Table.Tbody>
-              {rows.length > 0 ? (
-                rows
-              ) : (
-                <Table.Tr>
-                  <Table.Td colSpan={Object.keys(data[0]).length}>
-                    <Text fw={500} ta="center">
-                      Nothing found
-                    </Text>
-                  </Table.Td>
-                </Table.Tr>
-              )}
-            </Table.Tbody>
+            <Table.Tbody>{rows}</Table.Tbody>
           </Table>
         </ScrollArea>
       </div>
