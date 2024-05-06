@@ -1,8 +1,8 @@
 import User from "../model/users.model.js";
 import Assessments from "../model/assestment.model.js";
 import ResearchGroups from "../model/group.model.js";
+import Marks from "../model/marks.model.js";
 import bcryptjs from 'bcryptjs';
-import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { generatePassword } from "../utils/passowrdGenerator.js";
 import { sendGeneratedPassowrdToStaff } from "../mails/staff.mail.js";
@@ -401,6 +401,42 @@ export const updateAssestmentDetails = async (req, res) => {
   }
 
 };
+
+//Get the assessment Marks
+export const getAssessmentMarks = async (req, res) => {
+  try {
+   
+    const assessmentMark = await Marks.find()
+
+    res.status(200).json(assessmentMark);
+
+  } catch (err) {
+    console.log(err.message)
+    res.status(500).json({ message: "Failed to get Assessments Marks", err });
+  }
+}
+
+//compare group no and assessment ID
+export const compareAssessmentMarkId = async(req,res)=>{
+try{
+  const _id = req.params.id;
+  const compareId = await Marks.findOne({groupID:_id});
+
+  console.log(compareId);
+
+  res.status(201).json(compareId);
+
+}catch(err){
+  res.status(500).json({message : "Faild to match group ID and marks Id",err});
+}
+}
+
+
+
+
+
+
+
 
 
 

@@ -26,6 +26,11 @@ class ExaminerAPI {
         return axios.post(`${BASE_URL}/examiner/submit/marks`, data,{ withCredentials: true });
 
     }
+    
+    static getMarksByGroupID(groupID:any){
+        return axios.get(`${BASE_URL}/examiner/get/existing/marks/${groupID}`,{ withCredentials: true });
+
+    }
 
 }
 

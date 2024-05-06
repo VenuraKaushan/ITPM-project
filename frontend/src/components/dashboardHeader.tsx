@@ -35,8 +35,8 @@ export const DashboardHeader = () => {
     const studentUserData = JSON.parse(localStorage.getItem("user-student-session") || "{}");
     const staffUserData = JSON.parse(localStorage.getItem("user-staff-session") || "{}");
 
-    console.log("Student User Data:", studentUserData);
-    console.log("Staff User Data:", staffUserData);
+    // console.log("Student User Data:", studentUserData);
+    // console.log("Staff User Data:", staffUserData);
 
     let user;
 
@@ -49,7 +49,7 @@ export const DashboardHeader = () => {
         user = staffUserData;
     }
 
-    console.log("User:", user);
+    
 
     const logoutUrl = isStudent ? "/student/logout" : "/staff/logout";
 

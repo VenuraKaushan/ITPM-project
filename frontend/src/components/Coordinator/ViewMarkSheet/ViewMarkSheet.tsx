@@ -1,4 +1,3 @@
-
 import { useState , useEffect  } from "react";
 import {
   Table,
@@ -91,8 +90,23 @@ export function ViewMarkSheet() {
 const { data, isLoading, isError, refetch } = useQuery({
   queryKey: ["ViewMarkSheet"],
   queryFn: () =>
-    CoordinatorAPI.getViewMarkSheetDetaiils().then((res) => res.data),
+    CoordinatorAPI.getGroupDetails().then((res) => res.data),
 });
+
+const getGroupMarksById = async(values:any) =>{
+  try{
+
+    const response = await CoordinatorAPI.getAssessmentMarksByGroupId(values._id);
+    const AssessmentMarksDetails = response.data;
+
+    console.log(AssessmentMarksDetails)
+    return AssessmentMarksDetails;
+
+  }catch(error){
+            console.error('Error fetching marks:', error);
+            return null;
+  }
+}
 
 
   const [search, setSearch] = useState('');
