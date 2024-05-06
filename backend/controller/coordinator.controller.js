@@ -416,6 +416,28 @@ export const getAssessmentMarks = async (req, res) => {
   }
 }
 
+//compare group no and assessment ID
+export const compareAssessmentMarkId = async(req,res)=>{
+try{
+  const _id = req.params.id;
+  const compareId = await Marks.findOne({groupID:_id});
+
+  console.log(compareId);
+
+  res.status(201).json(compareId);
+
+}catch(err){
+  res.status(500).json({message : "Faild to match group ID and marks Id",err});
+}
+}
+
+
+
+
+
+
+
+
 
 
 
