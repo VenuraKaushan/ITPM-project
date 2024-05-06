@@ -25,6 +25,13 @@ export function AssignProjectMember() {
 
   });
   console.log(data);
+
+
+  if (isLoading) {
+    return <div>Loading....</div>;
+  }
+
+
   const rows = data.map((item: any ,index:number) => (
 
     
