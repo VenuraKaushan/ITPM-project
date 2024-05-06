@@ -81,3 +81,17 @@ export const submitMarks = async(req,res)=>{
         res.status(500).json({ message: "Failed to add Marks", err });
     }
 }
+
+export const getExistingMarks = async(req,res)=>{
+    try{
+        const _id = req.params.id;
+
+        const existinMarks = await  Marks.findOne({groupID: _id});
+
+        res.status(201).json(existinMarks);
+    }catch(err){
+        console.log(err.message)
+
+        res.status(500).json({ message: "Failed to get existing Marks", err });
+    }
+}

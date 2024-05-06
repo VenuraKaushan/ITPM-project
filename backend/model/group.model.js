@@ -2,95 +2,107 @@ import mongoose from "mongoose";
 
 const researchGroupSchema = new mongoose.Schema(
     {
-        groupID:{
-            type : String,
-            unique : true,
-            required : true,
+        groupID: {
+            type: String,
+            unique: true,
+            required: true,
         },
-        title:{
+        title: {
             type: String,
             required: true
         },
-        area:{
+        area: {
             type: String,
             required: true
         },
-        category:{
+        category: {
             type: String,
             required: true
         },
-        supervisorName:{
+        supervisorName: {
             type: String,
             required: true
         },
-        coSupervisorName:{
+        coSupervisorName: {
             type: String,
             required: true
         },
-        batch:{
+        batch: {
             type: String,
             required: true
         },
 
-       members:[
-        {
-            name:{
-                type: String,
-                required: true
-            },
-            registrationNumber:{
-                type: String,
-                required: true,
-                unique : true,
+        members: [
+            {
+                name: {
+                    type: String,
+                    required: true
+                },
+                registrationNumber: {
+                    type: String,
+                    required: true,
+                    unique: true,
 
-            },
-            contactNumber : {
-                type: String,
-                required: true
-            },
-            email:{
-                type: String,
-                required: true,
-                unique: true
-            },
-            specialization:{
-                type: String,
-                required: true
+                },
+                contactNumber: {
+                    type: String,
+                    required: true
+                },
+                email: {
+                    type: String,
+                    required: true,
+                    unique: true
+                },
+                specialization: {
+                    type: String,
+                    required: true
+                }
+
             }
+        ],
 
-        }
-       ],
+        leader: [
+            {
+                name: {
+                    type: String,
+                    required: true
+                },
+                registrationNumber: {
+                    type: String,
+                    required: true,
 
-       leader:[
-        {
-            name:{
-                type: String,
-                required: true
-            },
-            registrationNumber:{
-                type: String,
-                required: true,
+                },
+                contactNumber: {
+                    type: String,
+                    required: true
+                },
+                email: {
+                    type: String,
+                    required: true,
+                    unique: true
+                },
+                specialization: {
+                    type: String,
+                    required: true
+                }
 
-            },
-            contactNumber : {
-                type: String,
-                required: true
-            },
-            email:{
-                type: String,
-                required: true,
-                unique: true
-            },
-            specialization:{
-                type: String,
-                required: true
             }
+        ],
+        hIndex: {
+            type: String,
+            default: "",
+        },
+        ScopusIndex: {
+            type: String,
+            default: "",
+        },
+        image :{
+            type: String,
+        } 
 
-        }
-       ],
-    },{ timestamps: true }
+    }, { timestamps: true }
 );
 
-const ResearchGroups = mongoose.model("researchGroups",researchGroupSchema);
+const ResearchGroups = mongoose.model("researchGroups", researchGroupSchema);
 
 export default ResearchGroups;
