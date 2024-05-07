@@ -5,6 +5,7 @@ import "dotenv/config";
 import ResearchGroups from "../model/group.model.js"
 import Assessments from "../model/assestment.model.js";
 import path from 'path';
+import Tesseract from 'tesseract.js';
 
 
 
@@ -149,6 +150,7 @@ export const regResearchGroup = async (req, res) => {
       supervisorName: req.body.projectDetails.supervisorName,
       coSupervisorName: req.body.projectDetails.coSupervisorName,
       batch: req.body.batch,
+      isPublish: false
     });
 
     const saveGroup = await newGroup.save();
@@ -258,6 +260,70 @@ export const changePassword = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ message: "Failed to Change Password", err });
+
+  }
+}
+
+export const scanImage = async (req, res) => {
+  try {
+    const image = req.file; // Check if body contains any data
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image uploaded' });
+    }
+
+    const { data: { text } } = await Tesseract.recognize(req.file.path, 'eng');
+    console.log({ text });
+
+    // Possible variations of payment confirmation texts
+    const paymentConfirmationTexts = [
+      "payment successful",
+      "payment successfull",
+      "payment successful!",
+      "payment successfull!",
+      "payment completed",
+      "PAYMENT SUCCESSFUL"
+      // Add more variations as needed
+    ];
+
+    // Check if any of the variations match the recognized text
+    const isPaymentSuccessful = paymentConfirmationTexts.some(variation =>
+      text.toLowerCase().includes(variation)
+    );
+
+    console.log("Payment Successful:", isPaymentSuccessful);
+
+    res.json({ image, isPaymentSuccessful });
+
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const publishResearch = async (req, res) => {
+
+  try {
+    const _id = req.params.id;
+
+    const updateFields = {
+      ScopusIndex : req.body.scopusIndexing,
+      hIndex: req.body.hindex,
+      image: req.body.image.path,
+      isPublish: true
+    }
+
+    console.log(updateFields)
+
+    const publisheResearch = await ResearchGroups.findByIdAndUpdate(_id, updateFields, {
+      new: true,
+    });
+
+    res.status(200).json(publisheResearch);
+
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Failed to publish Research", err });
 
   }
 }

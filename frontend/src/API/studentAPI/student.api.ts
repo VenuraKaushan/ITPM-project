@@ -51,6 +51,19 @@ class StudentAPI {
 
     }
 
+    static researchPublish(values: {
+        _id : string,
+        image: string,
+        hindex: string,
+        scopusIndexing: string
+    }) {
+        console.log(values);
+        return axios.put(`${BASE_URL}/student/publish/research/${values._id}`, values, { withCredentials: true})
+
+    }
+
+    
+
 }
 
 export default StudentAPI;

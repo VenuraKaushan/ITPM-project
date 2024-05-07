@@ -8,7 +8,9 @@ import {
     submitAssessment,
     studentLogout,
     getSupervisors,
-    changePassword
+    changePassword,
+    scanImage,
+    publishResearch
  } from "../controller/student.controller.js";
 import { validateUSers } from "../middlewares/authMiddleware.js";
 
@@ -26,6 +28,8 @@ router.post("/upload/assessment",uploadAssessmentDoc);//route for upload assessm
 router.put("/upload/assessment/:id",submitAssessment)
 router.get("/get/supervisors",getSupervisors);
 router.put("/changePassword/:id",changePassword)
+router.post("/upload/image",scanImage);
+router.put("/publish/research/:id",publishResearch);
 
 
 export default router;
