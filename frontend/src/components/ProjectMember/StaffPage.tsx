@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useState }  from "react";
 import { Select, Button } from "@mantine/core";
 
 export const StaffPage = () => {
+
+  const [duration, setDuration] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleChange = (event) => {
+    const inputDuration = parseInt(event.target.value, 10); // Parse input as integer
+    setDuration(inputDuration);
+
+    // Validate duration
+    if (inputDuration < 10 || inputDuration > 20) {
+      setErrorMessage("Time duration should be between 10 to 20 minutes.");
+    } else {
+      setErrorMessage("");
+    }
+  };
+
   return (
     <div
       style={{
@@ -50,24 +66,33 @@ export const StaffPage = () => {
       </div>
 
       <div style={{ marginBottom: "20px" }}>
-        <label
-          htmlFor="duration"
-          style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}
-        >
-          Enter Time Duration
-        </label>
-        <input
-          type="text"
-          id="duration"
-          style={{
-            width: "100%",
-            padding: "8px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            boxSizing: "border-box",
-          }}
-        />
-      </div>
+      <label
+        htmlFor="duration"
+        style={{
+          display: "block",
+          fontWeight: "bold",
+          marginBottom: "5px",
+        }}
+      >
+        Enter Time Duration
+      </label>
+      <input
+        type="number" // Use type="number" for numeric input
+        id="duration"
+        value={duration}
+        onChange={handleChange}
+        style={{
+          width: "100%",
+          padding: "8px",
+          border: "1px solid #ccc",
+          borderRadius: "5px",
+          boxSizing: "border-box",
+        }}
+      />
+      {errorMessage && (
+        <div style={{ color: "red", marginTop: "5px" }}>{errorMessage}</div>
+      )}
+    </div>
 
       <Button
         variant="gradient"

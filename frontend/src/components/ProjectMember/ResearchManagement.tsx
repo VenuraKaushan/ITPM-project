@@ -2,7 +2,7 @@ import React from "react";
 import "../../Styles/ResearchTable.css";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-
+import { MultiSelect } from "@mantine/core";
 
 const ResearchManagement = () => {
   const data = [
@@ -11,7 +11,6 @@ const ResearchManagement = () => {
       groupNumber: "WE-IT056",
       date: "2023-12-01",
       time: "10:00 AM",
-      faculty: "Computing",
       examiner: "Prof. Johnson",
     },
     {
@@ -19,7 +18,6 @@ const ResearchManagement = () => {
       groupNumber: "WE-IT057",
       date: "2023-12-02",
       time: "11:00 AM",
-      faculty: "Engineering",
       examiner: "Prof. Davis",
     },
 
@@ -28,7 +26,6 @@ const ResearchManagement = () => {
       groupNumber: "WE-IT056",
       date: "2023-12-01",
       time: "10:00 AM",
-      faculty: "Computing",
       examiner: "Prof. Johnson",
     },
     {
@@ -36,34 +33,15 @@ const ResearchManagement = () => {
       groupNumber: "WE-IT056",
       date: "2023-12-02",
       time: "11:00 AM",
-      faculty: "Engineering",
       examiner: "Prof. Davis",
     },
     // Add more data as needed
   ];
 
-  // Array of examiners for dropdown menu
-  const examiners = ["Prof. Dilshan", "Dr. Prasanna", "Prof. Samantha"];
 
-  // Function to handle dropdown change
-  const handleDropdownChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const newData = [...data];
-    newData[index].examiner = event.target.value;
-    // You can perform additional actions here if needed
-    console.log("Selected examiner:", event.target.value);
-  };
-
-  // const navigate = useNavigate();
-
-  // const handleButtonClick = () => {
-  //   navigate("/MarkingRubricsSection");
-  // };
 
   return (
-    <div className="table-container" style={{marginTop:'25px'}}>
+    <div className="table-container" style={{ marginTop: "25px" }}>
       <table className="custom-table">
         <thead>
           <tr>
@@ -71,7 +49,7 @@ const ResearchManagement = () => {
             <th>Group Number</th>
             <th>Date</th>
             <th>Time</th>
-            <th>Faculty</th>
+
             <th>Examiner</th>
             <th>Actions</th>
           </tr>
@@ -83,23 +61,17 @@ const ResearchManagement = () => {
               <td>{item.groupNumber}</td>
               <td>{item.date}</td>
               <td>{item.time}</td>
-              <td>{item.faculty}</td>
+
               <td>
-                <select
-                  value={item.examiner}
-                  onChange={(e) => handleDropdownChange(index, e)}
-                >
-                  <option value="">Select Examiner</option>
-                  {examiners.map((examiner, idx) => (
-                    <option key={idx} value={examiner}>
-                      {examiner}
-                    </option>
-                  ))}
-                </select>
+                <MultiSelect
+                  label="Select 3 Examiners"
+                  placeholder="Pick Examiners"
+                  data={["Dr.Dilshan", "Dr.Dinuka", "Dr.Harendra", "Dr.Kavinga"]}
+                />
               </td>
               <td>
                 {/* Add actions buttons here */}
-                <Button variant="filled" color="green" radius="xl"  >
+                <Button variant="filled" color="green" radius="xl">
                   Presentation Marking Rubrics
                 </Button>
               </td>
