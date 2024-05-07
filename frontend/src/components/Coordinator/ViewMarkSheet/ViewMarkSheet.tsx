@@ -59,9 +59,11 @@ function filterData(data: RowData[], search: string) {
   return data.filter((item) =>
     keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
   );
+  
 }
 
 function sortData(
+  
   data: RowData[],
   payload: { sortBy: keyof RowData | null; reversed: boolean; search: string }
 ) {
@@ -107,7 +109,6 @@ const getGroupMarksById = async(values:any) =>{
             return null;
   }
 }
-
 
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState(data ? data : []);

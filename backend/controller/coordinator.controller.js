@@ -431,8 +431,38 @@ try{
 }
 }
 
+//Edit assessment mark details
+export const updateAssestmentMark = async (req, res) => {
 
+  const _id = req.params.id;
 
+  const updateFields = {
+            groupID: req.body.groupID,
+            proposalMarks: req.body.proposalMarks,
+            progress1Marks: req.body.progress1Marks,
+            progress2Marks: req.body.progress2Marks,
+            finalPresentationMarks: req.body.finalPresentationMarks,
+            comments: req.body.comments
+  }
+
+  try {
+    const updateAssestmentDetails = await Assessments.findByIdAndUpdate(_id, updateFields, {
+      new: true,
+    });
+
+    if (!updateAssestmentDetails) {
+      //If the Assestment is not found, send a 404 status code with a message
+      return res.status(404).json({ message: " Assestment Not Found" });
+    }
+
+    res.status(200).json(updateAssestmentDetails); //Send the updated Assestment as the response
+
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update Assestment", error });
+
+  }
+
+};
 
 
 
