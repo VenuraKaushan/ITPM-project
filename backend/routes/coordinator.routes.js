@@ -22,7 +22,7 @@ router.delete("/member/delete/:id",deleteStaffMember);
 
 router.delete("/student/delete/:id",deleteStudent);
 
-router.get(`/getgroupdetails`,getGroupDetails);
+router.get("/getgroupdetails",getViewMarkSheet);
 
 router.get(`/getviewmarksheetdetails`,getViewMarkSheet);
 

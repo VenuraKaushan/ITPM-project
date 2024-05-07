@@ -126,6 +126,7 @@ class CoordinatorAPI{
 
     //get comapare Id
     static getAssessmentMarksByGroupId(groupID:any){
+        console.log(groupID)
         return axios.get(`${BASE_URL}/coordinator/get/compareAssessmentMarkId/${groupID}`,{ withCredentials: true });
     }
 

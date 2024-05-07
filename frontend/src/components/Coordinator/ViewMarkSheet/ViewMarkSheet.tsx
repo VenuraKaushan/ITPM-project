@@ -1,4 +1,4 @@
-import { useState , useEffect  } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   ScrollArea,
@@ -59,11 +59,11 @@ function filterData(data: RowData[], search: string) {
   return data.filter((item) =>
     keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
   );
-  
+
 }
 
 function sortData(
-  
+
   data: RowData[],
   payload: { sortBy: keyof RowData | null; reversed: boolean; search: string }
 ) {
@@ -88,39 +88,38 @@ function sortData(
 
 export function ViewMarkSheet() {
 
-//use react query and fetch research data
-const { data, isLoading, isError, refetch } = useQuery({
-  queryKey: ["ViewMarkSheet"],
-  queryFn: () =>
-    CoordinatorAPI.getGroupDetails().then((res) => res.data),
-});
-
-const getGroupMarksById = async(values:any) =>{
-  try{
-
-    const response = await CoordinatorAPI.getAssessmentMarksByGroupId(values._id);
-    const AssessmentMarksDetails = response.data;
-
-    console.log(AssessmentMarksDetails)
-    return AssessmentMarksDetails;
-
-  }catch(error){
-            console.error('Error fetching marks:', error);
-            return null;
-  }
-}
+  //use react query and fetch research data
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["ViewMarkSheet"],
+    queryFn: () =>
+      CoordinatorAPI.getGroupDetails().then((res) => res.data),
+  });
 
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState(data ? data : []);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
+  const [marksData, setMarksData] = useState()
+
+  //declare view form
+  const GetIdForm = useForm({
+    validateInputOnChange: true,
+    initialValues: {
+      _id: "",
+    },
+
+  });
 
   useEffect(() => {
     if (data) {
       setSortedData(data);
     }
-  }, [data]);
+    if (marksData) {
+      open();
+    }
+  }, [data, marksData]); 
+  
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -135,38 +134,49 @@ const getGroupMarksById = async(values:any) =>{
     setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
-   
+  const compareID = async (id:any) => {
+    try {
+      const res = await CoordinatorAPI.getAssessmentMarksByGroupId(id)
 
-  const rows = sortedData.map((row:any) => (
+      console.log(res.data)
+      setMarksData(res.data);
+    } catch (err) {
+
+    }
+  }
+
+  const rows = sortedData.map((row: any) => (
     <Table.Tr key={row._id}>
       <Table.Td>{row.groupID}</Table.Td>
       <Table.Td>{row.title}</Table.Td>
       <center>
-      <Table.Td><Button onClick={open}>View</Button></Table.Td>
+        <Table.Td>
+          <Button
+            onClick={() => {
+              GetIdForm.setValues({
+                _id: row._id
+              });
+              compareID(row._id);
+              open();
+            }}
+          >
+            View
+          </Button>
+
+        </Table.Td>
       </center>
 
     </Table.Tr>
-    
+
   ));
 
-    //declare view form
-    const Form = useForm({
-      validateInputOnChange:true,
-  
-      initialValues:{
-        _id : "",
-        groupID : "",
-        title : "",
 
-      },
-      
-    });
 
   if (isLoading) {
     return <div>Loading....</div>;
   }
 
- 
+
 
   return (
     <ScrollArea>
@@ -182,12 +192,11 @@ const getGroupMarksById = async(values:any) =>{
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed" withTableBorder withColumnBorders>
         <Table.Tbody>
           <Table.Tr>
-          
+
             <Th
               sorted={sortBy === 'groupID'}
               reversed={reverseSortDirection}
               onSort={() => setSorting('groupID')}
-              {...Form.getInputProps("groupID")}
             >
               Group No
             </Th>
@@ -195,8 +204,7 @@ const getGroupMarksById = async(values:any) =>{
               sorted={sortBy === 'title'}
               reversed={reverseSortDirection}
               onSort={() => setSorting('title')}
-              {...Form.getInputProps("title")}
-              
+
             >
               Topic
             </Th>
@@ -224,13 +232,13 @@ const getGroupMarksById = async(values:any) =>{
       <Modal
         opened={opened}
         onClose={close}
-      fullScreen
+        fullScreen
         radius={0}
         transitionProps={{ transition: 'fade', duration: 200 }}
-        
+
       >
 
-        <ViewMarkSheetPage/>
+        <ViewMarkSheetPage assessmentMarksData={marksData} />
         {/* Modal content */}
       </Modal>
     </ScrollArea>
