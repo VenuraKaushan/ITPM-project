@@ -101,7 +101,7 @@ function sortData(
 
 
 
-const AssessmentMark = () => {
+const AssessmentMark = ({ assessmentMarksData }: { assessmentMarksData: any }) => {
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["staffMemberData"],
@@ -109,6 +109,8 @@ const AssessmentMark = () => {
       CoordinatorAPI.getAssessmentMarks().then((res) => res.data),
   });
 
+  console.log(assessmentMarksData)
+  
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
