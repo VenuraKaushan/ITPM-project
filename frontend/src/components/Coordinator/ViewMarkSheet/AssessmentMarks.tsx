@@ -106,7 +106,7 @@ const AssessmentMark = () => {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["staffMemberData"],
     queryFn: () =>
-      CoordinatorAPI.getAllStaffMemberDetails().then((res) => res.data),
+      CoordinatorAPI.getAssessmentMarks().then((res) => res.data),
   });
 
   const [search, setSearch] = useState("");

@@ -59,9 +59,11 @@ function filterData(data: RowData[], search: string) {
   return data.filter((item) =>
     keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
   );
+  
 }
 
 function sortData(
+  
   data: RowData[],
   payload: { sortBy: keyof RowData | null; reversed: boolean; search: string }
 ) {
@@ -108,7 +110,6 @@ const getGroupMarksById = async(values:any) =>{
   }
 }
 
-
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState(data ? data : []);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
@@ -134,6 +135,8 @@ const getGroupMarksById = async(values:any) =>{
     setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
+   
+
   const rows = sortedData.map((row:any) => (
     <Table.Tr key={row._id}>
       <Table.Td>{row.groupID}</Table.Td>
@@ -143,6 +146,7 @@ const getGroupMarksById = async(values:any) =>{
       </center>
 
     </Table.Tr>
+    
   ));
 
     //declare view form
@@ -155,11 +159,14 @@ const getGroupMarksById = async(values:any) =>{
         title : "",
 
       },
+      
     });
 
   if (isLoading) {
     return <div>Loading....</div>;
   }
+
+ 
 
   return (
     <ScrollArea>
