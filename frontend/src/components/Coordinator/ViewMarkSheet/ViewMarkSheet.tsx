@@ -134,6 +134,8 @@ const getGroupMarksById = async(values:any) =>{
     setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
+   
+
   const rows = sortedData.map((row:any) => (
     <Table.Tr key={row._id}>
       <Table.Td>{row.groupID}</Table.Td>
@@ -143,6 +145,7 @@ const getGroupMarksById = async(values:any) =>{
       </center>
 
     </Table.Tr>
+    
   ));
 
     //declare view form
@@ -155,11 +158,14 @@ const getGroupMarksById = async(values:any) =>{
         title : "",
 
       },
+      
     });
 
   if (isLoading) {
     return <div>Loading....</div>;
   }
+
+ 
 
   return (
     <ScrollArea>
