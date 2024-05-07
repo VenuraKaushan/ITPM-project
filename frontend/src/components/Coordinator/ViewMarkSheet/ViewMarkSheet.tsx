@@ -1,4 +1,3 @@
-
 import { useState , useEffect  } from "react";
 import {
   Table,
@@ -60,9 +59,11 @@ function filterData(data: RowData[], search: string) {
   return data.filter((item) =>
     keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
   );
+  
 }
 
 function sortData(
+  
   data: RowData[],
   payload: { sortBy: keyof RowData | null; reversed: boolean; search: string }
 ) {
@@ -91,9 +92,23 @@ export function ViewMarkSheet() {
 const { data, isLoading, isError, refetch } = useQuery({
   queryKey: ["ViewMarkSheet"],
   queryFn: () =>
-    CoordinatorAPI.getViewMarkSheetDetaiils().then((res) => res.data),
+    CoordinatorAPI.getGroupDetails().then((res) => res.data),
 });
 
+const getGroupMarksById = async(values:any) =>{
+  try{
+
+    const response = await CoordinatorAPI.getAssessmentMarksByGroupId(values._id);
+    const AssessmentMarksDetails = response.data;
+
+    console.log(AssessmentMarksDetails)
+    return AssessmentMarksDetails;
+
+  }catch(error){
+            console.error('Error fetching marks:', error);
+            return null;
+  }
+}
 
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState(data ? data : []);
@@ -120,6 +135,8 @@ const { data, isLoading, isError, refetch } = useQuery({
     setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
+   
+
   const rows = sortedData.map((row:any) => (
     <Table.Tr key={row._id}>
       <Table.Td>{row.groupID}</Table.Td>
@@ -129,6 +146,7 @@ const { data, isLoading, isError, refetch } = useQuery({
       </center>
 
     </Table.Tr>
+    
   ));
 
     //declare view form
@@ -141,11 +159,14 @@ const { data, isLoading, isError, refetch } = useQuery({
         title : "",
 
       },
+      
     });
 
   if (isLoading) {
     return <div>Loading....</div>;
   }
+
+ 
 
   return (
     <ScrollArea>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState , useEffect  } from "react";
 import {
   Table,
   ScrollArea,
@@ -24,8 +24,11 @@ import {
   IconMessage,
 } from "@tabler/icons-react";
 import classes from "../../../Styles/TableSort.module.css";
-
+import CoordinatorAPI from "../../../API/coordinatorAPI/coordinator.api";
 import { useForm } from "@mantine/form";
+import { useQuery } from "@tanstack/react-query";
+import { showNotification } from "@mantine/notifications";
+
 
 interface RowData {
   _id: string;
@@ -96,30 +99,16 @@ function sortData(
   );
 }
 
-const data = [
-  {
-    _id: "string",
-    groupNo: "string",
-    studentName: "string",
-    regNo: "string",
-    proposal: "string",
-    progress1: "string",
-    progress2: "string",
-    final: "string",
-  },
-  {
-    _id: "string",
-    groupNo: "string",
-    studentName: "string",
-    regNo: "string",
-    proposal: "string",
-    progress1: "string",
-    progress2: "string",
-    final: "string",
-  },
-];
+
 
 const AssessmentMark = () => {
+
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["staffMemberData"],
+    queryFn: () =>
+      CoordinatorAPI.getAssessmentMarks().then((res) => res.data),
+  });
+
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
@@ -128,6 +117,12 @@ const AssessmentMark = () => {
   const [commentsOpened, setCommentsOpened] = useState(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
+
+  useEffect(() => {
+    if (data) {
+      setSortedData(data);
+    }
+  }, [data]);
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -144,7 +139,7 @@ const AssessmentMark = () => {
     );
   };
 
-  const rows = sortedData.map((row) => (
+  const rows = sortedData.map((row:any) => (
     <Table.Tr key={row._id}>
       <Table.Td>{row._id}</Table.Td>
       <Table.Td>{row.groupNo}</Table.Td>
@@ -238,6 +233,10 @@ const AssessmentMark = () => {
     },
   });
 
+  if (isLoading) {
+    return <div>Loading....</div>;
+  }
+
   return (
     <>
       <div style={{ position: "absolute", top: "160px" }}>
@@ -283,13 +282,7 @@ const AssessmentMark = () => {
             }}
             title="Edit Assessment Marks"
           >
-            <TextInput
-              mt="md"
-              rightSectionPointerEvents="none"
-              rightSection={IconUserr}
-              label="Name"
-              placeholder="Student Name"
-            />
+            
             <TextInput
               mt="md"
               rightSectionPointerEvents="none"
@@ -364,13 +357,7 @@ const AssessmentMark = () => {
                   >
                     Group No
                   </Th>
-                  <Th
-                    sorted={sortBy === "studentName"}
-                    reversed={reverseSortDirection}
-                    onSort={() => setSorting("studentName")}
-                  >
-                    Student Name
-                  </Th>
+                 
                   <Th
                     sorted={sortBy === "regNo"}
                     reversed={reverseSortDirection}

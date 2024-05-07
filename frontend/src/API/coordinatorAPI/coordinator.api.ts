@@ -119,6 +119,20 @@ class CoordinatorAPI{
        
     };
 
+    //Get assessmentMark
+    static getAssessmentMarks() {
+        return axios.get(`${BASE_URL}/coordinator/get/assessmentMark`,{ withCredentials: true });
+    }
+
+    //get comapare Id
+    static getAssessmentMarksByGroupId(groupID:any){
+        return axios.get(`${BASE_URL}/coordinator/get/compareAssessmentMarkId/${groupID}`,{ withCredentials: true });
+    }
+
+  
+
+    
+
 
 };
 

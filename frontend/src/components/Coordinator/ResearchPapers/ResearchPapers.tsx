@@ -176,6 +176,7 @@ export function ResearchPapers() {
 
   return (
     <ScrollArea>
+      
       <TextInput
         style={{ paddingTop: "20px" }}
         placeholder="Search by any field"
