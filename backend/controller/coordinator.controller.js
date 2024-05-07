@@ -446,19 +446,19 @@ export const updateAssestmentMark = async (req, res) => {
   }
 
   try {
-    const updateAssestmentDetails = await Assessments.findByIdAndUpdate(_id, updateFields, {
+    const updateAssestmentMark = await Marks.findByIdAndUpdate(_id, updateFields, {
       new: true,
     });
 
-    if (!updateAssestmentDetails) {
+    if (!updateAssestmentMark) {
       //If the Assestment is not found, send a 404 status code with a message
-      return res.status(404).json({ message: " Assestment Not Found" });
+      return res.status(404).json({ message: " Assestment Marks Not Found" });
     }
 
-    res.status(200).json(updateAssestmentDetails); //Send the updated Assestment as the response
+    res.status(200).json(updateAssestmentMark); //Send the updated Assestment marks as the response
 
   } catch (error) {
-    res.status(500).json({ message: "Failed to update Assestment", error });
+    res.status(500).json({ message: "Failed to update Assestment marks", error });
 
   }
 
