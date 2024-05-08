@@ -6,6 +6,14 @@ const MarksSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        cusGroupNo: {
+            type: String,
+            required: true,
+        },
+        Title: {
+            type: String,
+            required: true,
+        },
 
         student: [{
             registrationNumber: {
