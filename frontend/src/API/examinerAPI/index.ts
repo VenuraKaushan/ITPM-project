@@ -23,7 +23,7 @@ class ExaminerAPI {
 
     static submitMarks (data:any){
         console.log(data)
-        return axios.post(`${BASE_URL}/examiner/submit/marks`, data,{ withCredentials: true });
+        return axios.put(`${BASE_URL}/examiner/submit/marks`, data,{ withCredentials: true });
 
     }
     

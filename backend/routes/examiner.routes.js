@@ -15,7 +15,7 @@ const router = express.Router();
 router.get("/get/allResearch",getResearchGroupByExaminer);
 router.put("/changePassword/:id",changePassword)
 router.get("/get/allRubrics",getRubrics);
-router.post("/submit/marks",submitMarks);
+router.put("/submit/marks",submitMarks);
 router.get("/get/existing/marks/:id",getExistingMarks);
 
 
