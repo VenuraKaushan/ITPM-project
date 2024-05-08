@@ -138,7 +138,7 @@ export function ViewMarkSheet() {
     try {
       const res = await CoordinatorAPI.getAssessmentMarksByGroupId(id)
 
-      console.log(res.data)
+      // console.log(res.data)
       setMarksData(res.data);
     } catch (err) {
 

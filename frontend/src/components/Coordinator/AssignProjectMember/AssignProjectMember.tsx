@@ -32,20 +32,19 @@ export function AssignProjectMember() {
   }
 
   //   // Combine project members from all groups into a single array
-  //   const allProjectMembers = data.reduce(
-  //     (acc:any, item:any) => acc.concat(item.members),
-  //     []
-  //   );
+    const allProjectMembers = data.reduce(
+      (acc:any, item:any) => acc.concat(item.members),
+      []
+    );
 
-  //    // Filter project members by role and extract their names
-  // const projectMemberNames = allProjectMembers
-  // .filter((member: any) => member.role === 'PROJECTMEMBER')
-  // .map((member: any) => member.name);
+     // Filter project members by role and extract their names
+  const projectMemberNames = allProjectMembers
+  .filter((member: any) => member.role === 'PROJECTMEMBER')
+  .map((member: any) => member.name);
 
 
   const rows = data.map((item: any ,index:number) => (
 
-    
     <Table.Tr key={`${item.groupID}-${index}`}>
       <Table.Td>{item.groupID}</Table.Td>
       <Table.Td>{item.title}</Table.Td>
