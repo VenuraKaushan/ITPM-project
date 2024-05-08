@@ -98,6 +98,12 @@ const researchGroupSchema = new mongoose.Schema(
         },
         image :{
             type: String,
+            default: "",
+        },
+        isPublish:{
+            type: Boolean,
+            default: false,
+
         } 
 
     }, { timestamps: true }

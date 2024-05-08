@@ -26,6 +26,7 @@ export const ManageMarks = () => {
 
     const [opened, { open, close }] = useDisclosure(false);
     const icon = <IconFileCv style={{ width: rem(18), height: rem(18) }} stroke={1.5} />;
+    const [marksData, setMarksData] = useState<any>(null);
 
     // Declare add marks form
     const addMarkForm = useForm({
@@ -82,81 +83,54 @@ export const ManageMarks = () => {
     });
 
     useEffect(() => {
-        // Check if data has been loaded and if there is data to fetch marks for
-        if (!isLoading && data.length > 0 && addMarkForm.values._id !== "") {
-            // Fetch marks data when the component mounts
+        if (!isLoading && data.length > 0 && addMarkForm.values._id !== '') {
             const fetchData = async () => {
-                const marksData = await fetchMarks(addMarkForm.values);
-                if (marksData !== null) {
-                    open(); // Open the modal after marks data is fetched
+                const marks = await fetchMarks(addMarkForm.values);
+                if (marks !== null) {
+                    setMarksData(marks); // Set marks data to state
+                    open();
                 }
             };
             fetchData();
         }
     }, [isLoading, data, addMarkForm.values, open]);
 
-
-    const fetchMarks = async (values:any) => {
+console.log(marksData)
+    const fetchMarks = async (values: any) => {
         try {
             const response = await ExaminerAPI.getMarksByGroupID(values._id);
-            const marksData = response.data; 
 
-            console.log(marksData)
-            return marksData;
+            console.log(response.data)
+            return response.data;
         } catch (error) {
             console.error('Error fetching marks:', error);
             return null;
         }
     };
 
-    
-    const submitMarks = (marks: any) => {
 
-        const groupID = marks._id;
+    const submitMarks = (values: any) => {
 
-        const proposalMarks = [
-            { registrationNumber: marks.leaderID, marks: marks.lProposal },
-            { registrationNumber: marks.member1ID, marks: marks.m1Proposal },
-            { registrationNumber: marks.member2ID, marks: marks.m2Proposal },
-            { registrationNumber: marks.member3ID, marks: marks.m3Proposal }
-        ];
+        const marksID = marksData._id;
 
-        const progress1Marks = [
-            { registrationNumber: marks.leaderID, marks: marks.lProgress1 },
-            { registrationNumber: marks.member1ID, marks: marks.m1Progress1 },
-            { registrationNumber: marks.member2ID, marks: marks.m2Progress1 },
-            { registrationNumber: marks.member3ID, marks: marks.m3Progress1 }
-        ];
+        const groupID = values._id;
 
-        const progress2Marks = [
-            { registrationNumber: marks.leaderID, marks: marks.lProgress2 },
-            { registrationNumber: marks.member1ID, marks: marks.m1Progress2 },
-            { registrationNumber: marks.member2ID, marks: marks.m2Progress2 },
-            { registrationNumber: marks.member3ID, marks: marks.m3Progress2 }
-        ];
-
-        const finalPresentationMarks = [
-            { registrationNumber: marks.leaderID, marks: marks.lFinalPresentation },
-            { registrationNumber: marks.member1ID, marks: marks.m1FinalPresentation },
-            { registrationNumber: marks.member2ID, marks: marks.m2FinalPresentation },
-            { registrationNumber: marks.member3ID, marks: marks.m3FinalPresentation }
-        ];
-
-        const comments = [
-            { registrationNumber: marks.leaderID, comment: marks.leadercomment },
-            { registrationNumber: marks.member1ID, comment: marks.m1comment },
-            { registrationNumber: marks.member2ID, comment: marks.m2comment },
-            { registrationNumber: marks.member3ID, comment: marks.m3comment }
-        ];
+        const student = marksData.student.map((student: any) => ({
+            registrationNumber: student.registrationNumber,
+            proposalMarks: values[`proposal_${student.registrationNumber}`],
+            progress1Marks: values[`progress1_${student.registrationNumber}`],
+            progress2Marks: values[`progress2_${student.registrationNumber}`],
+            finalPresentationMarks: values[`finalPresentation_${student.registrationNumber}`],
+            comments: values[`comments_${student.registrationNumber}`],
+        }));
 
         const data = {
-            proposalMarks,
-            progress1Marks,
-            progress2Marks,
-            finalPresentationMarks,
-            comments,
-            groupID
+            student,
+            groupID,
+            marksID
         };
+
+        console.log(data)
 
         showNotification({
             id: "Submit-Marks",
@@ -194,176 +168,114 @@ export const ManageMarks = () => {
 
     const rows = data.map((element: any) => (
         <Table.Tr key={element._id}>
-    <Table.Td>{element.groupID}</Table.Td>
-    <Table.Td>{element.title}</Table.Td>
-    <Table.Td>
-        <Center>
-            <Button
-                variant="gradient"
-                gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
-                onClick={async () => {
-                    addMarkForm.setValues({
-                        _id: element._id,
-                        groupID: element.groupID,
-                        leaderName: element.leader[0].name,
-                        leaderID: element.leader[0].registrationNumber,
-                        member1Name: element.members[0].name,
-                        member1ID: element.members[0].registrationNumber,
-                        member2Name: element.members[1].name,
-                        member2ID: element.members[1].registrationNumber,
-                        member3Name: element.members[2].name,
-                        member3ID: element.members[2].registrationNumber,
-                    });
+            <Table.Td>{element.groupID}</Table.Td>
+            <Table.Td>{element.title}</Table.Td>
+            <Table.Td>
+                <Center>
+                    <Button
+                        variant="gradient"
+                        gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
+                        onClick={async () => {
+                            addMarkForm.setValues({
+                                _id: element._id,
+                                groupID: element.groupID,
+                                leaderName: element.leader[0].name,
+                                leaderID: element.leader[0].registrationNumber,
+                                member1Name: element.members[0].name,
+                                member1ID: element.members[0].registrationNumber,
+                                member2Name: element.members[1].name,
+                                member2ID: element.members[1].registrationNumber,
+                                member3Name: element.members[2].name,
+                                member3ID: element.members[2].registrationNumber,
+                            });
 
-                    const marksData = await fetchMarks(addMarkForm.values);
-                    if (marksData == null) {
-                        open();
-                    }
-                }}
-            >
-                Add Marks
-            </Button>
-        </Center>
-    </Table.Td>
-</Table.Tr>
+                            await fetchMarks(addMarkForm.values);
+                            open();
+
+                        }}
+                    >
+                        Add Marks
+                    </Button>
+                </Center>
+            </Table.Td>
+        </Table.Tr>
 
     ));
-    console.log(addMarkForm.values);
+  const modalRows = marksData
+    ? marksData.student.map((student:any) => (
+          <Table.Tr key={student._id}>
+              <Table.Td>{student.registrationNumber}</Table.Td>
+              <Table.Td>
+                  {student.proposalMarks !== "" ? ( // Check if there are existing proposal marks
+                      <TextInput
+                          {...addMarkForm.getInputProps(`proposal_${student.registrationNumber}`)}
+                          defaultValue={student.proposalMarks}
+                      />
+                  ) : (
+                      <TextInput
+                          {...addMarkForm.getInputProps(`proposal_${student.registrationNumber}`)}
+                          placeholder="Enter Proposal Marks"
+                      />
+                  )}
+              </Table.Td>
+              <Table.Td>
+                  {student.progress1Marks !== "" ? ( // Check if there are existing progress1 marks
+                      <TextInput
+                          {...addMarkForm.getInputProps(`progress1_${student.registrationNumber}`)}
+                          defaultValue={student.progress1Marks}
+                      />
+                  ) : (
+                      <TextInput
+                          {...addMarkForm.getInputProps(`progress1_${student.registrationNumber}`)}
+                          placeholder="Enter Progress 1 Marks"
+                      />
+                  )}
+              </Table.Td>
+              <Table.Td>
+                  {student.progress2Marks !== "" ? ( // Check if there are existing progress2 marks
+                      <TextInput
+                          {...addMarkForm.getInputProps(`progress2_${student.registrationNumber}`)}
+                          defaultValue={student.progress2Marks}
+                      />
+                  ) : (
+                      <TextInput
+                          {...addMarkForm.getInputProps(`progress2_${student.registrationNumber}`)}
+                          placeholder="Enter Progress 2 Marks"
+                      />
+                  )}
+              </Table.Td>
+              <Table.Td>
+                  {student.finalPresentationMarks !== "" ? ( // Check if there are existing final presentation marks
+                      <TextInput
+                          {...addMarkForm.getInputProps(`finalPresentation_${student.registrationNumber}`)}
+                          defaultValue={student.finalPresentationMarks}
+                      />
+                  ) : (
+                      <TextInput
+                          {...addMarkForm.getInputProps(`finalPresentation_${student.registrationNumber}`)}
+                          placeholder="Enter Final Presentation Marks"
+                      />
+                  )}
+              </Table.Td>
+              <Table.Td>
+                  {student.comments !== "" ? ( // Check if there are existing comments
+                      <TextInput
+                          {...addMarkForm.getInputProps(`comments_${student.registrationNumber}`)}
+                          defaultValue={student.comments}
+                      />
+                  ) : (
+                      <TextInput
+                          {...addMarkForm.getInputProps(`comments_${student.registrationNumber}`)}
+                          placeholder="Enter Comments"
+                      />
+                  )}
+              </Table.Td>
+          </Table.Tr>
+      ))
+    : null;
 
-    const modalRows = (
-        <>
-            <Table.Tr>
-                <Table.Td>{addMarkForm.values.leaderID}</Table.Td>
-                <Table.Td>{addMarkForm.values.leaderName}</Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("lProposal")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("lProgress1")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("lProgress2")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("lFinalPresentation")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("leadercomment")}
-                    />
-                </Table.Td>
-                {/* <Table.Td>
-                    <Button
-                        variant="filled"
-                        color="red"
-                        radius="xl"
-                        onClick={() => submitMarks(addMarkForm.values)} >
-                        Submit Marks
-                    </Button>
-                </Table.Td> */}
-            </Table.Tr>
 
-            <Table.Tr>
-                <Table.Td>{addMarkForm.values.member1ID}</Table.Td>
-                <Table.Td>{addMarkForm.values.member1Name}</Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m1Proposal")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m1Progress1")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m1Progress2")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m1FinalPresentation")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m1comment")}
-                    />
-                </Table.Td>
-            </Table.Tr>
-
-            <Table.Tr>
-                <Table.Td>{addMarkForm.values.member2ID}</Table.Td>
-                <Table.Td>{addMarkForm.values.member2Name}</Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m2Proposal")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m2Progress1")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m2Progress2")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m2FinalPresentation")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m2comment")}
-                    />
-                </Table.Td>
-
-            </Table.Tr>
-
-            <Table.Tr>
-                <Table.Td>{addMarkForm.values.member3ID}</Table.Td>
-                <Table.Td>{addMarkForm.values.member3Name}</Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m3Proposal")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m3Progress1")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m3Progress2")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m3FinalPresentation")}
-                    />
-                </Table.Td>
-                <Table.Td>
-                    <TextInput
-                        {...addMarkForm.getInputProps("m3comment")}
-                    />
-                </Table.Td>
-            </Table.Tr>
-        </>
-    );
-
+console.log(addMarkForm.values)
 
     return (
         <Container>
@@ -408,7 +320,6 @@ export const ManageMarks = () => {
                     <Table.Thead>
                         <Table.Tr>
                             <Table.Th>Student Number</Table.Th>
-                            <Table.Th>Student Name</Table.Th>
                             <Table.Th>Proposal</Table.Th>
                             <Table.Th>Progress 1</Table.Th>
                             <Table.Th>Progress 2</Table.Th>

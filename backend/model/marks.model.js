@@ -1,79 +1,56 @@
 import mongoose from "mongoose";
 
 const MarksSchema = new mongoose.Schema(
-  {
-    groupID: {
-      type: String,
-      required: true,
-    },
+    {
+        groupID: {
+            type: String,
+            required: true,
+        },
+        cusGroupNo: {
+            type: String,
+            required: true,
+        },
+        Title: {
+            type: String,
+            required: true,
+        },
 
-    proposalMarks:[
-        {
-            registrationNumber:{
+        student: [{
+            registrationNumber: {
                 type: String,
                 required: true,
 
             },
-            marks:{
+
+            proposalMarks: {
                 type: String,
                 default: 0,
-            }
-        }
-    ],
-    progress1Marks:[
-        {
-            registrationNumber:{
-                type: String,
-                required: true,
-
             },
-            marks:{
+
+            progress1Marks: {
                 type: String,
                 default: 0,
-            }
-        }
-    ],
-    progress2Marks:[
-        {
-            registrationNumber:{
-                type: String,
-                required: true,
-
             },
-            marks:{
+
+            progress2Marks: {
                 type: String,
                 default: 0,
-            }
-        }
-    ],
-    finalPresentationMarks:[
-        {
-            registrationNumber:{
-                type: String,
-                required: true,
-
             },
-            marks:{
+
+            finalPresentationMarks: {
                 type: String,
                 default: 0,
-            }
-        }
-    ],
-    comments:[
-        {
-            registrationNumber:{
-                type: String,
-                required: true,
-
             },
-            comment:{
+
+            comments: {
                 type: String,
                 default: "NaN",
             }
         }
-    ],
-  },
-  { timestamps: true }
+        ],
+
+    },
+    { timestamps: true }
 );
 
 const Marks = mongoose.model("marks", MarksSchema);

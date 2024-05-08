@@ -42,7 +42,7 @@ const storage = multer.diskStorage({
       cb(null, file.originalname);
     }
   });
-  const upload = multer({ storage });
+  const upload = multer({ storage: storage });
 
 // root end point
 app.get("/",(req,res)=>{
@@ -62,6 +62,7 @@ app.use('/pm',PmemberRoutes);
 app.use('/examiner',ExaminerRoutes);
 
 app.use('/api', upload.single('file'),StudentRoutes)
+app.use('/apist', upload.single('image'),StudentRoutes)
 
 app.use('/pmapi', upload.single('file'),PmemberRoutes)
 

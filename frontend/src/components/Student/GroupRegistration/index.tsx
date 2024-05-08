@@ -47,8 +47,6 @@ export const GroupRegistration = () => {
 
    // Extract names from supervisors data
    const supervisorNames = data.map((supervisor: { name: any; }) => supervisor.name);
-
-   console.log(supervisorNames);
    
     const handleSubmit = (event: any) => {
         event.preventDefault();

@@ -23,12 +23,17 @@ class ExaminerAPI {
 
     static submitMarks (data:any){
         console.log(data)
-        return axios.post(`${BASE_URL}/examiner/submit/marks`, data,{ withCredentials: true });
+        return axios.put(`${BASE_URL}/examiner/submit/marks`, data,{ withCredentials: true });
 
     }
     
     static getMarksByGroupID(groupID:any){
         return axios.get(`${BASE_URL}/examiner/get/existing/marks/${groupID}`,{ withCredentials: true });
+
+    }
+
+    static getGroupMarksByExaminer(){
+        return axios.get(`${BASE_URL}/examiner/get/marks`,{ withCredentials: true });
 
     }
 

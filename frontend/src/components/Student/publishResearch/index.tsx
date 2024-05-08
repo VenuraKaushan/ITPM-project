@@ -13,14 +13,21 @@ import {
     rem
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
-import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { IconUpload, IconPhoto, IconX, IconCheck } from '@tabler/icons-react';
+import {
+    Dropzone,
+    IMAGE_MIME_TYPE,
+    FileWithPath,
+} from '@mantine/dropzone';
 import { useQuery } from "@tanstack/react-query";
 import StudentAPI from '../../../API/studentAPI/student.api';
 import { useForm } from '@mantine/form';
+import { showNotification, updateNotification } from '@mantine/notifications';
+import axios from 'axios';
 
 export function PublishResearch() {
     const [opened, { open, close }] = useDisclosure(false);
+    const [files, setFiles] = useState<FileWithPath[]>([]);
 
     //get logged user session data
     const user = JSON.parse(localStorage.getItem("user-student-session") || "{}");
@@ -30,6 +37,7 @@ export function PublishResearch() {
     const publishReseach = useForm({
         validateInputOnChange: true,
         initialValues: {
+            _id: "",
             groupID: "",
             leaderName: "",
             member1Name: "",
@@ -43,6 +51,7 @@ export function PublishResearch() {
         },
     });
 
+    console.log(files)
     // Use react query and fetch research data
     const {
         data = [],
@@ -53,6 +62,97 @@ export function PublishResearch() {
         queryKey: ["researchData"],
         queryFn: () => StudentAPI.getResearch(user).then((res) => res.data),
     });
+
+
+    const handleScan = async () => {
+        if (!files.length) {
+            console.error('No image selected');
+            return;
+        }
+
+        const formData = new FormData();
+        files.forEach((file, index) => {
+            formData.append(`image`, file);
+        });
+
+        await axios.post('http://localhost:3001/apist/upload/image', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+            .then((res) => {
+                if (res.data.isPaymentSuccessful) {
+                    researchPublish({
+                        ...publishReseach.values,
+                        image: res.data.image
+                    });
+                } else {
+                    showNotification({
+                        id: "Publish-Research",
+                        color: "red",
+                        title: "Something went wrong!!",
+                        message: "The provided photo is not valid",
+                        icon: <IconCheck size={16} />,
+                        autoClose: 5000,
+                    });
+                }
+            })
+
+
+            .catch((error) => {
+                console.error(error);
+
+            })
+
+    };
+
+
+    const researchPublish = async (values: {
+        _id: string,
+        image: string,
+        hindex: string,
+        scopusIndexing: string
+    }) => {
+        console.log(values)
+        showNotification({
+            id: "Publish-Research",
+            color: "teal",
+            title: "Publish Research",
+            message: "Please wait while we publish your Research..",
+            icon: <IconCheck size={16} />,
+            autoClose: 5000,
+        });
+
+        StudentAPI.researchPublish(values)
+            .then((res) => {
+                updateNotification({
+                    id: "Publish-Research",
+                    color: "teal",
+                    icon: <IconCheck />,
+                    title: "Research successfully Published",
+                    message: "Research successfully Published.",
+                    // icon: <IconCheck />,
+                    autoClose: 5000,
+                });
+
+                publishReseach.reset();
+                close();
+
+            })
+            .catch((error) => {
+                updateNotification({
+                    id: "Publish-Research",
+                    color: "red",
+                    title: "Something went wrong!!",
+                    icon: <IconX />,
+                    message: `An error occurred: ${error.response.data.message}`,
+                    // icon: <IconAlertTriangle />,
+                    autoClose: 5000,
+                });
+            });
+
+    }
+
 
 
     const rows = data.map((element: any) => (
@@ -66,6 +166,7 @@ export function PublishResearch() {
                     <Button
                         onClick={() => {
                             publishReseach.setValues({
+                                _id: element._id,
                                 groupID: element.groupID,
                                 leaderName: element.leader[0].name,
                                 member1Name: element.members[0].name,
@@ -179,13 +280,15 @@ export function PublishResearch() {
 
                 <div style={{ display: "flex", gap: 30, marginTop: "20px" }}>
 
-                    <Text fw={500} style={{ marginTop: "30px" }}>
+                    <Text fw={500} style={{ marginTop: "30px" }} >
                         Link for view H-index
                     </Text>
 
                     <TextInput
                         style={{ marginTop: "25px" }}
                         rightSectionPointerEvents="none"
+                        {...publishReseach.getInputProps("hindex")}
+
                     />
 
                     <Text fw={500} style={{ marginTop: "30px" }}>
@@ -195,6 +298,8 @@ export function PublishResearch() {
                     <TextInput
                         style={{ marginTop: "25px" }}
                         rightSectionPointerEvents="none"
+                        {...publishReseach.getInputProps("scopusIndexing")}
+
                     />
                 </div>
 
@@ -204,13 +309,25 @@ export function PublishResearch() {
 
                 <div>
                     <Dropzone
-                        onDrop={(files) => console.log('accepted files', files)}
-                        onReject={(files) => console.log('rejected files', files)}
+                        onDrop={(files) => setFiles(files)}
+                        onReject={(files) => {
+                            showNotification({
+                                title: "File upload Error",
+                                message: "try to reupload another file",
+                                autoClose: 1500,
+                                icon: <IconX />,
+                                color: "red",
+                            });
+                        }}
                         maxSize={5 * 1024 ** 2}
                         accept={IMAGE_MIME_TYPE}
+                        maxFiles={1}
                     // {...props}
                     >
-                        <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
+                        <Group
+                            justify="center"
+                            gap="xl" mih={220}
+                            style={{ pointerEvents: 'none' }}>
                             <Dropzone.Accept>
                                 <IconUpload
                                     style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
@@ -240,13 +357,18 @@ export function PublishResearch() {
                             </div>
                         </Group>
                     </Dropzone>
+                    {/* <Button variant="gradient"
+                        gradient={{ from: 'lime', to: 'green', deg: 90 }}
+                    >
+                        Scan photo
+                    </Button> */}
                 </div>
 
                 <center style={{ paddingTop: '10px' }}>
                     <Button
                         variant="gradient"
                         gradient={{ from: 'red', to: 'violet', deg: 90 }}
-
+                        onClick={handleScan}
                     >
                         Publish Research
                     </Button>

@@ -420,6 +420,8 @@ export const getAssessmentMarks = async (req, res) => {
 export const compareAssessmentMarkId = async(req,res)=>{
 try{
   const _id = req.params.id;
+  console.log(_id);
+
   const compareId = await Marks.findOne({groupID:_id});
 
   console.log(compareId);

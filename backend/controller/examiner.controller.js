@@ -45,7 +45,7 @@ export const changePassword = async (req, res) => {
     }
 }
 
-export const getRubrics = async(req,res)=>{
+export const getRubrics = async (req, res) => {
     try {
         const allRubrics = await MarkingRubrics.find();
 
@@ -56,42 +56,55 @@ export const getRubrics = async(req,res)=>{
     }
 }
 
-export const submitMarks = async(req,res)=>{
-    
-    try{
+export const submitMarks = async (req, res) => {
 
-        const marks = new Marks({
+    try {
+        const _id = req.body.marksID
+
+  
+        const updateFields = {
             groupID: req.body.groupID,
-            proposalMarks: req.body.proposalMarks,
-            progress1Marks: req.body.progress1Marks,
-            progress2Marks: req.body.progress2Marks,
-            finalPresentationMarks: req.body.finalPresentationMarks,
-            comments: req.body.comments
-        })
+            student: req.body.student
+          }
 
-        console.log(marks)
-        const saveMarks = await marks.save();
+        console.log(updateFields)
+
+        const saveMarks = await Marks.findByIdAndUpdate(_id, updateFields, {
+            new: true,
+        });
 
         res.status(201).json(saveMarks);
 
 
-    }catch(err){
+    } catch (err) {
         console.log(err.message)
 
         res.status(500).json({ message: "Failed to add Marks", err });
     }
 }
 
-export const getExistingMarks = async(req,res)=>{
-    try{
+export const getExistingMarks = async (req, res) => {
+    try {
         const _id = req.params.id;
 
-        const existinMarks = await  Marks.findOne({groupID: _id});
+        const existinMarks = await Marks.findOne({ groupID: _id });
 
         res.status(201).json(existinMarks);
-    }catch(err){
+    } catch (err) {
         console.log(err.message)
 
         res.status(500).json({ message: "Failed to get existing Marks", err });
+    }
+}
+
+export const getGroupMarksByExaminer = async(req,res)=>{
+    try{
+        const groupMarks = await Marks.find();
+
+        res.status(200).json(groupMarks)
+
+    }catch(err){
+        res.status(500).json({ message: "Failed to get group Marks", err });
+
     }
 }
