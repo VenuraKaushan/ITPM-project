@@ -96,3 +96,15 @@ export const getExistingMarks = async (req, res) => {
         res.status(500).json({ message: "Failed to get existing Marks", err });
     }
 }
+
+export const getGroupMarksByExaminer = async(req,res)=>{
+    try{
+        const groupMarks = await Marks.find();
+
+        res.status(200).json(groupMarks)
+
+    }catch(err){
+        res.status(500).json({ message: "Failed to get group Marks", err });
+
+    }
+}

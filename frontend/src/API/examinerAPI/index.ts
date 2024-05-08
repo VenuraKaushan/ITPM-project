@@ -32,6 +32,11 @@ class ExaminerAPI {
 
     }
 
+    static getGroupMarksByExaminer(){
+        return axios.get(`${BASE_URL}/examiner/get/marks`,{ withCredentials: true });
+
+    }
+
 }
 
 export default ExaminerAPI;

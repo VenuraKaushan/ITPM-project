@@ -16,40 +16,100 @@ import {
     IconFileCv,
     IconSearch,
 } from '@tabler/icons-react';
+import { useQuery } from "@tanstack/react-query";
+import ExaminerAPI from '../../../API/examinerAPI';
+import { useForm } from '@mantine/form';
 
-
-const elements = [
-    { groupNumber: "Y4_RSR_GRP-1", title: "VD room", date: "30/03/2024", time: "10.30 AM" },
-    { groupNumber: "Y4_RSR_GRP-2", title: "VD room", date: "30/03/2024", time: "11.00 AM" },
-    { groupNumber: "Y4_RSR_GRP-3", title: "VD room", date: "30/03/2024", time: "11.30 AM" },
-
-];
-
-const elements2 = [
-    { StudentNumber: "IT21211928", StudentName: "Venura", Proposal: "80", Progress2: "79", FinalPresentation: "80" },
-    { StudentNumber: "IT21334244", StudentName: "Vinnath", Proposal: "80", Progress2: "79", FinalPresentation: "80" },
-    { StudentNumber: "IT23431112", StudentName: "Sahan", Proposal: "80", Progress2: "79", FinalPresentation: "80" },
-    { StudentNumber: "IT23431352", StudentName: "Shehan", Proposal: "80", Progress2: "79", FinalPresentation: "80" },
-
-
-];
 
 export const CompletedMarks = () => {
     const [opened, { open, close }] = useDisclosure(false);
     const icon = <IconFileCv style={{ width: rem(18), height: rem(18) }} stroke={1.5} />;
 
-    const rows = elements.map((element) => (
-        <Table.Tr key={element.groupNumber}>
-            <Table.Td>{element.groupNumber}</Table.Td>
-            <Table.Td>{element.title}</Table.Td>
-            <Table.Td>{element.date}</Table.Td>
-            <Table.Td>{element.time}</Table.Td>
+    const marksForm = useForm({
+        validateInputOnChange: true,
+        initialValues: {
+            _id: "",
+            cusGroupNo: "",
+            leaderNo: "",
+            leaderProposal: "",
+            leaderProgress1: "",
+            leaderProgress2: "",
+            leaderFinal: "",
+
+            m1No: "",
+            m1Proposal: "",
+            m1Progress1: "",
+            m1Progress2: "",
+            m1Final: "",
+
+            m2No: "",
+            m2Proposal: "",
+            m2Progress1: "",
+            m2Progress2: "",
+            m2Final: "",
+
+            m3No: "",
+            m3Proposal: "",
+            m3Progress1: "",
+            m3Progress2: "",
+            m3Final: "",
+        },
+    });
+
+    // Use react query and fetch research data
+    const {
+        data = [],
+        isLoading,
+        isError,
+        refetch,
+    } = useQuery({
+        queryKey: ["groupMarks"],
+        queryFn: () => ExaminerAPI.getGroupMarksByExaminer().then((res) => res.data),
+    });
+
+    // Filter relevant research groups' data
+    const relevantData = data.filter((element: any) => element._id == marksForm.values._id)
+    console.log(data)
+    const rows = data.map((element: any) => (
+        <Table.Tr key={element._id}>
+            <Table.Td>{element.cusGroupNo}</Table.Td>
+            <Table.Td>{element.Title}</Table.Td>
             <Table.Td>
                 <Center>
                     <Button
                         variant="gradient"
                         gradient={{ from: 'violet', to: 'cyan', deg: 90 }}
-                        onClick={open}
+                        onClick={() => {
+                            marksForm.setValues({
+                                _id: element._id,
+                                cusGroupNo: element.cusGroupNo,
+                                leaderNo: element.student[0].registrationNumber,
+                                leaderProposal: element.student[0].proposalMarks,
+                                leaderProgress1: element.student[0].progress1Marks,
+                                leaderProgress2: element.student[0].progress2Marks,
+                                leaderFinal: element.student[0].finalPresentationMarks,
+
+                                m1No: element.student[1].registrationNumber,
+                                m1Proposal: element.student[1].proposalMarks,
+                                m1Progress1: element.student[1].progress1Marks,
+                                m1Progress2: element.student[1].progress2Marks,
+                                m1Final: element.student[1].finalPresentationMarks,
+
+                                m2No: element.student[2].registrationNumber,
+                                m2Proposal: element.student[2].proposalMarks,
+                                m2Progress1: element.student[2].progress1Marks,
+                                m2Progress2: element.student[2].progress2Marks,
+                                m2Final: element.student[2].finalPresentationMarks,
+
+                                m3No: element.student[2].registrationNumber,
+                                m3Proposal: element.student[2].proposalMarks,
+                                m3Progress1: element.student[2].progress1Marks,
+                                m3Progress2: element.student[2].progress2Marks,
+                                m3Final: element.student[2].finalPresentationMarks,
+                            })
+                            open()
+                        }}
+
                     >
                         View Marks
                     </Button>
@@ -60,23 +120,20 @@ export const CompletedMarks = () => {
         </Table.Tr>
     ));
 
-    const modalRows = elements2.map((element) => (
-        <Table.Tr key={element.StudentNumber}>
-            <Table.Td>{element.StudentNumber}</Table.Td>
-            <Table.Td>{element.StudentName}</Table.Td>
-            <Table.Td>
-                {element.Proposal}
-            </Table.Td>
+    console.log(marksForm.values)
 
-            <Table.Td>
-                {element.Progress2}
-            </Table.Td>
+    const modalRows = relevantData.map((element: any) =>
+        element.student.map((student: any) => (
+            <Table.Tr key={student._id}>
+                <Table.Td>{student.registrationNumber}</Table.Td>
+                <Table.Td>{student.proposalMarks}</Table.Td>
+                <Table.Td>{student.progress1Marks}</Table.Td>
+                <Table.Td>{student.progress2Marks}</Table.Td>
+                <Table.Td>{student.finalPresentationMarks}</Table.Td>
+            </Table.Tr>
+        ))
+    );
 
-            <Table.Td>
-                {element.FinalPresentation}
-            </Table.Td>
-        </Table.Tr>
-    ));
 
     return (
         <Container>
@@ -103,9 +160,12 @@ export const CompletedMarks = () => {
             <Modal opened={opened} onClose={close} title="View Marks" size="65%">
 
                 <div style={{ display: "flex", gap: 30, marginBottom: "40px" }}>
-                    <Text fw={500}>
-                        VD Room - Y4_RSR_GRP-1
-                    </Text>
+                    <TextInput
+                        fw={500}
+                        {...marksForm.getInputProps("cusGroupNo")}
+                        disabled
+                    >
+                    </TextInput>
 
                 </div>
 
@@ -119,8 +179,8 @@ export const CompletedMarks = () => {
                     <Table.Thead>
                         <Table.Tr>
                             <Table.Th>Student Number</Table.Th>
-                            <Table.Th>Student Name</Table.Th>
                             <Table.Th>Proposal</Table.Th>
+                            <Table.Th>Progress 1</Table.Th>
                             <Table.Th>Progress 2</Table.Th>
                             <Table.Th>Final Presentation</Table.Th>
                         </Table.Tr>
@@ -142,8 +202,6 @@ export const CompletedMarks = () => {
                         <Table.Tr>
                             <Table.Th>Group Number</Table.Th>
                             <Table.Th>Title</Table.Th>
-                            <Table.Th>Date</Table.Th>
-                            <Table.Th>Time</Table.Th>
                             <Table.Th>Action</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
