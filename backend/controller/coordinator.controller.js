@@ -2,7 +2,7 @@ import User from "../model/users.model.js";
 import Assessments from "../model/assestment.model.js";
 import ResearchGroups from "../model/group.model.js";
 import Marks from "../model/marks.model.js";
-import bcryptjs from 'bcryptjs';
+import bcryptjs from "bcryptjs";
 import "dotenv/config";
 import { generatePassword } from "../utils/passowrdGenerator.js";
 import { sendGeneratedPassowrdToStaff } from "../mails/staff.mail.js";
@@ -16,9 +16,11 @@ const generateMemberId = async () => {
       { role: "PROJECTMEMBER" },
       { role: "SUPERVISOR" },
       { role: "EXAMINER" },
-      { role: "STUDENT" }
-    ]
-  }).sort({ _id: -1 }).limit(1);
+      { role: "STUDENT" },
+    ],
+  })
+    .sort({ _id: -1 })
+    .limit(1);
 
   //check the result array is empty or not, if its empty then return first member ID
   if (lastMemberDetails.length == 0) {
@@ -38,9 +40,6 @@ const generateMemberId = async () => {
 
   return `MEMBER-${newMemberId}`; //return new Member ID
 };
-
-
-
 
 //Register STAFF member function
 export const registerMember = async (req, res) => {
@@ -73,15 +72,17 @@ export const registerMember = async (req, res) => {
     const savedMember = await newMember.save();
 
     //send auto generate password to the user
-    sendGeneratedPassowrdToStaff(newMember.name, newMember.email, hashedPassword)
+    sendGeneratedPassowrdToStaff(
+      newMember.name,
+      newMember.email,
+      hashedPassword
+    );
 
     res.status(201).json(savedMember);
-
   } catch (error) {
-    console.log(error.message)
-
+    console.log(error.message);
   }
-}
+};
 
 //Register Student Function
 export const registerStudent = async (req, res) => {
@@ -119,15 +120,17 @@ export const registerStudent = async (req, res) => {
     const savedStudent = await newMember.save();
 
     //send auto generate password to the user
-    sendGeneratedPassowrdToStudent(newMember.name, newMember.email, hashedPassword)
+    sendGeneratedPassowrdToStudent(
+      newMember.name,
+      newMember.email,
+      hashedPassword
+    );
 
     res.status(201).json(savedStudent);
-
   } catch (error) {
-    console.log(error.message)
-
+    console.log(error.message);
   }
-}
+};
 
 //get all staff member details
 export const getStaffMembers = async (req, res) => {
@@ -137,33 +140,28 @@ export const getStaffMembers = async (req, res) => {
         { role: "PROJECTMEMBER" },
         { role: "SUPERVISOR" },
         { role: "EXAMINER" },
-      ]
-    })
+      ],
+    });
 
     //If no members found, send a 404 status code with a message
     res.status(200).json(members);
-
   } catch (error) {
-    res.status(500).json({ message: "Cannot Find Member" })
-
+    res.status(500).json({ message: "Cannot Find Member" });
   }
-
-}
+};
 
 //get all student details
 export const getAllStudentDetails = async (req, res) => {
   try {
-    const students = await User.find({ role: "STUDENT" })
+    const students = await User.find({ role: "STUDENT" });
     res.status(200).json(students);
-
   } catch (error) {
-    res.status(500).json({ message: "Cannot find Students" })
+    res.status(500).json({ message: "Cannot find Students" });
   }
-}
+};
 
 //edit the staff member details
 export const updateStaffMember = async (req, res) => {
-
   const _id = req.params.id;
 
   const updateFields = {
@@ -172,7 +170,7 @@ export const updateStaffMember = async (req, res) => {
     phone: req.body.phone,
     specialization: req.body.specialization,
     role: req.body.role,
-  }
+  };
 
   try {
     const updateStaffMember = await User.findByIdAndUpdate(_id, updateFields, {
@@ -185,17 +183,13 @@ export const updateStaffMember = async (req, res) => {
     }
 
     res.status(200).json(updateStaffMember); //Send the updated staff member as the response
-
   } catch (error) {
     res.status(500).json({ message: "Failed to update staff member", error });
-
   }
-
 };
 
 //edit the student details
 export const updateStudentDetails = async (req, res) => {
-
   const _id = req.params.id;
 
   const updateFields = {
@@ -205,7 +199,7 @@ export const updateStudentDetails = async (req, res) => {
     specialization: req.body.specialization,
     batch: req.body.batch,
     semester: req.body.semester,
-  }
+  };
 
   try {
     const updateStudent = await User.findByIdAndUpdate(_id, updateFields, {
@@ -218,12 +212,9 @@ export const updateStudentDetails = async (req, res) => {
     }
 
     res.status(200).json(updateStudent); //Send the updated Student as the response
-
   } catch (error) {
     res.status(500).json({ message: "Failed to update student", error });
-
   }
-
 };
 
 //Delete staff member function
@@ -286,12 +277,10 @@ export const getViewMarkSheet = async (req, res) => {
   try {
     const getViewMarkSheetDetails = await ResearchGroups.find();
     res.status(200).json(getViewMarkSheetDetails);
-
   } catch (error) {
-    res.status(500).json({ message: "Cannot find the group details" })
-
+    res.status(500).json({ message: "Cannot find the group details" });
   }
-}
+};
 
 //Get the Research paper group details
 
@@ -299,61 +288,55 @@ export const getResearchPaperDetails = async (req, res) => {
   try {
     const getResearchPaperDetails = await ResearchGroups.find();
     res.status(200).json(getResearchPaperDetails);
-
   } catch (error) {
-    res.status(500).json({ message: "Cannot find the research group details" })
+    res.status(500).json({ message: "Cannot find the research group details" });
   }
-}
+};
 
 //Add Assessment in Project Coordinator
 export const addAssestment = async (req, res) => {
-
   try {
     const newAssestment = new Assessments({
       assestmentName: req.body.assessmentName,
       doc: req.body.assessmentUpload,
       deadline: req.body.deadline,
-      specialization:req.body.specialization,
-      semster:req.body.semester,
+      specialization: req.body.specialization,
+      semster: req.body.semester,
       quesDoc: req.body.submitDoc.path,
-      ansDoc:'Not a Answer',
-      comment : "NaN"
+      ansDoc: "Not a Answer",
+      comment: "NaN",
     });
 
     console.log(newAssestment);
-    
+
     const saveAssestment = await newAssestment.save();
 
     res.status(201).json(saveAssestment);
   } catch (error) {
-    console.log(error.message)
-    res.status(500).json({message: "Failed to add Assestment",error});
+    console.log(error.message);
+    res.status(500).json({ message: "Failed to add Assestment", error });
   }
-  
 };
 
 //Get the assessment details
 export const getAssestment = async (req, res) => {
   try {
-   
-    const assesstment = await Assessments.find()
+    const assesstment = await Assessments.find();
 
     res.status(200).json(assesstment);
-
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
     res.status(500).json({ message: "Failed to get Assessments data", err });
   }
-}
+};
 
-//Delete Assessment 
+//Delete Assessment
 export const deleteAssestment = async (req, res) => {
   const _id = req.params.id;
   const assessmentName = req.params.assessmentName;
 
   try {
-
-    console.log("controller delete")
+    console.log("controller delete");
     const deletedAssestment = await Assessments.findByIdAndDelete(_id);
 
     if (!deletedAssestment) {
@@ -366,27 +349,30 @@ export const deleteAssestment = async (req, res) => {
     res.status(500).json({ message: "Failed to delete Assessments", error });
   }
 };
-  
+
 //edit the Assessments details
 export const updateAssestmentDetails = async (req, res) => {
-
   const _id = req.params.id;
 
   const updateFields = {
     assestmentName: req.body.assessmentName,
-      doc: req.body.assessmentUpload,
-      deadline: req.body.deadline,
-      specialization:req.body.specialization,
-      semster:req.body.semester,
-      quesDoc: req.body.submitDoc.path,
-      ansDoc:'Not a Answer',
-      comment : "NaN"
-  }
+    doc: req.body.assessmentUpload,
+    deadline: req.body.deadline,
+    specialization: req.body.specialization,
+    semster: req.body.semester,
+    quesDoc: req.body.submitDoc.path,
+    ansDoc: "Not a Answer",
+    comment: "NaN",
+  };
 
   try {
-    const updateAssestmentDetails = await Assessments.findByIdAndUpdate(_id, updateFields, {
-      new: true,
-    });
+    const updateAssestmentDetails = await Assessments.findByIdAndUpdate(
+      _id,
+      updateFields,
+      {
+        new: true,
+      }
+    );
 
     if (!updateAssestmentDetails) {
       //If the Assestment is not found, send a 404 status code with a message
@@ -394,95 +380,77 @@ export const updateAssestmentDetails = async (req, res) => {
     }
 
     res.status(200).json(updateAssestmentDetails); //Send the updated Assestment as the response
-
   } catch (error) {
     res.status(500).json({ message: "Failed to update Assestment", error });
-
   }
-
 };
 
 //Get the assessment Marks
 export const getAssessmentMarks = async (req, res) => {
   try {
-   
-    const assessmentMark = await Marks.find()
+    const assessmentMark = await Marks.find();
 
     res.status(200).json(assessmentMark);
-
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
     res.status(500).json({ message: "Failed to get Assessments Marks", err });
   }
-}
-
-//compare group no and assessment ID
-export const compareAssessmentMarkId = async(req,res)=>{
-try{
-  const _id = req.params.id;
-  console.log(_id);
-
-  const compareId = await Marks.findOne({groupID:_id});
-
-  console.log(compareId);
-
-  res.status(201).json(compareId);
-
-}catch(err){
-  res.status(500).json({message : "Faild to match group ID and marks Id",err});
-}
-}
-
-//Edit assessment mark details
-export const updateAssestmentMark = async (req, res) => {
-
-  const _id = req.params.id;
-
-  const updateFields = {
-            groupID: req.body.groupID,
-            proposalMarks: req.body.proposalMarks,
-            progress1Marks: req.body.progress1Marks,
-            progress2Marks: req.body.progress2Marks,
-            finalPresentationMarks: req.body.finalPresentationMarks,
-            comments: req.body.comments
-  }
-
-  try {
-    const updateAssestmentMark = await Marks.findByIdAndUpdate(_id, updateFields, {
-      new: true,
-    });
-
-    if (!updateAssestmentMark) {
-      //If the Assestment is not found, send a 404 status code with a message
-      return res.status(404).json({ message: " Assestment Marks Not Found" });
-    }
-
-    res.status(200).json(updateAssestmentMark); //Send the updated Assestment marks as the response
-
-  } catch (error) {
-    res.status(500).json({ message: "Failed to update Assestment marks", error });
-
-  }
-
 };
 
+//compare group no and assessment ID
+export const compareAssessmentMarkId = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    console.log(_id);
 
+    const compareId = await Marks.findOne({ groupID: _id });
 
+    console.log(compareId);
 
+    res.status(201).json(compareId);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Faild to match group ID and marks Id", err });
+  }
+};
 
+//Edit assessment mark details
+export const updateAssessmentMark = async (req, res) => {
+  const _id = req.params.id;
+  const registrationNumber = req.body.registrationNumber;
 
+  const updateFields = {
+    // registrationNumber: req.body.registrationNumber,
+    proposalMarks: req.body.proposalMarks,
+    progress1Marks: req.body.progress1Marks,
+    progress2Marks: req.body.progress2Marks,
+    finalPresentationMarks: req.body.finalPresentationMarks,
+  };
 
+  try {
+    const marks = await Marks.findOneAndUpdate(
+      { "student.registrationNumber": registrationNumber },
+      {
+        $set: {
+          "student.$.proposalMarks": req.body.proposalMarks,
+          "student.$.progress1Marks": req.body.progress1Marks,
+          "student.$.progress2Marks": req.body.progress2Marks,
+          "student.$.finalPresentationMarks": req.body.finalPresentationMarks,
+        },
+      },
+      { new: true }
+    );
 
+    if (!marks) {
+      return res.status(404).json({ message: "Assessment Marks not found" });
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
+    res.status(200).json(marks);
+  } catch (error) {
+    console.log(error.message);
+    res
+      .status(500)
+      .json({ message: "Failed to update Assessment Marks", error });
+  }
+};

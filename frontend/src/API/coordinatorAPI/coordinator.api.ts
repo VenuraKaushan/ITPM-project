@@ -130,6 +130,22 @@ class CoordinatorAPI{
         return axios.get(`${BASE_URL}/coordinator/get/compareAssessmentMarkId/${groupID}`,{ withCredentials: true });
     }
 
+    //Update Assessments Marks
+    static updateAssestmentMark = (values:{
+        _id : string,
+        registrationNumber : string,
+        proposalMarks : string,
+        progress1Marks : string,
+        progress2Marks : string,
+        finalPresentationMarks : string
+    }) =>{
+        return axios.put(`${BASE_URL}/coordinator/updateAssestmentMark/update/${values._id}`, values,
+
+        
+        {withCredentials:true})
+       
+    };
+
   
 
     
