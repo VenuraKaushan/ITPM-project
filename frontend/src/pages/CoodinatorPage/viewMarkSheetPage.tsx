@@ -6,7 +6,7 @@ import AssessmentMark from '../../components/Coordinator/ViewMarkSheet/Assessmen
 
 export function ViewMarkSheetPage({ assessmentMarksData }: { assessmentMarksData: any }) {
   const iconStyle = { width: rem(12), height: rem(12) };
-  console.log(assessmentMarksData)
+  // console.log(assessmentMarksData)
 
   return (
     <>

@@ -2,280 +2,140 @@ import { useState , useEffect  } from "react";
 import {
   Table,
   ScrollArea,
-  UnstyledButton,
-  Group,
-  Text,
-  Center,
   TextInput,
   rem,
-  keys,
   Button,
   Modal,
   Tooltip,
   ActionIcon,
+  Container
 } from "@mantine/core";
 import {
-  IconSelector,
-  IconChevronDown,
-  IconChevronUp,
   IconAt,
   IconUser,
   IconEdit,
   IconMessage,
 } from "@tabler/icons-react";
-import classes from "../../../Styles/TableSort.module.css";
-import CoordinatorAPI from "../../../API/coordinatorAPI/coordinator.api";
+
+
 import { useForm } from "@mantine/form";
-import { useQuery } from "@tanstack/react-query";
-import { showNotification } from "@mantine/notifications";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import CoordinatorAPI from "../../../API/coordinatorAPI/coordinator.api";
 
-
-interface RowData {
-  _id: string;
-  groupNo: string;
-  studentName: string;
-  regNo: string;
-  proposal: string;
-  progress1: string;
-  progress2: string;
-  final: string;
-}
-
-interface ThProps {
-  children: React.ReactNode;
-  reversed: boolean;
-  sorted: boolean;
-  onSort(): void;
-}
-
-function Th({ children, reversed, sorted, onSort }: ThProps) {
-  const Icon = sorted
-    ? reversed
-      ? IconChevronUp
-      : IconChevronDown
-    : IconSelector;
-  return (
-    <Table.Th className={classes.th}>
-      <UnstyledButton onClick={onSort} className={classes.control}>
-        <Group justify="space-between">
-          <Text fw={500} fz="sm">
-            {children}
-          </Text>
-          <Center className={classes.icon}>
-            <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </Center>
-        </Group>
-      </UnstyledButton>
-    </Table.Th>
-  );
-}
-
-function filterData(data: RowData[], search: string) {
-  const query = search.toLowerCase().trim();
-  return data.filter((item) =>
-    keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
-  );
-}
-
-function sortData(
-  data: RowData[],
-  payload: { sortBy: keyof RowData | null; reversed: boolean; search: string }
-) {
-  const { sortBy } = payload;
-
-  if (!sortBy) {
-    return filterData(data, payload.search);
-  }
-
-  return filterData(
-    [...data].sort((a, b) => {
-      if (payload.reversed) {
-        return b[sortBy].localeCompare(a[sortBy]);
-      }
-
-      return a[sortBy].localeCompare(b[sortBy]);
-    }),
-    payload.search
-  );
-}
-
-
+const elements = [
+  { presentation1: "76", report1: "91",document: "80" },
+];
 
 const AssessmentMark = ({ assessmentMarksData }: { assessmentMarksData: any }) => {
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["staffMemberData"],
-    queryFn: () =>
-      CoordinatorAPI.getAssessmentMarks().then((res) => res.data),
-  });
 
   console.log(assessmentMarksData)
+
   
-  const [search, setSearch] = useState("");
-  const [sortedData, setSortedData] = useState(data);
-  const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
-  const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
   const [commentsOpened, setCommentsOpened] = useState(false);
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const IconUserr = <IconUser style={{ width: rem(16), height: rem(16) }} />;
 
-  useEffect(() => {
-    if (data) {
-      setSortedData(data);
-    }
-  }, [data]);
 
-  const setSorting = (field: keyof RowData) => {
-    const reversed = field === sortBy ? !reverseSortDirection : false;
-    setReverseSortDirection(reversed);
-    setSortBy(field);
-    setSortedData(sortData(data, { sortBy: field, reversed, search }));
-  };
+//from Structure
+const form = useForm({
+  validateInputOnChange: true,
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setSearch(value);
-    setSortedData(
-      sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
-    );
-  };
+  initialValues: {
+    _id: "",
+    groupNo: "",
+    studentName: "",
+    regNo: "",
+    proposal: "",
+    progress1: "",
+    progress2: "",
+    final: "",
+  },
+});
 
-  const rows = sortedData.map((row:any) => (
-    <Table.Tr key={row._id}>
-      <Table.Td>{row._id}</Table.Td>
-      <Table.Td>{row.groupNo}</Table.Td>
-      <Table.Td>{row.studentName}</Table.Td>
-      <Table.Td>{row.regNo}</Table.Td>
-      <Table.Td>{row.proposal}</Table.Td>
-      <Table.Td>{row.progress1}</Table.Td>
-      <Table.Td>{row.progress2}</Table.Td>
-      <Table.Td>{row.final}</Table.Td>
+const commentsForm = useForm({
+  validateInputOnChange: true,
 
-      <Table.Td>
-        <center>
-          <Tooltip label="Edit">
-            <ActionIcon
-              onClick={() => {
-                editForm.setValues({
-                  _id: row._id,
-                  groupNo: row.groupNo,
-                  studentName: row.studentName,
-                  regNo: row.regNo,
-                  proposal: row.proposal,
-                  progress1: row.progress1,
-                  progress2: row.progress2,
-                  final: row.final,
-                });
-                setEditOpened(true);
-              }}
-              style={{ marginRight: "30px" }}
-              color="blue"
-            >
-              <IconEdit />
-            </ActionIcon>
-          </Tooltip>
+  initialValues: {
+    proposal: "",
+    progress1: "",
+    progress2: "",
+    final: "",
+  },
+});
 
-          <Tooltip label="View">
-            <ActionIcon
-              onClick={() => {
-                commentsForm.setValues({});
-                setCommentsOpened(true);
-              }}
-              color="#89ec9c"
-            >
-              <IconMessage />
-            </ActionIcon>
-          </Tooltip>
-        </center>
-      </Table.Td>
-    </Table.Tr>
-  ));
+//declare edit form
+const editForm = useForm({
+  validateInputOnChange: true,
 
-  //from Structure
-  const form = useForm({
-    validateInputOnChange: true,
+  initialValues: {
+    _id: "",
+    registrationNumber: "",
+    proposalMarks: "",
+    progress1Marks: "",
+    progress2Marks: "",
+    finalPresentationMarks: "",
+  
+  },
+});
 
-    initialValues: {
-      _id: "",
-      groupNo: "",
-      studentName: "",
-      regNo: "",
-      proposal: "",
-      progress1: "",
-      progress2: "",
-      final: "",
-    },
+console.log(editForm.values)
+
+const updateAssestmentMark = async (values:{
+        _id : string,
+        registrationNumber : string,
+        proposalMarks : string,
+        progress1Marks : string,
+        progress2Marks : string,
+        finalPresentationMarks : string
+
+}) =>{
+  showNotification({
+    id: 'Update Marks',
+    loading : true,
+    title : "Updating items record",
+    message : "Please wait while we update Marks record..",
+    autoClose : 2000,
   });
+CoordinatorAPI.updateAssestmentMark(values)
+  .then((response)=>{
+    updateNotification({
+      id: "update-marks",
+      color: "teal",
+      // icon: <IconCheck />,
+      title: "Marks updated successfully",
+      message: "Marks data updated successfully.",
+      //icon: <IconCheck />,
+      autoClose: 3000,
+    });
+    editForm.reset();
+    setEditOpened(false);
 
-  const commentsForm = useForm({
-    validateInputOnChange: true,
-
-    initialValues: {
-      proposal: "",
-      progress1: "",
-      progress2: "",
-      final: "",
-    },
+    
+  })
+  .catch((error) => {
+    updateNotification({
+      id: "update-items",
+      color: "red",
+      title: "Items updatimg failed",
+      // icon: <IconX />,
+      message: "We were unable to update the Items",
+      // icon: <IconAlertTriangle />,
+      autoClose: 5000,
+    });
   });
+};
 
-  //declare edit form
-  const editForm = useForm({
-    validateInputOnChange: true,
 
-    initialValues: {
-      _id: "",
-      groupNo: "",
-      studentName: "",
-      regNo: "",
-      proposal: "",
-      progress1: "",
-      progress2: "",
-      final: "",
-    },
-  });
 
-  if (isLoading) {
-    return <div>Loading....</div>;
-  }
 
-  return (
-    <>
-      <div style={{ position: "absolute", top: "160px" }}>
-        {/* View  student  Comments Modal */}
-        <form>
-          <Modal
-          size= "80%"
-            opened={commentsOpened}
-            onClose={() => {
-              editForm.reset();
-              setCommentsOpened(false);
-            }}
-            title="View Comments"
-          >
-            <Table withTableBorder withColumnBorders>
-              <Table.Tr>
-                <Table.Th></Table.Th>
-                <Table.Th>Proposal</Table.Th>
-                <Table.Th>Progress 1</Table.Th>
-                <Table.Th>Progress2</Table.Th>
-                <Table.Th>Final</Table.Th>
-              </Table.Tr>
+return (
+  <Container>
+  <div style={{ position: "absolute", top: "160px", marginLeft:'-250px', marginRight:'30px' }}>
 
-              <Table.Tr>
-                <Table.Th>Examiner</Table.Th>
-               
-              </Table.Tr>
-              <Table.Tr>
-                <Table.Th>Supervisor</Table.Th>
-               
-              </Table.Tr>
-            </Table>
-          </Modal>
-        </form>
-
-        {/* student edit modal */}
-        <form>
+    {/* student edit modal */}
+    <form>
           <Modal
             opened={editOpened}
             onClose={() => {
@@ -291,138 +151,122 @@ const AssessmentMark = ({ assessmentMarksData }: { assessmentMarksData: any }) =
               rightSection={icon}
               label="Registration Number"
               placeholder="IT21244766"
-              {...form.getInputProps("regNo")}
+              {...editForm.getInputProps("registrationNumber")}
             />
             <TextInput
               mt="md"
               rightSectionPointerEvents="none"
-              label="Proposal"
-              placeholder="Proposal"
+              label="Proposal Marks"
+              placeholder="Proposal Marks"
+              {...editForm.getInputProps("proposalMarks")}
+            />
+            <TextInput
+              mt="md"
+              rightSectionPointerEvents="none"
+              label="Progress 1 Marks"
+              placeholder="Progress 1 Marks"
+              {...editForm.getInputProps("progress1Marks")}
             />
 
             <TextInput
               mt="md"
               rightSectionPointerEvents="none"
-              label="Progress 1"
-              placeholder="Progress 1"
+              label="	Progress 2 Marks"
+              placeholder="Progress 2 Marks"
+              {...editForm.getInputProps("progress2Marks")}
             />
 
             <TextInput
               mt="md"
               rightSectionPointerEvents="none"
-              label="Progress 2"
-              placeholder="Progress 2"
+              label="	Final Presentation Marks"
+              placeholder="Final Presentation Marks"
+              {...editForm.getInputProps("finalPresentationMarks")}
             />
 
-            <TextInput
-              mt="md"
-              rightSectionPointerEvents="none"
-              label="Final"
-              placeholder="Final"
-            />
+           
 
             <center style={{ paddingTop: "10px" }}>
               <Button
                 variant="gradient"
+                type="submit"
                 gradient={{ from: "gray", to: "blue", deg: 0 }}
+                onClick={() => {
+                  // Handle edit action
+                  updateAssestmentMark( editForm.values);
+                }}
               >
                 Edit Details
               </Button>
             </center>
           </Modal>
         </form>
+    <ScrollArea>
+      <Table
+        highlightOnHover
+        withTableBorder
+        withColumnBorders
+        horizontalSpacing="md"
+        verticalSpacing="xs"
+        miw={700}
+        layout="fixed"
+      >
+          <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Registration Number</Table.Th>
+                <Table.Th>Proposal Marks</Table.Th>
+                <Table.Th>Progress 1 Marks</Table.Th>
+                <Table.Th>Progress 2 Marks</Table.Th>
+                <Table.Th>Final Presentation Marks</Table.Th>
+                <Table.Th>Comments</Table.Th>
+                <Table.Th>Action</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+        <Table.Tbody>
+        {assessmentMarksData?.student?.map((student: any) => (
+            <Table.Tr key={student._id}>
+              <Table.Td>{student.registrationNumber}</Table.Td>
+              <Table.Td>{student.proposalMarks}</Table.Td>
+              <Table.Td>{student.progress1Marks}</Table.Td>
+              <Table.Td>{student.progress2Marks}</Table.Td>
+              <Table.Td>{student.finalPresentationMarks}</Table.Td>
+              <Table.Td>{student.comments}</Table.Td>
+              <Table.Td>
+                <center>
+                  <Tooltip label="Edit">
+                    <ActionIcon
+                      onClick={() => {
+                        editForm.setValues({
+                          _id: student._id,
+                          registrationNumber: student.registrationNumber,
+                          proposalMarks: student.proposalMarks,
+                          progress1Marks: student.progress1Marks,
+                          progress2Marks: student.progress2Marks,
+                          finalPresentationMarks: student.finalPresentationMarks,
+                          
+                        });
+                        setEditOpened(true);
+          
+                      }}
+                      style={{ marginRight: "30px" }}
+                      color="blue"
+                    >
+                      <IconEdit />
+                    </ActionIcon>
+                  </Tooltip>
 
-        <div style={{ marginRight: "50px" }}>
-          <ScrollArea>
-            <Table
-              highlightOnHover
-              withTableBorder
-              withColumnBorders
-              horizontalSpacing="md"
-              verticalSpacing="xs"
-              miw={700}
-              layout="fixed"
-            >
-              <Table.Tbody>
-                <Table.Tr>
-                  <Th
-                    sorted={sortBy === "_id"}
-                    reversed={reverseSortDirection}
-                    onSort={() => setSorting("_id")}
-                  >
-                    ID
-                  </Th>
-                  <Th
-                    sorted={sortBy === "groupNo"}
-                    reversed={reverseSortDirection}
-                    onSort={() => setSorting("groupNo")}
-                  >
-                    Group No
-                  </Th>
-                 
-                  <Th
-                    sorted={sortBy === "regNo"}
-                    reversed={reverseSortDirection}
-                    onSort={() => setSorting("regNo")}
-                  >
-                    Registration number
-                  </Th>
-                  <Th
-                    sorted={sortBy === "proposal"}
-                    reversed={reverseSortDirection}
-                    onSort={() => setSorting("proposal")}
-                  >
-                    Proposal
-                  </Th>
-                  <Th
-                    sorted={sortBy === "progress1"}
-                    reversed={reverseSortDirection}
-                    onSort={() => setSorting("progress1")}
-                  >
-                    Progress 1
-                  </Th>
-                  <Th
-                    sorted={sortBy === "progress2"}
-                    reversed={reverseSortDirection}
-                    onSort={() => setSorting("progress2")}
-                  >
-                    Progress 2
-                  </Th>
-                  <Th
-                    sorted={sortBy === "final"}
-                    reversed={reverseSortDirection}
-                    onSort={() => setSorting("final")}
-                  >
-                    Final
-                  </Th>
-                  <Th
-                    sorted={sortBy === "final"}
-                    reversed={reverseSortDirection}
-                    onSort={() => setSorting("final")}
-                  >
-                    Action
-                  </Th>
-                </Table.Tr>
-              </Table.Tbody>
-              <Table.Tbody>
-                {rows.length > 0 ? (
-                  rows
-                ) : (
-                  <Table.Tr>
-                    <Table.Td colSpan={Object.keys(data[0]).length}>
-                      <Text fw={500} ta="center">
-                        Nothing found
-                      </Text>
-                    </Table.Td>
-                  </Table.Tr>
-                )}
-              </Table.Tbody>
-            </Table>
-          </ScrollArea>
-        </div>
-      </div>
-    </>
-  );
-};
+                  
+                </center>
+              </Table.Td>
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </Table>
+    </ScrollArea>
+  </div>
+</Container>
+)
+}
+
 
 export default AssessmentMark;

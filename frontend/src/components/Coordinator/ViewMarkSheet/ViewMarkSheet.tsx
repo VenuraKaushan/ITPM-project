@@ -134,11 +134,12 @@ export function ViewMarkSheet() {
     setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
+  
   const compareID = async (id:any) => {
     try {
       const res = await CoordinatorAPI.getAssessmentMarksByGroupId(id)
 
-      console.log(res.data)
+      // console.log(res.data)
       setMarksData(res.data);
     } catch (err) {
 
