@@ -239,7 +239,7 @@ export function ViewMarkSheet() {
 
       >
 
-        <ViewMarkSheetPage assessmentMarksData={marksData} />
+        <ViewMarkSheetPage assessmentMarksData={marksData} refetch = {refetch} />
         {/* Modal content */}
       </Modal>
     </ScrollArea>

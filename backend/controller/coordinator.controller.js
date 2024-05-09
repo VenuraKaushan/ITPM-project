@@ -267,6 +267,8 @@ export const getGroupDetails = async (req, res) => {
     const responseData = [...groups, ...users];
 
     res.status(200).json(responseData);
+
+    console.log(res)
   } catch (error) {
     res.status(500).json({ message: "Cannot find Group" });
   }

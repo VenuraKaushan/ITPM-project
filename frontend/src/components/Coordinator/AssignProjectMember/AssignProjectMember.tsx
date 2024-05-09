@@ -7,9 +7,9 @@ import {
   TextInput,
   rem,
   keys,
+  Button,
 } from '@mantine/core';
 import {  IconSearch } from '@tabler/icons-react';
-
 import { Select } from '@mantine/core';
 import CoordinatorAPI from '../../../API/coordinatorAPI/coordinator.api';
 import { useQuery } from "@tanstack/react-query";
@@ -31,21 +31,22 @@ export function AssignProjectMember() {
     return <div>Loading....</div>;
   }
 
-  //   // Combine project members from all groups into a single array
-    const allProjectMembers = data.reduce(
-      (acc:any, item:any) => acc.concat(item.members),
-      []
-    );
+  // //   // Combine project members from all groups into a single array
+  //   const allProjectMembers = data.reduce(
+  //     (acc:any, item:any) => acc.concat(item.members),
+  //     []
+  //   );
 
-     // Filter project members by role and extract their names
-  const projectMemberNames = allProjectMembers
-  .filter((member: any) => member.role === 'PROJECTMEMBER')
-  .map((member: any) => member.name);
+  //    // Filter project members by role and extract their names
+  // const projectMemberNames = allProjectMembers
+  // .filter((member: any) => member.role === 'PROJECTMEMBER')
+  // .map((member: any) => member.name);
 
-
+  // console.log(projectMemberNames)
   const rows = data.map((item: any ,index:number) => (
 
     <Table.Tr key={`${item.groupID}-${index}`}>
+      
       <Table.Td>{item.groupID}</Table.Td>
       <Table.Td>{item.title}</Table.Td>
       <Table.Td>
@@ -77,10 +78,11 @@ export function AssignProjectMember() {
           
         />
       </Table.Td>
+      <Table.Td>
+        <Button>Submit</Button>
+      </Table.Td>
     </Table.Tr>
   ));
-
-
 
   if (isLoading) {
     return <div>Loading....</div>;
@@ -113,7 +115,11 @@ export function AssignProjectMember() {
             </Table.Th>
             <Table.Th
             >
-              Action
+              Select Project Member
+            </Table.Th>
+            <Table.Th
+            >
+             Action
             </Table.Th>
           </Table.Tr>
         </Table.Tbody>

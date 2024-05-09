@@ -4,7 +4,7 @@ import ReportsMarks from '../../components/Coordinator/ViewMarkSheet/ReportsMark
 import AssessmentMark from '../../components/Coordinator/ViewMarkSheet/AssessmentMarks';
 
 
-export function ViewMarkSheetPage({ assessmentMarksData }: { assessmentMarksData: any }) {
+export function ViewMarkSheetPage({ assessmentMarksData,refetch }: any) {
   const iconStyle = { width: rem(12), height: rem(12) };
   // console.log(assessmentMarksData)
 
@@ -22,7 +22,7 @@ export function ViewMarkSheetPage({ assessmentMarksData }: { assessmentMarksData
         </Tabs.List>
 
         <Tabs.Panel value="AssessmentMark">
-          <AssessmentMark assessmentMarksData={assessmentMarksData} />
+          <AssessmentMark assessmentMarksData={assessmentMarksData} refetch = {refetch} />
         </Tabs.Panel>
 
         <Tabs.Panel value="ReportsMark">
