@@ -62,6 +62,12 @@ class StudentAPI {
 
     }
 
+    static getMarks(values:any){
+        
+        return axios.get(`${BASE_URL}/student/get/marks/${values}`, { withCredentials: true})
+
+    }
+
     
 
 }

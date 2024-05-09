@@ -138,7 +138,11 @@ export const Assessment = () => {
         <Table.Tr key={element._id}>
             <Table.Td>{element.assestmentName}</Table.Td>
             <Table.Td>{new Date(element.deadline).toLocaleDateString("en-CA")}</Table.Td>
-            <Table.Td>{element.quesDoc}</Table.Td>
+            <Table.Td>
+                <a href={`http://localhost:3001/student/download${element.quesDoc}`} download>
+                    Download
+                </a>
+            </Table.Td>
             <Table.Td>
                 <Center>
                     <Button
@@ -152,16 +156,14 @@ export const Assessment = () => {
                                 deadline: new Date(element.deadline).toLocaleDateString("en-CA"),
                             })
                         }}
-
                     >
                         View assessment
                     </Button>
                 </Center>
             </Table.Td>
-
-
         </Table.Tr>
     ));
+    
 
     return (
         <Container>

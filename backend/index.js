@@ -10,6 +10,7 @@ import ExaminerRoutes from "./routes/examiner.routes.js"
 import multer from 'multer';
 import fs from 'fs';
 import { promisify } from 'util';
+import path from 'path';
 const writeFileAsync = promisify(fs.writeFile);
 
 //initialized express
@@ -65,6 +66,10 @@ app.use('/api', upload.single('file'),StudentRoutes)
 app.use('/apist', upload.single('image'),StudentRoutes)
 
 app.use('/pmapi', upload.single('file'),PmemberRoutes)
+
+
+const __dirname = path.resolve(""); //set dirname to root directory
+app.use("/student/download/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.listen(PORT,()=>{
     console.log(`🚀💀 Server is started on port ${PORT}!`);
