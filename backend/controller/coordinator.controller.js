@@ -300,11 +300,11 @@ export const addAssestment = async (req, res) => {
       assestmentName: req.body.assessmentName,
       doc: req.body.assessmentUpload,
       deadline: req.body.deadline,
-      specialization: req.body.specialization,
-      semster: req.body.semester,
-      quesDoc: req.body.submitDoc.path,
-      ansDoc: "Not a Answer",
-      comment: "NaN",
+      specialization:req.body.specialization,
+      semster:req.body.semester,
+      quesDoc: `/${req.body.submitDoc.path}`,
+      ansDoc:'Not a Answer',
+      comment : "NaN"
     });
 
     console.log(newAssestment);

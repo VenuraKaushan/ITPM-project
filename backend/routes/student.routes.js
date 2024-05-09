@@ -10,7 +10,8 @@ import {
     getSupervisors,
     changePassword,
     scanImage,
-    publishResearch
+    publishResearch,
+    getMarks,
  } from "../controller/student.controller.js";
 import { validateUSers } from "../middlewares/authMiddleware.js";
 
@@ -30,6 +31,8 @@ router.get("/get/supervisors",getSupervisors);
 router.put("/changePassword/:id",changePassword)
 router.post("/upload/image",scanImage);
 router.put("/publish/research/:id",publishResearch);
+router.get("/get/marks/:id",getMarks);
+
 
 
 export default router;
