@@ -4,7 +4,8 @@ import {
     changePassword,
     getRubrics,
     submitMarks,
-    getExistingMarks 
+    getExistingMarks,
+    getGroupMarksByExaminer 
 } from "../controller/examiner.controller.js";
 import { validateUSers } from "../middlewares/authMiddleware.js";
 
@@ -17,6 +18,7 @@ router.put("/changePassword/:id",changePassword)
 router.get("/get/allRubrics",getRubrics);
 router.put("/submit/marks",submitMarks);
 router.get("/get/existing/marks/:id",getExistingMarks);
+router.get("/get/marks",getGroupMarksByExaminer);
 
 
 export default router;

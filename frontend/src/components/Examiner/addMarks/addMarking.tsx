@@ -95,12 +95,12 @@ export const ManageMarks = () => {
         }
     }, [isLoading, data, addMarkForm.values, open]);
 
-
+console.log(marksData)
     const fetchMarks = async (values: any) => {
         try {
             const response = await ExaminerAPI.getMarksByGroupID(values._id);
 
-            console.log(response.data.student)
+            console.log(response.data)
             return response.data;
         } catch (error) {
             console.error('Error fetching marks:', error);
@@ -129,6 +129,8 @@ export const ManageMarks = () => {
             groupID,
             marksID
         };
+
+        console.log(data)
 
         showNotification({
             id: "Submit-Marks",
@@ -199,87 +201,78 @@ export const ManageMarks = () => {
         </Table.Tr>
 
     ));
-   
-    const modalRows = marksData && marksData.student
-    ? marksData.student.map((student: any) => (
-        <Table.Tr key={student._id}>
-            <Table.Td>{student.registrationNumber}</Table.Td>
-            <Table.Td>{student.registrationNumber}</Table.Td>
-            <Table.Td>
-                {student.proposalMarks !== "" ? (
-                    <TextInput
-                        {...addMarkForm.getInputProps(`proposal_${student.registrationNumber}`)}
-                        defaultValue={student.proposalMarks}
-                    />
-                ) : (
-                    <TextInput
-                        {...addMarkForm.getInputProps(`proposal_${student.registrationNumber}`)}
-                        placeholder="Enter Proposal Marks"
-                    />
-                )}
-            </Table.Td>
-            <Table.Td>
-                {student.progress1Marks !== "" ? (
-                    <TextInput
-                        {...addMarkForm.getInputProps(`progress1_${student.registrationNumber}`)}
-                        defaultValue={student.progress1Marks}
-                    />
-                ) : (
-                    <TextInput
-                        {...addMarkForm.getInputProps(`progress1_${student.registrationNumber}`)}
-                        placeholder="Enter Progress 1 Marks"
-                    />
-                )}
-            </Table.Td>
-            <Table.Td>
-                {student.progress2Marks !== "" ? (
-                    <TextInput
-                        {...addMarkForm.getInputProps(`progress2_${student.registrationNumber}`)}
-                        defaultValue={student.progress2Marks}
-                    />
-                ) : (
-                    <TextInput
-                        {...addMarkForm.getInputProps(`progress2_${student.registrationNumber}`)}
-                        placeholder="Enter Progress 2 Marks"
-                    />
-                )}
-            </Table.Td>
-            <Table.Td>
-                {student.finalPresentationMarks !== "" ? (
-                    <TextInput
-                        {...addMarkForm.getInputProps(`finalPresentation_${student.registrationNumber}`)}
-                        defaultValue={student.finalPresentationMarks}
-                    />
-                ) : (
-                    <TextInput
-                        {...addMarkForm.getInputProps(`finalPresentation_${student.registrationNumber}`)}
-                        placeholder="Enter Final Presentation Marks"
-                    />
-                )}
-            </Table.Td>
-            <Table.Td>
-                {student.comments !== "" ? (
-                    <TextInput
-                        {...addMarkForm.getInputProps(`comments_${student.registrationNumber}`)}
-                        defaultValue={student.comments}
-                    />
-                ) : (
-                    <TextInput
-                        {...addMarkForm.getInputProps(`comments_${student.registrationNumber}`)}
-                        placeholder="Enter Comments"
-                    />
-                )}
-            </Table.Td>
-        </Table.Tr>
-    ))
-    : data.length === 0
-    ? (
-        <Table.Tr>
-            <Table.Td colSpan={7}>No data available</Table.Td>
-        </Table.Tr>
-    )
+  const modalRows = marksData
+    ? marksData.student.map((student:any) => (
+          <Table.Tr key={student._id}>
+              <Table.Td>{student.registrationNumber}</Table.Td>
+              <Table.Td>
+                  {student.proposalMarks !== "" ? ( // Check if there are existing proposal marks
+                      <TextInput
+                          {...addMarkForm.getInputProps(`proposal_${student.registrationNumber}`)}
+                          defaultValue={student.proposalMarks}
+                      />
+                  ) : (
+                      <TextInput
+                          {...addMarkForm.getInputProps(`proposal_${student.registrationNumber}`)}
+                          placeholder="Enter Proposal Marks"
+                      />
+                  )}
+              </Table.Td>
+              <Table.Td>
+                  {student.progress1Marks !== "" ? ( // Check if there are existing progress1 marks
+                      <TextInput
+                          {...addMarkForm.getInputProps(`progress1_${student.registrationNumber}`)}
+                          defaultValue={student.progress1Marks}
+                      />
+                  ) : (
+                      <TextInput
+                          {...addMarkForm.getInputProps(`progress1_${student.registrationNumber}`)}
+                          placeholder="Enter Progress 1 Marks"
+                      />
+                  )}
+              </Table.Td>
+              <Table.Td>
+                  {student.progress2Marks !== "" ? ( // Check if there are existing progress2 marks
+                      <TextInput
+                          {...addMarkForm.getInputProps(`progress2_${student.registrationNumber}`)}
+                          defaultValue={student.progress2Marks}
+                      />
+                  ) : (
+                      <TextInput
+                          {...addMarkForm.getInputProps(`progress2_${student.registrationNumber}`)}
+                          placeholder="Enter Progress 2 Marks"
+                      />
+                  )}
+              </Table.Td>
+              <Table.Td>
+                  {student.finalPresentationMarks !== "" ? ( // Check if there are existing final presentation marks
+                      <TextInput
+                          {...addMarkForm.getInputProps(`finalPresentation_${student.registrationNumber}`)}
+                          defaultValue={student.finalPresentationMarks}
+                      />
+                  ) : (
+                      <TextInput
+                          {...addMarkForm.getInputProps(`finalPresentation_${student.registrationNumber}`)}
+                          placeholder="Enter Final Presentation Marks"
+                      />
+                  )}
+              </Table.Td>
+              <Table.Td>
+                  {student.comments !== "" ? ( // Check if there are existing comments
+                      <TextInput
+                          {...addMarkForm.getInputProps(`comments_${student.registrationNumber}`)}
+                          defaultValue={student.comments}
+                      />
+                  ) : (
+                      <TextInput
+                          {...addMarkForm.getInputProps(`comments_${student.registrationNumber}`)}
+                          placeholder="Enter Comments"
+                      />
+                  )}
+              </Table.Td>
+          </Table.Tr>
+      ))
     : null;
-
 
 
 console.log(addMarkForm.values)
@@ -327,7 +320,6 @@ console.log(addMarkForm.values)
                     <Table.Thead>
                         <Table.Tr>
                             <Table.Th>Student Number</Table.Th>
-                            <Table.Th>Student Name</Table.Th>
                             <Table.Th>Proposal</Table.Th>
                             <Table.Th>Progress 1</Table.Th>
                             <Table.Th>Progress 2</Table.Th>
