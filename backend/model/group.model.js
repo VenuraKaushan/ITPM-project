@@ -104,7 +104,15 @@ const researchGroupSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
 
-        } 
+        },
+        vivaDate :{
+            type: String,
+            default: "",
+        },
+        vivaTime :{
+            type: String,
+            default: "",
+        },
 
     }, { timestamps: true }
 );
