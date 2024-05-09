@@ -26,7 +26,7 @@ const elements = [
   { presentation1: "76", report1: "91",document: "80" },
 ];
 
-const AssessmentMark = ({ assessmentMarksData }: { assessmentMarksData: any }) => {
+const AssessmentMark = ({ assessmentMarksData , refetch }: any) => {
 
 
   console.log(assessmentMarksData)
@@ -194,6 +194,7 @@ return (
                 onClick={() => {
                   // Handle edit action
                   updateAssestmentMark( editForm.values);
+                  refetch();
                 }}
               >
                 Edit Details
