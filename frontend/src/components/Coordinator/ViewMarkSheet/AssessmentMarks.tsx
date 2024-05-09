@@ -2,13 +2,8 @@ import { useState , useEffect  } from "react";
 import {
   Table,
   ScrollArea,
-  UnstyledButton,
-  Group,
-  Text,
-  Center,
   TextInput,
   rem,
-  keys,
   Button,
   Modal,
   Tooltip,
@@ -16,15 +11,12 @@ import {
   Container
 } from "@mantine/core";
 import {
-  IconSelector,
-  IconChevronDown,
-  IconChevronUp,
   IconAt,
   IconUser,
   IconEdit,
   IconMessage,
 } from "@tabler/icons-react";
-import classes from "../../../Styles/TableSort.module.css";
+
 
 import { useForm } from "@mantine/form";
 import { showNotification, updateNotification } from "@mantine/notifications";
@@ -35,6 +27,9 @@ const elements = [
 ];
 
 const AssessmentMark = ({ assessmentMarksData }: { assessmentMarksData: any }) => {
+
+
+  console.log(assessmentMarksData)
 
   
   const [editOpened, setEditOpened] = useState(false);
@@ -223,6 +218,7 @@ return (
                 <Table.Th>Progress 1 Marks</Table.Th>
                 <Table.Th>Progress 2 Marks</Table.Th>
                 <Table.Th>Final Presentation Marks</Table.Th>
+                <Table.Th>Comments</Table.Th>
                 <Table.Th>Action</Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -234,6 +230,7 @@ return (
               <Table.Td>{student.progress1Marks}</Table.Td>
               <Table.Td>{student.progress2Marks}</Table.Td>
               <Table.Td>{student.finalPresentationMarks}</Table.Td>
+              <Table.Td>{student.comments}</Table.Td>
               <Table.Td>
                 <center>
                   <Tooltip label="Edit">
@@ -258,16 +255,7 @@ return (
                     </ActionIcon>
                   </Tooltip>
 
-                  <Tooltip label="View">
-                    <ActionIcon
-                      onClick={() => {
-                        // Handle view action
-                      }}
-                      color="#89ec9c"
-                    >
-                      <IconMessage />
-                    </ActionIcon>
-                  </Tooltip>
+                  
                 </center>
               </Table.Td>
             </Table.Tr>

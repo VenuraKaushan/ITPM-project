@@ -650,7 +650,7 @@ const StudentDetails = () => {
 
 
         <div >
-          <ScrollArea>
+          
             <div style={{ marginBottom: "50px" }}>
               <TextInput
                 placeholder="Search by any field"
@@ -679,6 +679,8 @@ const StudentDetails = () => {
                 Add Student
               </Button>
             </div>
+
+            <ScrollArea h={380} >
 
             <Table
 
@@ -758,7 +760,8 @@ const StudentDetails = () => {
                 )}
               </Table.Tbody>
             </Table>
-          </ScrollArea>
+            </ScrollArea>
+          
         </div>
       </div>
     </div>

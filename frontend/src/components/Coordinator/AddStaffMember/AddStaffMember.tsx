@@ -584,7 +584,7 @@ const AddStaffMember = () => {
       </Modal>
 
       <div style={{ marginLeft: "-200px", marginRight: "50px" }}>
-        <ScrollArea>
+        
           <div style={{ marginBottom: "50px" }}>
             <TextInput
               placeholder="Search by any field"
@@ -613,6 +613,8 @@ const AddStaffMember = () => {
               Add Staff Member
             </Button>
           </div>
+
+          <ScrollArea h ={380}>
 
           <Table
             highlightOnHover

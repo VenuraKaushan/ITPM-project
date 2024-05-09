@@ -30,8 +30,6 @@ import { useForm } from "@mantine/form";
 
 interface RowData {
   _id: string;
-  groupNo: string;
-  studentName: string;
   regNo: string;
   statusReport1: string;
   proposalDocument: string;
@@ -101,27 +99,41 @@ function sortData(
 const data = [
   {
     _id: "string",
-    groupNo: "string",
-    studentName: "string",
-    regNo: "string",
-    statusReport1: "string",
-    proposalDocument: "string",
-    statusReport2: "string",
-    logBook: "string",
-    finalThesis: "string",
+    regNo: "IT21244694",
+    statusReport1: "20",
+    proposalDocument: "35",
+    statusReport2: "55",
+    logBook: "65",
+    finalThesis: "45",
   },
 
  
   {
     _id: "string",
-    groupNo: "string",
-    studentName: "string",
-    regNo: "string",
-    statusReport1: "string",
-    proposalDocument: "string",
-    statusReport2: "string",
-    logBook: "string",
-    finalThesis: "string",
+    regNo: "IT21244694",
+    statusReport1: "67",
+    proposalDocument: "45",
+    statusReport2: "76",
+    logBook: "57",
+    finalThesis: "78",
+  },
+  {
+    _id: "string",
+    regNo: "IT21234567",
+    statusReport1: "67",
+    proposalDocument: "45",
+    statusReport2: "45",
+    logBook: "57",
+    finalThesis: "78",
+  },
+  {
+    _id: "string",
+    regNo: "IT21212134",
+    statusReport1: "67",
+    proposalDocument: "100",
+    statusReport2: "76",
+    logBook: "57",
+    finalThesis: "78",
   },
 ];
 
@@ -152,9 +164,7 @@ const ReportsMarks = () => {
 
   const rows = sortedData.map((row) => (
     <Table.Tr key={row._id}>
-       <Table.Td>{row._id}</Table.Td>
-      <Table.Td>{row.groupNo}</Table.Td>
-      <Table.Td>{row.studentName}</Table.Td>
+       
       <Table.Td>{row.regNo}</Table.Td>
       <Table.Td>{row.statusReport1}</Table.Td>
       <Table.Td>{row.proposalDocument}</Table.Td>
@@ -169,8 +179,6 @@ const ReportsMarks = () => {
               onClick={() => {
                 editForm.setValues({
                   _id: row._id,
-                  groupNo: row.groupNo,
-                  studentName: row.studentName,
                   regNo: row.regNo,
                   statusReport1: row.statusReport1,
                   proposalDocument: row.proposalDocument,
@@ -340,27 +348,7 @@ const ReportsMarks = () => {
               <Table.Tr>
 
 
-                <Th
-                  sorted={sortBy === "_id"}
-                  reversed={reverseSortDirection}
-                  onSort={() => setSorting("_id")}
-                >
-                  ID
-                </Th>
-                <Th
-                  sorted={sortBy === "groupNo"}
-                  reversed={reverseSortDirection}
-                  onSort={() => setSorting("groupNo")}
-                >
-                  Group No
-                </Th>
-                <Th
-                  sorted={sortBy === "studentName"}
-                  reversed={reverseSortDirection}
-                  onSort={() => setSorting("studentName")}
-                >
-                  Student Name
-                </Th>
+                
                 <Th
                   sorted={sortBy === "regNo"}
                   reversed={reverseSortDirection}
