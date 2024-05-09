@@ -149,6 +149,8 @@ export const GroupRegistration = () => {
                     },
                 });
                 refetch();
+                window.location.reload();
+
 
             })
             .catch((error) => {

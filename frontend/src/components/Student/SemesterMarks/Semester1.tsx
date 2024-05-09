@@ -7,25 +7,56 @@ import {
 
 
 } from '@mantine/core';
-
+import { useEffect, useState } from 'react';
+import { useForm } from "@mantine/form";
+import StudentAPI from '../../../API/studentAPI/student.api';
+import { useQuery } from "@tanstack/react-query";
 
 
 
 const elements = [
-    { presentation1: "76", report1: "91",document: "80" },
+    { presentation1: "76", report1: "91", document: "80" },
 ];
 
 export const Semester1Marks = () => {
+    const [regNo, setRegNo] = useState("")
 
-    const rows = elements.map((element) => (
-        <Table.Tr key={element.presentation1}>
-            <Table.Td>{element.presentation1}</Table.Td>
-            <Table.Td>{element.report1}</Table.Td>
-            <Table.Td>{element.document}</Table.Td>
+    useEffect(() => {
+        // Retrieve user details from local storage
+        const userStudentSessionString = localStorage.getItem("user-student-session");
+        if (userStudentSessionString) {
+            const userStudentSession = JSON.parse(userStudentSessionString);
+            setRegNo(userStudentSession.regNo)
+        }
+    }, []);
+    console.log(regNo)
 
+    // Use react query and fetch marks data
+    const {
+        data = [],
+        isLoading,
+        isError,
+        refetch,
+    } = useQuery({
+        queryKey: ["marksData"],
+        queryFn: () => StudentAPI.getMarks(regNo).then((res) => res.data),
+    });
 
+    console.log(data)
+
+    const userMarks = data.student && data.student.find((student: any) => student.registrationNumber === regNo);
+    // const proposalAndProgress1Sum = parseInt(userMarks.proposalMarks) + parseInt(userMarks.progress1Marks);
+
+    console.log(userMarks)
+
+    const rows = userMarks && (
+        <Table.Tr key={userMarks._id}>
+          <Table.Td>{userMarks.proposalMarks}</Table.Td>
+          <Table.Td>{userMarks.progress1Marks}</Table.Td>
+          <Table.Td>60</Table.Td>
+          <Table.Td>78</Table.Td>
         </Table.Tr>
-    ));
+      );
 
     return (
         <Container>
@@ -34,7 +65,7 @@ export const Semester1Marks = () => {
                     size="lg"
                     fw={700}
                 >
-                    1st Semester Marks 
+                    1st Semester Marks
                 </Text>
             </Center>
             <ScrollArea>
@@ -47,7 +78,8 @@ export const Semester1Marks = () => {
                 >
                     <Table.Thead>
                         <Table.Tr>
-                            <Table.Th>Proposa l and Progress 1 presentations</Table.Th>
+                            <Table.Th>Proposal viva</Table.Th>
+                            <Table.Th>Progress 1 viva</Table.Th>
                             <Table.Th>Status report 1</Table.Th>
                             <Table.Th>Proposal document</Table.Th>
                         </Table.Tr>

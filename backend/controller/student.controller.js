@@ -6,7 +6,7 @@ import ResearchGroups from "../model/group.model.js"
 import Assessments from "../model/assestment.model.js";
 import path from 'path';
 import Tesseract from 'tesseract.js';
-
+import Marks from "../model/marks.model.js";
 
 
 //student login function
@@ -167,7 +167,6 @@ export const getResearchByLeader = async (req, res) => {
 
   const loggedUser = req.body;
 
-  console.log(loggedUser.regNo);
   try {
 
     const research = await ResearchGroups.find({ 'leader.registrationNumber': loggedUser.regNo })
@@ -211,7 +210,7 @@ export const submitAssessment = async (req, res) => {
 
     const updateFields = {
       comment: req.body.comment,
-      ansDoc: req.body.submitDoc.path,
+      ansDoc: `/${req.body.submitDoc.path}`,
     }
 
     console.log(updateFields)
@@ -327,3 +326,20 @@ export const publishResearch = async (req, res) => {
 
   }
 }
+
+export const getMarks = async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    console.log(_id)
+
+    const studentMarks = await Marks.findOne({ "student.registrationNumber": _id });
+
+    console.log(studentMarks)
+    res.status(200).json(studentMarks);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to get marks data", err });
+  }
+};
+
+

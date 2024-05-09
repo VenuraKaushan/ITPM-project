@@ -18,7 +18,6 @@ export const addRubrics = async (req, res) => {
 
 //add question to db
 export const uploadQuestiontDoc = async (req, res) => {
-  console.log("ajshf");
 
   try {
     console.log(req.body); // Check if body contains any data
@@ -41,7 +40,7 @@ export const addAssestment = async (req, res) => {
       deadline: req.body.deadline,
       specialization: req.body.specialization,
       semster: req.body.semester,
-      quesDoc: req.body.submitDoc.path,
+      quesDoc: `/${req.body.submitDoc.path}`,
       ansDoc: "Not a Answer",
       comment: "NaN",
     });
