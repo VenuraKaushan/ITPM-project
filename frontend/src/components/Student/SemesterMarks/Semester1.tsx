@@ -44,19 +44,18 @@ export const Semester1Marks = () => {
 
     console.log(data)
 
-    const userMarks = data.student && data.student.find((student: any) => student.registrationNumber === regNo);
-    // const proposalAndProgress1Sum = parseInt(userMarks.proposalMarks) + parseInt(userMarks.progress1Marks);
+    const userMarks = data?.student?.find((student: any) => student.registrationNumber === regNo);
 
     console.log(userMarks)
 
-    const rows = userMarks && (
+    const rows = userMarks ? (
         <Table.Tr key={userMarks._id}>
           <Table.Td>{userMarks.proposalMarks}</Table.Td>
           <Table.Td>{userMarks.progress1Marks}</Table.Td>
           <Table.Td>60</Table.Td>
           <Table.Td>78</Table.Td>
         </Table.Tr>
-      );
+      ) : null;
 
     return (
         <Container>
