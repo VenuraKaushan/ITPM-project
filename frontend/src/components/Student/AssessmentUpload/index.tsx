@@ -140,7 +140,7 @@ export const Assessment = () => {
             <Table.Td>{new Date(element.deadline).toLocaleDateString("en-CA")}</Table.Td>
             <Table.Td>
                 <a href={`http://localhost:3001/student/download${element.quesDoc}`} download>
-                    Download
+                    Download Assessment
                 </a>
             </Table.Td>
             <Table.Td>
@@ -157,7 +157,7 @@ export const Assessment = () => {
                             })
                         }}
                     >
-                        View assessment
+                        Submit Answer
                     </Button>
                 </Center>
             </Table.Td>

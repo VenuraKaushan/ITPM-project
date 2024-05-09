@@ -45,7 +45,6 @@ export const Semester1Marks = () => {
     console.log(data)
 
     const userMarks = data.student && data.student.find((student: any) => student.registrationNumber === regNo);
-    // const proposalAndProgress1Sum = parseInt(userMarks.proposalMarks) + parseInt(userMarks.progress1Marks);
 
     console.log(userMarks)
 
