@@ -1,12 +1,63 @@
-import React, { useState }  from "react";
+import React, { useState } from "react";
 import { Select, Button } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import PMemberAPI from "../../API/PMemberAPI/pmember.api";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { IconUpload, IconPhoto, IconX, IconCheck } from "@tabler/icons-react";
 
 export const StaffPage = () => {
-
   const [duration, setDuration] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleChange = (event) => {
+  // Declare publish research form
+  const sheduleForm = useForm({
+    validateInputOnChange: true,
+    initialValues: {
+      special: "",
+      date: "",
+      timeDuration: "",
+    },
+  });
+
+  const sheduleViva = (values: {
+    special: string;
+    date: string;
+    timeDuration: string;
+  }) => {
+    showNotification({
+      id: "Schedule-Viva",
+      color: "teal",
+      title: "Publish Research",
+      message: "Please wait while we publish your Research..",
+      icon: <IconCheck size={16} />,
+      autoClose: 5000,
+    });
+    PMemberAPI.sheduleViva(values)
+      .then((res) => {
+        updateNotification({
+          id: "Schedule-Viva",
+          color: "teal",
+          icon: <IconCheck />,
+          title: "Viva successfully Scheduled",
+          message: "Viva successfully Scheduled",
+          autoClose: 5000,
+        });
+
+        window.location.reload();
+      })
+      .catch((error) => {
+        updateNotification({
+          id: "Schedule-Viva",
+          color: "red",
+          title: "Something went wrong!!",
+          icon: <IconX />,
+          message: `An error occurred: ${error.response.data.message}`,
+          autoClose: 5000,
+        });
+      });
+  };
+
+  const handleChange = (event: any) => {
     const inputDuration = parseInt(event.target.value, 10); // Parse input as integer
     setDuration(inputDuration);
 
@@ -17,6 +68,8 @@ export const StaffPage = () => {
       setErrorMessage("");
     }
   };
+
+  console.log(sheduleForm.values);
 
   return (
     <div
@@ -42,6 +95,7 @@ export const StaffPage = () => {
           placeholder="Pick value"
           data={["IT", "SE", "DS", "CSNE"]}
           searchable
+          {...sheduleForm.getInputProps("special")}
         />
       </div>
 
@@ -55,6 +109,7 @@ export const StaffPage = () => {
         <input
           type="date"
           id="date"
+          {...sheduleForm.getInputProps("date")}
           style={{
             width: "100%",
             padding: "8px",
@@ -66,35 +121,40 @@ export const StaffPage = () => {
       </div>
 
       <div style={{ marginBottom: "20px" }}>
-      <label
-        htmlFor="duration"
-        style={{
-          display: "block",
-          fontWeight: "bold",
-          marginBottom: "5px",
-        }}
-      >
-        Enter Time Duration
-      </label>
-      <input
-        type="number" // Use type="number" for numeric input
-        id="duration"
-        value={duration}
-        onChange={handleChange}
-        style={{
-          width: "100%",
-          padding: "8px",
-          border: "1px solid #ccc",
-          borderRadius: "5px",
-          boxSizing: "border-box",
-        }}
-      />
-      {errorMessage && (
-        <div style={{ color: "red", marginTop: "5px" }}>{errorMessage}</div>
-      )}
-    </div>
+        <label
+          htmlFor="duration"
+          style={{
+            display: "block",
+            fontWeight: "bold",
+            marginBottom: "5px",
+          }}
+        >
+          Enter Time Duration
+        </label>
+        <input
+          type="number"
+          id="duration"
+          value={duration}
+          onChange={(event) => {
+            handleChange(event);
+            sheduleForm.getInputProps("timeDuration").onChange(event); // Call the onChange handler from getInputProps
+          }}
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+            boxSizing: "border-box",
+          }}
+        />
+
+        {errorMessage && (
+          <div style={{ color: "red", marginTop: "5px" }}>{errorMessage}</div>
+        )}
+      </div>
 
       <Button
+        type="submit"
         variant="gradient"
         gradient={{ from: "lime", to: "blue", deg: 90 }}
         style={{
@@ -107,6 +167,10 @@ export const StaffPage = () => {
           cursor: "pointer",
           transition: "background-color 0.3s ease",
         }}
+        onClick={() => {
+          sheduleViva(sheduleForm.values);
+        }}
+
         // hoverStyle={{ backgroundColor: '#6c63ff' }}
       >
         Search

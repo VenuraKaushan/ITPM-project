@@ -3,40 +3,21 @@ import "../../Styles/ResearchTable.css";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { MultiSelect } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
+import PMemberAPI from "../../API/PMemberAPI/pmember.api";
 
 const ResearchManagement = () => {
-  const data = [
-    {
-      projectTitle: "Virtual Dressing Shop",
-      groupNumber: "WE-IT056",
-      date: "2023-12-01",
-      time: "10:00 AM",
-      examiner: "Prof. Johnson",
-    },
-    {
-      projectTitle: "Project 2",
-      groupNumber: "WE-IT057",
-      date: "2023-12-02",
-      time: "11:00 AM",
-      examiner: "Prof. Davis",
-    },
 
-    {
-      projectTitle: "Virtual Dressing Shop",
-      groupNumber: "WE-IT056",
-      date: "2023-12-01",
-      time: "10:00 AM",
-      examiner: "Prof. Johnson",
-    },
-    {
-      projectTitle: "Project 2",
-      groupNumber: "WE-IT056",
-      date: "2023-12-02",
-      time: "11:00 AM",
-      examiner: "Prof. Davis",
-    },
-    // Add more data as needed
-  ];
+  const {
+    data = [],
+    isLoading,
+    isError,
+    refetch,
+} = useQuery({
+    queryKey: ["researchData"],
+    queryFn: () => PMemberAPI.getResearch().then((res) => res.data),
+});
+console.log(data)
 
 
 
@@ -55,18 +36,23 @@ const ResearchManagement = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
+          {data.map((item:any, index:any) => (
             <tr key={index}>
-              <td>{item.projectTitle}</td>
-              <td>{item.groupNumber}</td>
-              <td>{item.date}</td>
-              <td>{item.time}</td>
+              <td>{item.title}</td>
+              <td>{item.groupID}</td>
+              <td>{item.vivaDate}</td>
+              <td>{item.vivaTime}</td>
 
               <td>
                 <MultiSelect
                   label="Select 3 Examiners"
                   placeholder="Pick Examiners"
-                  data={["Dr.Dilshan", "Dr.Dinuka", "Dr.Harendra", "Dr.Kavinga"]}
+                  data={[
+                    "Dr.Dilshan",
+                    "Dr.Dinuka",
+                    "Dr.Harendra",
+                    "Dr.Kavinga",
+                  ]}
                 />
               </td>
               <td>

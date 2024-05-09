@@ -4,7 +4,10 @@ import {
     addAssestment,
     getAssessment,
     editAssestment,
-    deleteAssestment
+    deleteAssestment,
+    validateVivaShedule,
+    getResearchViaPM
+
 } from "../controller/pMember.controller.js";
 import { uploadQuestiontDoc } from "../controller/pMember.controller.js";
 
@@ -16,6 +19,8 @@ router.post("/question/upload", uploadQuestiontDoc);
 router.put("/edit/assestment/:id", editAssestment);
 router.get("/get/assessment",getAssessment);
 router.delete("/assessment/delete/:id",deleteAssestment);
+router.put("/shecule/viva",validateVivaShedule)
+router.get("/get/research/",getResearchViaPM);
 
 
 export default router;

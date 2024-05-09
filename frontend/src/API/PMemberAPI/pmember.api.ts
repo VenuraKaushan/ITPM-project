@@ -44,11 +44,29 @@ class PMemberAPI {
   }
 
   static deleteAssestment = (values: { _id: string }) => {
-    console.log(values)
+    console.log(values);
     return axios.delete(`${BASE_URL}/pm/assessment/delete/${values._id}`, {
       withCredentials: true,
     });
   };
+
+  static sheduleViva(values: {
+    special: string;
+    date: string;
+    timeDuration: string;
+  }) {
+    console.log(values)
+    return axios.put(`${BASE_URL}/pm/shecule/viva`, values, {
+      withCredentials: true,
+    });
+  }
+
+  static getResearch(){
+    return axios.get(`${BASE_URL}/pm/get/research/`,{ withCredentials: true });
+
+  }
+
+
 }
 
 export default PMemberAPI;

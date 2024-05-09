@@ -1,5 +1,6 @@
 import MarkingRubrics from "../model/rubrics.model.js";
 import Assessments from "../model/assestment.model.js";
+import ResearchGroups from "../model/group.model.js";
 
 export const addRubrics = async (req, res) => {
   try {
@@ -18,7 +19,6 @@ export const addRubrics = async (req, res) => {
 
 //add question to db
 export const uploadQuestiontDoc = async (req, res) => {
-
   try {
     console.log(req.body); // Check if body contains any data
     console.log(req.file);
@@ -88,24 +88,22 @@ export const editAssestment = async (req, res) => {
 
 export const getAssessment = async (req, res) => {
   try {
-    const assessments = await Assessments.find({ansDoc: 'Not a Answer'})
+    const assessments = await Assessments.find({ ansDoc: "Not a Answer" });
 
-    console.log(assessments)
+    console.log(assessments);
     res.status(200).json(assessments);
-
   } catch (err) {
     res.status(500).json({ message: "Failed to get Assessments data", err });
   }
-}
+};
 
-//Delete Assessment 
+//Delete Assessment
 export const deleteAssestment = async (req, res) => {
   const _id = req.params.id;
   const assessmentName = req.params.assessmentName;
 
   try {
-
-    console.log("controller delete")
+    console.log("controller delete");
     const deletedAssestment = await Assessments.findByIdAndDelete(_id);
 
     if (!deletedAssestment) {
@@ -116,5 +114,54 @@ export const deleteAssestment = async (req, res) => {
     res.status(200).json({ message: "Assessments deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Failed to delete Assessments", error });
+  }
+};
+
+export const validateVivaShedule = async (req, res) => {
+  try {
+    const { date, timeDuration } = req.body; // Assuming you have 'date' and 'timeDuration' fields in your request body
+
+    // Convert timeDuration to minutes
+    const timeDurationInMinutes = parseInt(timeDuration);
+
+    // Find the appropriate research group(s)
+    const researchGroups = await ResearchGroups.find();
+
+    // Calculate viva start time
+    const startTime = new Date(`${date}T09:00:00`);
+
+    // Schedule viva for each research group
+    for (let i = 0; i < researchGroups.length; i++) {
+      const group = researchGroups[i];
+
+      // Calculate viva time for the current group
+      const vivaTime = new Date(
+        startTime.getTime() + i * timeDurationInMinutes * 60000
+      );
+
+      // Update viva date and time for the current group
+      group.vivaDate = date;
+      group.vivaTime = vivaTime.toLocaleTimeString("en-US", { hour12: false });
+
+      // Save the changes to the database
+      await group.save();
+    }
+
+    res.status(200).json({ message: "Viva schedule updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+export const getResearchViaPM = async (req, res) => {
+  try {
+    const researchGroups = await ResearchGroups.find();
+
+    console.log(researchGroups);
+    res.status(200).json(researchGroups);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to get Research group data", err });
   }
 };

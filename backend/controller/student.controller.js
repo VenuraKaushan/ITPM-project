@@ -150,7 +150,9 @@ export const regResearchGroup = async (req, res) => {
       supervisorName: req.body.projectDetails.supervisorName,
       coSupervisorName: req.body.projectDetails.coSupervisorName,
       batch: req.body.batch,
-      isPublish: false
+      isPublish: false,
+      vivaDate:"NaN",
+      vivaTime:"NaN"
     });
 
     const saveGroup = await newGroup.save();
