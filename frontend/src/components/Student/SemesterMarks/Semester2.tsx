@@ -39,20 +39,17 @@ export const Semester2Marks = () => {
         queryFn: () => StudentAPI.getMarks(regNo).then((res) => res.data),
     });
 
-    const userMarks = data.student && data.student.find((student: any) => student.registrationNumber === regNo);
+    const userMarks = data?.student?.find((student: any) => student.registrationNumber === regNo);
 
 
-    const rows = userMarks && (
+    const rows = userMarks ? (
         <Table.Tr key={userMarks._id}>
-          <Table.Td>{userMarks.progress2Marks}</Table.Td>
-          <Table.Td>{userMarks.finalPresentationMarks}</Table.Td>
-          <Table.Td>60</Table.Td>
-          <Table.Td>78</Table.Td>
-          <Table.Td>80</Table.Td>
-          <Table.Td>78</Table.Td>
-
+            <Table.Td>{userMarks.proposalMarks}</Table.Td>
+            <Table.Td>{userMarks.progress1Marks}</Table.Td>
+            <Table.Td>60</Table.Td>
+            <Table.Td>78</Table.Td>
         </Table.Tr>
-      );
+    ) : null;
 
     return (
         <Container>
