@@ -69,7 +69,7 @@ class CoordinatorAPI{
     //get all group details to assign project member
     static getGroupDetails(){
 
-        return axios.get(`${BASE_URL}/coordinator/getgroupdetails`,{withCredentials:true});
+        return axios.get(`${BASE_URL}/coordinator/get/groupdetails`,{withCredentials:true});
     }
 
     //Get view Mark Sheet Details

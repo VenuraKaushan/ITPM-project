@@ -42,6 +42,7 @@ router.get('/get/compareAssessmentMarkId/:id',compareAssessmentMarkId);
 
 router.put("/updateAssestmentMark/update/:id",updateAssessmentMark);
 
+router.get("/get/groupdetails",getGroupDetails);
 
 
 export default router;
